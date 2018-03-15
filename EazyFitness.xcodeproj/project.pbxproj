@@ -1,0 +1,588 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BCE205A315B001965F7 /* AppDelegate.swift */; };
+		A3281BD1205A315B001965F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BD0205A315B001965F7 /* ViewController.swift */; };
+		A3281BD4205A315B001965F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3281BD2205A315B001965F7 /* Main.storyboard */; };
+		A3281BD6205A315C001965F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3281BD5205A315C001965F7 /* Assets.xcassets */; };
+		A3281BD9205A315C001965F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3281BD7205A315C001965F7 /* LaunchScreen.storyboard */; };
+		A3281BE4205A315C001965F7 /* EazyFitnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BE3205A315C001965F7 /* EazyFitnessTests.swift */; };
+		A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A3281BE0205A315C001965F7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3281BC3205A315B001965F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A3281BCA205A315B001965F7;
+			remoteInfo = EazyFitness;
+		};
+		A3281BEB205A315C001965F7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3281BC3205A315B001965F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A3281BCA205A315B001965F7;
+			remoteInfo = EazyFitness;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A3281BCB205A315B001965F7 /* EazyFitness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EazyFitness.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3281BCE205A315B001965F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A3281BD0205A315B001965F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A3281BD3205A315B001965F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A3281BD5205A315C001965F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A3281BD8205A315C001965F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A3281BDA205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3281BDF205A315C001965F7 /* EazyFitnessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EazyFitnessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3281BE3205A315C001965F7 /* EazyFitnessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EazyFitnessTests.swift; sourceTree = "<group>"; };
+		A3281BE5205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3281BEA205A315C001965F7 /* EazyFitnessUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EazyFitnessUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EazyFitnessUITests.swift; sourceTree = "<group>"; };
+		A3281BF0205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A3281BC8205A315B001965F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3281BDC205A315C001965F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3281BE7205A315C001965F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A3281BC2205A315B001965F7 = {
+			isa = PBXGroup;
+			children = (
+				A3281BCD205A315B001965F7 /* EazyFitness */,
+				A3281BE2205A315C001965F7 /* EazyFitnessTests */,
+				A3281BED205A315C001965F7 /* EazyFitnessUITests */,
+				A3281BCC205A315B001965F7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A3281BCC205A315B001965F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3281BCB205A315B001965F7 /* EazyFitness.app */,
+				A3281BDF205A315C001965F7 /* EazyFitnessTests.xctest */,
+				A3281BEA205A315C001965F7 /* EazyFitnessUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A3281BCD205A315B001965F7 /* EazyFitness */ = {
+			isa = PBXGroup;
+			children = (
+				A3281BCE205A315B001965F7 /* AppDelegate.swift */,
+				A3281BD0205A315B001965F7 /* ViewController.swift */,
+				A3281BD2205A315B001965F7 /* Main.storyboard */,
+				A3281BD5205A315C001965F7 /* Assets.xcassets */,
+				A3281BD7205A315C001965F7 /* LaunchScreen.storyboard */,
+				A3281BDA205A315C001965F7 /* Info.plist */,
+			);
+			path = EazyFitness;
+			sourceTree = "<group>";
+		};
+		A3281BE2205A315C001965F7 /* EazyFitnessTests */ = {
+			isa = PBXGroup;
+			children = (
+				A3281BE3205A315C001965F7 /* EazyFitnessTests.swift */,
+				A3281BE5205A315C001965F7 /* Info.plist */,
+			);
+			path = EazyFitnessTests;
+			sourceTree = "<group>";
+		};
+		A3281BED205A315C001965F7 /* EazyFitnessUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */,
+				A3281BF0205A315C001965F7 /* Info.plist */,
+			);
+			path = EazyFitnessUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A3281BCA205A315B001965F7 /* EazyFitness */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3281BF3205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitness" */;
+			buildPhases = (
+				A3281BC7205A315B001965F7 /* Sources */,
+				A3281BC8205A315B001965F7 /* Frameworks */,
+				A3281BC9205A315B001965F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EazyFitness;
+			productName = EazyFitness;
+			productReference = A3281BCB205A315B001965F7 /* EazyFitness.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A3281BDE205A315C001965F7 /* EazyFitnessTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3281BF6205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitnessTests" */;
+			buildPhases = (
+				A3281BDB205A315C001965F7 /* Sources */,
+				A3281BDC205A315C001965F7 /* Frameworks */,
+				A3281BDD205A315C001965F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A3281BE1205A315C001965F7 /* PBXTargetDependency */,
+			);
+			name = EazyFitnessTests;
+			productName = EazyFitnessTests;
+			productReference = A3281BDF205A315C001965F7 /* EazyFitnessTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A3281BE9205A315C001965F7 /* EazyFitnessUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3281BF9205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitnessUITests" */;
+			buildPhases = (
+				A3281BE6205A315C001965F7 /* Sources */,
+				A3281BE7205A315C001965F7 /* Frameworks */,
+				A3281BE8205A315C001965F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A3281BEC205A315C001965F7 /* PBXTargetDependency */,
+			);
+			name = EazyFitnessUITests;
+			productName = EazyFitnessUITests;
+			productReference = A3281BEA205A315C001965F7 /* EazyFitnessUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A3281BC3205A315B001965F7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = luke;
+				TargetAttributes = {
+					A3281BCA205A315B001965F7 = {
+						CreatedOnToolsVersion = 9.3;
+					};
+					A3281BDE205A315C001965F7 = {
+						CreatedOnToolsVersion = 9.3;
+						TestTargetID = A3281BCA205A315B001965F7;
+					};
+					A3281BE9205A315C001965F7 = {
+						CreatedOnToolsVersion = 9.3;
+						TestTargetID = A3281BCA205A315B001965F7;
+					};
+				};
+			};
+			buildConfigurationList = A3281BC6205A315B001965F7 /* Build configuration list for PBXProject "EazyFitness" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A3281BC2205A315B001965F7;
+			productRefGroup = A3281BCC205A315B001965F7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A3281BCA205A315B001965F7 /* EazyFitness */,
+				A3281BDE205A315C001965F7 /* EazyFitnessTests */,
+				A3281BE9205A315C001965F7 /* EazyFitnessUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A3281BC9205A315B001965F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3281BD9205A315C001965F7 /* LaunchScreen.storyboard in Resources */,
+				A3281BD6205A315C001965F7 /* Assets.xcassets in Resources */,
+				A3281BD4205A315B001965F7 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3281BDD205A315C001965F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3281BE8205A315C001965F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A3281BC7205A315B001965F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
+				A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3281BDB205A315C001965F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3281BE4205A315C001965F7 /* EazyFitnessTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3281BE6205A315C001965F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A3281BE1205A315C001965F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A3281BCA205A315B001965F7 /* EazyFitness */;
+			targetProxy = A3281BE0205A315C001965F7 /* PBXContainerItemProxy */;
+		};
+		A3281BEC205A315C001965F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A3281BCA205A315B001965F7 /* EazyFitness */;
+			targetProxy = A3281BEB205A315C001965F7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A3281BD2205A315B001965F7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3281BD3205A315B001965F7 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A3281BD7205A315C001965F7 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3281BD8205A315C001965F7 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A3281BF1205A315D001965F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A3281BF2205A315D001965F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A3281BF4205A315D001965F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
+				INFOPLIST_FILE = EazyFitness/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitness;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A3281BF5205A315D001965F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
+				INFOPLIST_FILE = EazyFitness/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitness;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A3281BF7205A315D001965F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
+				INFOPLIST_FILE = EazyFitnessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EazyFitness.app/EazyFitness";
+			};
+			name = Debug;
+		};
+		A3281BF8205A315D001965F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
+				INFOPLIST_FILE = EazyFitnessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EazyFitness.app/EazyFitness";
+			};
+			name = Release;
+		};
+		A3281BFA205A315D001965F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
+				INFOPLIST_FILE = EazyFitnessUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EazyFitness;
+			};
+			name = Debug;
+		};
+		A3281BFB205A315D001965F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
+				INFOPLIST_FILE = EazyFitnessUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EazyFitness;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A3281BC6205A315B001965F7 /* Build configuration list for PBXProject "EazyFitness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3281BF1205A315D001965F7 /* Debug */,
+				A3281BF2205A315D001965F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A3281BF3205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3281BF4205A315D001965F7 /* Debug */,
+				A3281BF5205A315D001965F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A3281BF6205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitnessTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3281BF7205A315D001965F7 /* Debug */,
+				A3281BF8205A315D001965F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A3281BF9205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitnessUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3281BFA205A315D001965F7 /* Debug */,
+				A3281BFB205A315D001965F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A3281BC3205A315B001965F7 /* Project object */;
+}
