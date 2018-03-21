@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */; };
+		A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795E205B750700512378 /* SwitchCameraButton.swift */; };
+		A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795F205B750700512378 /* QRCodeReaderViewController.swift */; };
+		A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077960205B750700512378 /* QRCodeReaderViewContainer.swift */; };
+		A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077961205B750700512378 /* QRCodeReaderView.swift */; };
+		A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077962205B750700512378 /* ToggleTorchButton.swift */; };
+		A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077963205B750700512378 /* QRCodeReaderResult.swift */; };
+		A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */; };
+		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
+		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
 		A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BCE205A315B001965F7 /* AppDelegate.swift */; };
 		A3281BD1205A315B001965F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BD0205A315B001965F7 /* ViewController.swift */; };
 		A3281BD4205A315B001965F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3281BD2205A315B001965F7 /* Main.storyboard */; };
@@ -14,6 +24,7 @@
 		A3281BD9205A315C001965F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3281BD7205A315C001965F7 /* LaunchScreen.storyboard */; };
 		A3281BE4205A315C001965F7 /* EazyFitnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BE3205A315C001965F7 /* EazyFitnessTests.swift */; };
 		A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */; };
+		A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BFC205A3372001965F7 /* Alphanumeric.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +45,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerBuilder.swift; sourceTree = "<group>"; };
+		A307795E205B750700512378 /* SwitchCameraButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCameraButton.swift; sourceTree = "<group>"; };
+		A307795F205B750700512378 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
+		A3077960205B750700512378 /* QRCodeReaderViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewContainer.swift; sourceTree = "<group>"; };
+		A3077961205B750700512378 /* QRCodeReaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderView.swift; sourceTree = "<group>"; };
+		A3077962205B750700512378 /* ToggleTorchButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleTorchButton.swift; sourceTree = "<group>"; };
+		A3077963205B750700512378 /* QRCodeReaderResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderResult.swift; sourceTree = "<group>"; };
+		A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerDelegate.swift; sourceTree = "<group>"; };
+		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
+		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
 		A3281BCB205A315B001965F7 /* EazyFitness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EazyFitness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3281BCE205A315B001965F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A3281BD0205A315B001965F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +68,7 @@
 		A3281BEA205A315C001965F7 /* EazyFitnessUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EazyFitnessUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EazyFitnessUITests.swift; sourceTree = "<group>"; };
 		A3281BF0205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3281BFC205A3372001965F7 /* Alphanumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alphanumeric.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +96,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A307795C205B74E400512378 /* QRCode */ = {
+			isa = PBXGroup;
+			children = (
+				A3077966205B750800512378 /* QRCodeReader.swift */,
+				A3077963205B750700512378 /* QRCodeReaderResult.swift */,
+				A3077961205B750700512378 /* QRCodeReaderView.swift */,
+				A3077960205B750700512378 /* QRCodeReaderViewContainer.swift */,
+				A307795F205B750700512378 /* QRCodeReaderViewController.swift */,
+				A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */,
+				A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */,
+				A3077965205B750700512378 /* ReaderOverlayView.swift */,
+				A307795E205B750700512378 /* SwitchCameraButton.swift */,
+				A3077962205B750700512378 /* ToggleTorchButton.swift */,
+			);
+			path = QRCode;
+			sourceTree = "<group>";
+		};
 		A3281BC2205A315B001965F7 = {
 			isa = PBXGroup;
 			children = (
@@ -97,8 +136,10 @@
 		A3281BCD205A315B001965F7 /* EazyFitness */ = {
 			isa = PBXGroup;
 			children = (
+				A307795C205B74E400512378 /* QRCode */,
 				A3281BCE205A315B001965F7 /* AppDelegate.swift */,
 				A3281BD0205A315B001965F7 /* ViewController.swift */,
+				A3281BFC205A3372001965F7 /* Alphanumeric.swift */,
 				A3281BD2205A315B001965F7 /* Main.storyboard */,
 				A3281BD5205A315C001965F7 /* Assets.xcassets */,
 				A3281BD7205A315C001965F7 /* LaunchScreen.storyboard */,
@@ -256,7 +297,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */,
+				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
+				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
+				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
+				A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */,
 				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
+				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
+				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,
+				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
+				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
+				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
+				A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */,
 				A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,6 +484,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -450,6 +503,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
