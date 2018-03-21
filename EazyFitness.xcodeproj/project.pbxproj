@@ -25,6 +25,7 @@
 		A3281BE4205A315C001965F7 /* EazyFitnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BE3205A315C001965F7 /* EazyFitnessTests.swift */; };
 		A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */; };
 		A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BFC205A3372001965F7 /* Alphanumeric.swift */; };
+		A33774CA2062F08A007270A9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A33774C92062F08A007270A9 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EazyFitnessUITests.swift; sourceTree = "<group>"; };
 		A3281BF0205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3281BFC205A3372001965F7 /* Alphanumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alphanumeric.swift; sourceTree = "<group>"; };
+		A33774C92062F08A007270A9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 		A3281BC2205A315B001965F7 = {
 			isa = PBXGroup;
 			children = (
+				A33774C92062F08A007270A9 /* GoogleService-Info.plist */,
 				A3281BCD205A315B001965F7 /* EazyFitness */,
 				A3281BE2205A315C001965F7 /* EazyFitnessTests */,
 				A3281BED205A315C001965F7 /* EazyFitnessUITests */,
@@ -271,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3281BD9205A315C001965F7 /* LaunchScreen.storyboard in Resources */,
+				A33774CA2062F08A007270A9 /* GoogleService-Info.plist in Resources */,
 				A3281BD6205A315C001965F7 /* Assets.xcassets in Resources */,
 				A3281BD4205A315B001965F7 /* Main.storyboard in Resources */,
 			);
