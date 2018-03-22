@@ -8,8 +8,10 @@
 
 import UIKit
 import AVFoundation
+import FirebaseDatabase
 
 class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
+    var ref: DatabaseReference!
     lazy var readerVC: QRCodeReaderViewController = {
         let builder = QRCodeReaderViewControllerBuilder {
             $0.reader          = QRCodeReader(metadataObjectTypes: [.qr], captureDevicePosition: .back)
@@ -75,11 +77,28 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
     
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
+        ref = Database.database().reference()
+        var cardID="";
+        ref.child("QRCODE").child(result.value).observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user value
+            let value = snapshot.value as? NSDictionary
+            let numberValue = value?.value(forKey: "MemberID")
+            cardID = "\(numberValue ?? 0)"
+            if(cardID != "0"){
+                let childUpdates = ["/course/\(cardID)/total/": 10,
+                                    "/course/\(cardID)/finished/": 5,
+                                    "/course/\(cardID)/monthTotal/": 6,
+                                    "/course/\(cardID)/monthFinished/": 3]
+                self.ref.updateChildValues(childUpdates)
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         
         dismiss(animated: true) { [weak self] in
             let alert = UIAlertController(
                 title: "QRCodeReader",
-                message: String (format:"%@ (of type %@)", result.value, result.metadataType),
+                message: String (format:"%@ (of type %@)", cardID, result.metadataType),
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))

@@ -3,10 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		179A6386A61CC74C4E594210 /* Pods_EazyFitnessTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21608D02244DD67E8A7BCB5D /* Pods_EazyFitnessTests.framework */; };
+		375780039CA37C47D458F855 /* Pods_EazyFitness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2DF9C6DF394FF6D84356AF9 /* Pods_EazyFitness.framework */; };
+		980291F209AB19C83C6FC585 /* Pods_EazyFitnessUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4AA104B60E7AE848C7C8D8 /* Pods_EazyFitnessUITests.framework */; };
 		A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */; };
 		A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795E205B750700512378 /* SwitchCameraButton.swift */; };
 		A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795F205B750700512378 /* QRCodeReaderViewController.swift */; };
@@ -25,7 +28,8 @@
 		A3281BE4205A315C001965F7 /* EazyFitnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BE3205A315C001965F7 /* EazyFitnessTests.swift */; };
 		A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */; };
 		A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BFC205A3372001965F7 /* Alphanumeric.swift */; };
-		A33774CA2062F08A007270A9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A33774C92062F08A007270A9 /* GoogleService-Info.plist */; };
+		A32C595E20637CB70024519D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32C595D20637CB60024519D /* GoogleService-Info.plist */; };
+		A33D71C32063901500A1A116 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D71C22063901500A1A116 /* CollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +50,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		21608D02244DD67E8A7BCB5D /* Pods_EazyFitnessTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EazyFitnessTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		307E003CBF4A4C843CE1A52C /* Pods-EazyFitness.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitness.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness.debug.xcconfig"; sourceTree = "<group>"; };
+		5B4AA104B60E7AE848C7C8D8 /* Pods_EazyFitnessUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EazyFitnessUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerBuilder.swift; sourceTree = "<group>"; };
 		A307795E205B750700512378 /* SwitchCameraButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCameraButton.swift; sourceTree = "<group>"; };
 		A307795F205B750700512378 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
@@ -70,7 +77,14 @@
 		A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EazyFitnessUITests.swift; sourceTree = "<group>"; };
 		A3281BF0205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3281BFC205A3372001965F7 /* Alphanumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alphanumeric.swift; sourceTree = "<group>"; };
-		A33774C92062F08A007270A9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A32C595D20637CB60024519D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A33D71C22063901500A1A116 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		A6DBEDA49BDA1391B374CD7A /* Pods-EazyFitnessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B1C0FD4826D14F9F2B63618A /* Pods-EazyFitnessUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitness.release.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness.release.xcconfig"; sourceTree = "<group>"; };
+		E2DF9C6DF394FF6D84356AF9 /* Pods_EazyFitness.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EazyFitness.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF62F2A410B58CBA8FAEDE57 /* Pods-EazyFitnessTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests.release.xcconfig"; sourceTree = "<group>"; };
+		F10AE9B4FAF20458C3115F84 /* Pods-EazyFitnessUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				375780039CA37C47D458F855 /* Pods_EazyFitness.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				179A6386A61CC74C4E594210 /* Pods_EazyFitnessTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,12 +108,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				980291F209AB19C83C6FC585 /* Pods_EazyFitnessUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		29837EA4EA2D740CDE3954C8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				307E003CBF4A4C843CE1A52C /* Pods-EazyFitness.debug.xcconfig */,
+				C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */,
+				A6DBEDA49BDA1391B374CD7A /* Pods-EazyFitnessTests.debug.xcconfig */,
+				EF62F2A410B58CBA8FAEDE57 /* Pods-EazyFitnessTests.release.xcconfig */,
+				B1C0FD4826D14F9F2B63618A /* Pods-EazyFitnessUITests.debug.xcconfig */,
+				F10AE9B4FAF20458C3115F84 /* Pods-EazyFitnessUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		523C106A21712991F064FCBB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2DF9C6DF394FF6D84356AF9 /* Pods_EazyFitness.framework */,
+				21608D02244DD67E8A7BCB5D /* Pods_EazyFitnessTests.framework */,
+				5B4AA104B60E7AE848C7C8D8 /* Pods_EazyFitnessUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A307795C205B74E400512378 /* QRCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,11 +158,13 @@
 		A3281BC2205A315B001965F7 = {
 			isa = PBXGroup;
 			children = (
-				A33774C92062F08A007270A9 /* GoogleService-Info.plist */,
+				A32C595D20637CB60024519D /* GoogleService-Info.plist */,
 				A3281BCD205A315B001965F7 /* EazyFitness */,
 				A3281BE2205A315C001965F7 /* EazyFitnessTests */,
 				A3281BED205A315C001965F7 /* EazyFitnessUITests */,
 				A3281BCC205A315B001965F7 /* Products */,
+				29837EA4EA2D740CDE3954C8 /* Pods */,
+				523C106A21712991F064FCBB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +184,7 @@
 				A307795C205B74E400512378 /* QRCode */,
 				A3281BCE205A315B001965F7 /* AppDelegate.swift */,
 				A3281BD0205A315B001965F7 /* ViewController.swift */,
+				A33D71C22063901500A1A116 /* CollectionViewController.swift */,
 				A3281BFC205A3372001965F7 /* Alphanumeric.swift */,
 				A3281BD2205A315B001965F7 /* Main.storyboard */,
 				A3281BD5205A315C001965F7 /* Assets.xcassets */,
@@ -176,9 +219,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A3281BF3205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitness" */;
 			buildPhases = (
+				B7DF2730351F5B112EA0FA48 /* [CP] Check Pods Manifest.lock */,
 				A3281BC7205A315B001965F7 /* Sources */,
 				A3281BC8205A315B001965F7 /* Frameworks */,
 				A3281BC9205A315B001965F7 /* Resources */,
+				1D5EBA4F21430E0749A85719 /* [CP] Embed Pods Frameworks */,
+				A19CDA37D335DD58C259A052 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,9 +239,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A3281BF6205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitnessTests" */;
 			buildPhases = (
+				5E3FF55F46E5039A94F99BDE /* [CP] Check Pods Manifest.lock */,
 				A3281BDB205A315C001965F7 /* Sources */,
 				A3281BDC205A315C001965F7 /* Frameworks */,
 				A3281BDD205A315C001965F7 /* Resources */,
+				4FD124706E08493D387BBD2C /* [CP] Embed Pods Frameworks */,
+				19DA0421C36B69A009412A06 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -211,9 +260,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A3281BF9205A315D001965F7 /* Build configuration list for PBXNativeTarget "EazyFitnessUITests" */;
 			buildPhases = (
+				9BD9524CC6E5BA0890243ADE /* [CP] Check Pods Manifest.lock */,
 				A3281BE6205A315C001965F7 /* Sources */,
 				A3281BE7205A315C001965F7 /* Frameworks */,
 				A3281BE8205A315C001965F7 /* Resources */,
+				9149630CC45E322C53D703BB /* [CP] Embed Pods Frameworks */,
+				7D923F51A1ECAD929B74FDBA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -237,19 +289,22 @@
 				TargetAttributes = {
 					A3281BCA205A315B001965F7 = {
 						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
 					};
 					A3281BDE205A315C001965F7 = {
 						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
 						TestTargetID = A3281BCA205A315B001965F7;
 					};
 					A3281BE9205A315C001965F7 = {
 						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
 						TestTargetID = A3281BCA205A315B001965F7;
 					};
 				};
 			};
 			buildConfigurationList = A3281BC6205A315B001965F7 /* Build configuration list for PBXProject "EazyFitness" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -274,7 +329,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3281BD9205A315C001965F7 /* LaunchScreen.storyboard in Resources */,
-				A33774CA2062F08A007270A9 /* GoogleService-Info.plist in Resources */,
+				A32C595E20637CB70024519D /* GoogleService-Info.plist in Resources */,
 				A3281BD6205A315C001965F7 /* Assets.xcassets in Resources */,
 				A3281BD4205A315B001965F7 /* Main.storyboard in Resources */,
 			);
@@ -296,6 +351,160 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		19DA0421C36B69A009412A06 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1D5EBA4F21430E0749A85719 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4FD124706E08493D387BBD2C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5E3FF55F46E5039A94F99BDE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EazyFitnessTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7D923F51A1ECAD929B74FDBA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9149630CC45E322C53D703BB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9BD9524CC6E5BA0890243ADE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EazyFitnessUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A19CDA37D335DD58C259A052 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B7DF2730351F5B112EA0FA48 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EazyFitness-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A3281BC7205A315B001965F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -305,6 +514,7 @@
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
 				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
+				A33D71C32063901500A1A116 /* CollectionViewController.swift in Sources */,
 				A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */,
 				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
@@ -483,16 +693,14 @@
 		};
 		A3281BF4205A315D001965F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 307E003CBF4A4C843CE1A52C /* Pods-EazyFitness.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitness;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -502,16 +710,14 @@
 		};
 		A3281BF5205A315D001965F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitness;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -521,17 +727,14 @@
 		};
 		A3281BF7205A315D001965F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6DBEDA49BDA1391B374CD7A /* Pods-EazyFitnessTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitnessTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -542,17 +745,14 @@
 		};
 		A3281BF8205A315D001965F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF62F2A410B58CBA8FAEDE57 /* Pods-EazyFitnessTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitnessTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -563,16 +763,13 @@
 		};
 		A3281BFA205A315D001965F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1C0FD4826D14F9F2B63618A /* Pods-EazyFitnessUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitnessUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -583,16 +780,13 @@
 		};
 		A3281BFB205A315D001965F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F10AE9B4FAF20458C3115F84 /* Pods-EazyFitnessUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitnessUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitnessUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
