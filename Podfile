@@ -9,6 +9,13 @@ target 'EazyFitness' do
 pod 'Firebase/Core'
 pod 'Firebase/Database'
 
+pod 'FirebaseUI'
+pod 'FirebaseUI/Auth'
+pod 'FirebaseUI/Google'
+pod 'FirebaseUI/Facebook'
+pod 'FirebaseUI/Twitter'
+pod 'FirebaseUI/Phone'
+
   target 'EazyFitnessTests' do
     inherit! :search_paths
     # Pods for testing

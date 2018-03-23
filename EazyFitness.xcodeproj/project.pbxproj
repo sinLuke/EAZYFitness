@@ -29,7 +29,15 @@
 		A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */; };
 		A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BFC205A3372001965F7 /* Alphanumeric.swift */; };
 		A32C595E20637CB70024519D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32C595D20637CB60024519D /* GoogleService-Info.plist */; };
-		A33D71C32063901500A1A116 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D71C22063901500A1A116 /* CollectionViewController.swift */; };
+		A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A5206424CD00E192EB /* TrainerViewController.swift */; };
+		A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A720642DB100E192EB /* StudentViewController.swift */; };
+		A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A92064414900E192EB /* TrainerNav.swift */; };
+		A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22AC2064644800E192EB /* MyStudentTableVC.swift */; };
+		A3BD22AF2064698900E192EB /* AllStudentTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22AE2064698900E192EB /* AllStudentTableVC.swift */; };
+		A3BD22B12064699700E192EB /* TrainerTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B02064699700E192EB /* TrainerTableVC.swift */; };
+		A3BD22B320648E8200E192EB /* EditableTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B220648E8200E192EB /* EditableTableVC.swift */; };
+		A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B420648EF700E192EB /* EditableTableCell.swift */; };
+		A3BD22B72064915300E192EB /* ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B62064915300E192EB /* ListItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,7 +86,16 @@
 		A3281BF0205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3281BFC205A3372001965F7 /* Alphanumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alphanumeric.swift; sourceTree = "<group>"; };
 		A32C595D20637CB60024519D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		A33D71C22063901500A1A116 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		A3BD22A02064184D00E192EB /* EazyFitness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EazyFitness.entitlements; sourceTree = "<group>"; };
+		A3BD22A5206424CD00E192EB /* TrainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerViewController.swift; sourceTree = "<group>"; };
+		A3BD22A720642DB100E192EB /* StudentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentViewController.swift; sourceTree = "<group>"; };
+		A3BD22A92064414900E192EB /* TrainerNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerNav.swift; sourceTree = "<group>"; };
+		A3BD22AC2064644800E192EB /* MyStudentTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStudentTableVC.swift; sourceTree = "<group>"; };
+		A3BD22AE2064698900E192EB /* AllStudentTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentTableVC.swift; sourceTree = "<group>"; };
+		A3BD22B02064699700E192EB /* TrainerTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerTableVC.swift; sourceTree = "<group>"; };
+		A3BD22B220648E8200E192EB /* EditableTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTableVC.swift; sourceTree = "<group>"; };
+		A3BD22B420648EF700E192EB /* EditableTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTableCell.swift; sourceTree = "<group>"; };
+		A3BD22B62064915300E192EB /* ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItem.swift; sourceTree = "<group>"; };
 		A6DBEDA49BDA1391B374CD7A /* Pods-EazyFitnessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B1C0FD4826D14F9F2B63618A /* Pods-EazyFitnessUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitness.release.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness.release.xcconfig"; sourceTree = "<group>"; };
@@ -181,15 +198,19 @@
 		A3281BCD205A315B001965F7 /* EazyFitness */ = {
 			isa = PBXGroup;
 			children = (
+				A3BD22AB2064642B00E192EB /* Tables */,
+				A3BD22A02064184D00E192EB /* EazyFitness.entitlements */,
 				A307795C205B74E400512378 /* QRCode */,
 				A3281BCE205A315B001965F7 /* AppDelegate.swift */,
 				A3281BD0205A315B001965F7 /* ViewController.swift */,
-				A33D71C22063901500A1A116 /* CollectionViewController.swift */,
 				A3281BFC205A3372001965F7 /* Alphanumeric.swift */,
 				A3281BD2205A315B001965F7 /* Main.storyboard */,
 				A3281BD5205A315C001965F7 /* Assets.xcassets */,
 				A3281BD7205A315C001965F7 /* LaunchScreen.storyboard */,
 				A3281BDA205A315C001965F7 /* Info.plist */,
+				A3BD22A5206424CD00E192EB /* TrainerViewController.swift */,
+				A3BD22A720642DB100E192EB /* StudentViewController.swift */,
+				A3BD22A92064414900E192EB /* TrainerNav.swift */,
 			);
 			path = EazyFitness;
 			sourceTree = "<group>";
@@ -210,6 +231,19 @@
 				A3281BF0205A315C001965F7 /* Info.plist */,
 			);
 			path = EazyFitnessUITests;
+			sourceTree = "<group>";
+		};
+		A3BD22AB2064642B00E192EB /* Tables */ = {
+			isa = PBXGroup;
+			children = (
+				A3BD22AC2064644800E192EB /* MyStudentTableVC.swift */,
+				A3BD22AE2064698900E192EB /* AllStudentTableVC.swift */,
+				A3BD22B02064699700E192EB /* TrainerTableVC.swift */,
+				A3BD22B220648E8200E192EB /* EditableTableVC.swift */,
+				A3BD22B420648EF700E192EB /* EditableTableCell.swift */,
+				A3BD22B62064915300E192EB /* ListItem.swift */,
+			);
+			path = Tables;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,6 +324,11 @@
 					A3281BCA205A315B001965F7 = {
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					A3281BDE205A315C001965F7 = {
 						CreatedOnToolsVersion = 9.3;
@@ -374,13 +413,41 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -476,9 +543,26 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseFacebookAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseGoogleAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebasePhoneAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseTwitterAuthUI.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterShareExtensionUIResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseFacebookAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseGoogleAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebasePhoneAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseTwitterAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterShareExtensionUIResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -510,16 +594,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */,
 				A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */,
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
+				A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */,
+				A3BD22B72064915300E192EB /* ListItem.swift in Sources */,
 				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
+				A3BD22AF2064698900E192EB /* AllStudentTableVC.swift in Sources */,
+				A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */,
+				A3BD22B12064699700E192EB /* TrainerTableVC.swift in Sources */,
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
-				A33D71C32063901500A1A116 /* CollectionViewController.swift in Sources */,
 				A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */,
 				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
+				A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */,
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
+				A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */,
 				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
+				A3BD22B320648E8200E192EB /* EditableTableVC.swift in Sources */,
 				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
 				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
 				A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */,
@@ -685,6 +777,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
@@ -696,15 +789,17 @@
 			baseConfigurationReference = 307E003CBF4A4C843CE1A52C /* Pods-EazyFitness.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = EazyFitness/EazyFitness.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitness;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "";
 			};
 			name = Debug;
 		};
@@ -713,15 +808,18 @@
 			baseConfigurationReference = C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = EazyFitness/EazyFitness.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RW646P4KDZ;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ios.EazyFitness;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "";
+				"VALID_ARCHS[sdk=*]" = arm64;
 			};
 			name = Release;
 		};

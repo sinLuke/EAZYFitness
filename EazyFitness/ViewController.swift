@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import FirebaseDatabase
+import GoogleSignIn
 
 class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
     var ref: DatabaseReference!
@@ -75,35 +76,70 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
         }
     }
     
+    func fetchUserData(CardID:String, ref:DatabaseReference){
+        ref.child("student").child(CardID).observeSingleEvent(of: .value) { (snapshot) in
+            let value = snapshot.value as? NSDictionary
+            self.gotUserData(userInfo: value!)
+        }
+    }
+    
+    func gotUserData(userInfo:NSDictionary){
+        let registered = userInfo.value(forKey: "Registered") as! Int
+        var messageString = ""
+        if registered == 0{
+            messageString = "用户未注册"
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let studentViewController = storyboard.instantiateViewController(withIdentifier: "Student") as! StudentViewController
+            studentViewController.studentInfo = userInfo
+            studentViewController.mode = 0
+            studentViewController.MemberID = userInfo.value(forKey: "MemberID") as! Int
+            self.present(studentViewController, animated: true)
+        }
+        if messageString != "" {
+            let alert = UIAlertController(
+                title: "QRCodeReader",
+                message: messageString,
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
         ref = Database.database().reference()
+        
         var cardID="";
+        var messageString = ""
         ref.child("QRCODE").child(result.value).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
             let value = snapshot.value as? NSDictionary
             let numberValue = value?.value(forKey: "MemberID")
             cardID = "\(numberValue ?? 0)"
             if(cardID != "0"){
-                let childUpdates = ["/course/\(cardID)/total/": 10,
-                                    "/course/\(cardID)/finished/": 5,
-                                    "/course/\(cardID)/monthTotal/": 6,
-                                    "/course/\(cardID)/monthFinished/": 3]
-                self.ref.updateChildValues(childUpdates)
+                self.fetchUserData(CardID: cardID, ref:self.ref)
+            } else {
+                messageString = "二维码无效"
             }
         }) { (error) in
             print(error.localizedDescription)
         }
         
         dismiss(animated: true) { [weak self] in
-            let alert = UIAlertController(
-                title: "QRCodeReader",
-                message: String (format:"%@ (of type %@)", cardID, result.metadataType),
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
             
-            self?.present(alert, animated: true, completion: nil)
+            if messageString != "" {
+                let alert = UIAlertController(
+                    title: "QRCodeReader",
+                    message: messageString,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                
+                self?.present(alert, animated: true, completion: nil)
+            }
         }
     }
     
@@ -117,6 +153,11 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func trainer(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let authViewController = appDelegate.authUI!.authViewController()
+        self.present(authViewController, animated: true)
+    }
 }
 
 
