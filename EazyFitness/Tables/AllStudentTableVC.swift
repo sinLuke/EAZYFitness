@@ -16,7 +16,7 @@ class AllStudentTableVC: UITableViewController {
         super.viewDidLoad()
         let vc = self.navigationController as! TrainerNav
         dic = vc.allStudentDic
-        self.title = "所以学生"
+        self.title = "所有学生"
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 

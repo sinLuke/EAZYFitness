@@ -152,12 +152,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                             if user?.uid == uuid as? String{
                                 self.checkSuper(user: user!)
                                 return
-                            } else {
-                                AppDelegate.sentErrorMessage(message: "用户无效")
-                                self.signout()
-                                return
                             }
                         }
+                        AppDelegate.sentErrorMessage(message: "用户无效")
+                        self.signout()
+                        return
                     }
                 }
                 return
