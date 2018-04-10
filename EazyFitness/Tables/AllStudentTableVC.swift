@@ -12,6 +12,7 @@ import Firebase
 class AllStudentTableVC: UITableViewController {
     var dic = NSDictionary()
     var sortedKeys = [String]()
+    var group:String?
     override func viewDidLoad() {
         super.viewDidLoad()
         let vc = self.navigationController as! TrainerNav
@@ -59,6 +60,7 @@ class AllStudentTableVC: UITableViewController {
             let fname = (dic.value(forKey: sortedKeys[indexPath.row]) as? NSDictionary)?.value(forKey: "First Name") ?? dic.allKeys[indexPath.row]
             let lname = (dic.value(forKey: sortedKeys[indexPath.row]) as? NSDictionary)?.value(forKey: "Last Name") ?? ""
             cell.detailTextLabel?.text = "\(fname) \(lname)"
+            cell.detailTextLabel?.textColor = UIColor.black
         } else {
             cell.detailTextLabel?.text = "未注册"
             cell.detailTextLabel?.textColor = UIColor.red

@@ -41,16 +41,43 @@ class TrainerViewController: UIViewController, QRCodeReaderViewControllerDelegat
         superLabel.layer.cornerRadius = 10
         superLabel.layer.masksToBounds = true
         self.vc = self.navigationController as! TrainerNav
-        print(vc.mode)
-        if (vc.mode == 2){
+        
+        switch vc.group {
+        case "super":
             trainer.isHidden = false
             allStudent.isHidden = false
             superLabel.isHidden = false
-        } else {
+            superLabel.text = "超级用户"
+            
+        case "trainer":
+            trainer.isHidden = true
+            allStudent.isHidden = true
+            superLabel.isHidden = true
+            
+        case "mississauga":
+            trainer.isHidden = false
+            allStudent.isHidden = false
+            superLabel.isHidden = false
+            superLabel.text = "Mississauga 管理员" //1001 - 1500
+            
+        case "scarbrough":
+            trainer.isHidden = false
+            allStudent.isHidden = false
+            superLabel.isHidden = false
+            superLabel.text = "Scarbrough 管理员" //1501-1750
+            
+        case "waterloo":
+            trainer.isHidden = false
+            allStudent.isHidden = false
+            superLabel.isHidden = false
+            superLabel.text = "Waterloo 管理员" //1751-2000
+            
+        default:
             trainer.isHidden = true
             allStudent.isHidden = true
             superLabel.isHidden = true
         }
+        
         let firebaseAuth = Auth.auth()
         emailAddress.text = firebaseAuth.currentUser?.email
         displayedName.text = firebaseAuth.currentUser?.displayName
@@ -74,10 +101,6 @@ class TrainerViewController: UIViewController, QRCodeReaderViewControllerDelegat
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.destination.isKind(of: MyStudentTableVC.self){
-            //let vc = segue.destination as! MyStudentTableVC
-            
-        }
         // Pass the selected object to the new view controller.
     }
     @IBAction func scan(_ sender: Any) {
@@ -183,7 +206,7 @@ class TrainerViewController: UIViewController, QRCodeReaderViewControllerDelegat
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let studentViewController = storyboard.instantiateViewController(withIdentifier: "Student") as! StudentViewController
             studentViewController.studentInfo = userInfo
-            studentViewController.mode = self.vc.mode
+            studentViewController.group = self.vc.group
             studentViewController.MemberID = userInfo.value(forKey: "MemberID") as! Int
             self.present(studentViewController, animated: true)
         }

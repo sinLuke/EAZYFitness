@@ -113,7 +113,7 @@ class MyStudentTableVC: UITableViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showStudents", let destination = segue.destination as? StudentViewController, let Index = tableView.indexPathForSelectedRow?.row{
-            destination.studentInfo = self.dic.value(forKey: self.sortedKeys[Index]) as! NSDictionary
+            destination.studentInfo = self.dic.value(forKey: self.sortedKeys[Index]) as? NSDictionary
             destination.MemberID = Int(self.sortedKeys[Index])
             destination.mode = 4
         }

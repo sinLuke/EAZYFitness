@@ -14,7 +14,7 @@ class TrainerNav: UINavigationController {
     var trainerDic:NSDictionary!
     var allStudentDic:NSDictionary!
     var user:User!
-    var mode = 1
+    var group = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         

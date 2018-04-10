@@ -11,13 +11,13 @@ import Firebase
 
 class StudentViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
-    
+    var postView_y:CGFloat = 0
     let _MINIMUM_ADJEST_VALUE_ = 0.5
     let _MINIMUM_ACCEPT_VALUE_ = 0.5
     
     var studentInfo: NSDictionary?
     var MemberID: Int!
-    var mode = 0 //4 inside nav
+    var group = "" //4 inside nav
     
     var ref: DatabaseReference!
     
@@ -29,6 +29,8 @@ class StudentViewController: UIViewController {
     @IBOutlet weak var monthTotal: UILabel!
     @IBOutlet weak var finished: UILabel!
     @IBOutlet weak var monthFinished: UILabel!
+
+    @IBOutlet weak var reminderLabel: UILabel!
     
     var firstName = ""
     var lastName = ""
@@ -38,7 +40,10 @@ class StudentViewController: UIViewController {
     var TotalCourseValue = 0.0
     var totalRemainedValue = 0.0
     
-    //trainer mode (1)
+    var reminderTextValue = ""
+    
+    //trainer
+    @IBOutlet weak var reminderText: UITextField!
     @IBOutlet weak var trainer_label: UILabel!
     @IBOutlet weak var trainer_plusButton: UIButton!
     @IBOutlet weak var trainer_minusButton: UIButton!
@@ -46,21 +51,37 @@ class StudentViewController: UIViewController {
     @IBOutlet weak var trainer_number: UILabel!
     lazy var value = _MINIMUM_ACCEPT_VALUE_
     
-    //super mode (2)
+    //super
     @IBOutlet weak var super_delete: UIButton!
     
     @IBAction func back(_ sender: Any) {
         self.dismiss(animated: true)
     }
     override func viewDidAppear(_ animated: Bool) {
-        if self.mode == 4{
-            self.backButton.isHidden = true
-        } else {
-            self.backButton.isHidden = false
-        }
+        postView_y = self.view.frame.origin.y
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        // do whatever you want with this keyboard height
+        
+        self.view.frame.origin.y = postView_y - keyboardHeight + 100
+    }
+    
+    @objc func keyboardWillHide(notification: Notification) {
+        // keyboard is dismissed/hidden from the screen
+        self.view.frame.origin.y = postView_y
+    }
+    
     override func viewDidLoad() {
-        if self.mode == 4{
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        self.view.addGestureRecognizer(tapGesture)
+        if self.group == "Back"{
             self.backButton.isHidden = true
         } else {
             self.backButton.isHidden = false
@@ -70,8 +91,6 @@ class StudentViewController: UIViewController {
         
         self.updateData()
         self.requireUpdate()
-        
-        
         
         
         //let numberValue = value?.value(forKey: "MemberID")
@@ -108,9 +127,18 @@ class StudentViewController: UIViewController {
             if value < _MINIMUM_ACCEPT_VALUE_{
                 trainer_enterButton.isHidden = true
                 trainer_label.text = "无法记录"
+                requireUpdate()
             }
         }
         
+    }
+    @IBAction func editEnd(_ sender: Any) {
+        reminderTextValue = self.reminderText.text!
+        self.reminderText.text = "请稍候……"
+        
+        let reminderUpdates = ["/student/\(self.MemberID!)/Reminder": reminderTextValue]
+        ref.updateChildValues(reminderUpdates)
+        self.requireUpdate()
     }
     
     @IBAction func minus(_ sender: Any) {
@@ -127,11 +155,19 @@ class StudentViewController: UIViewController {
     @IBAction func enter(_ sender: Any) {
         let childUpdates = ["/student/\(self.MemberID!)/Finished Course": finishedCourseValue + value,
                             "/student/\(self.MemberID!)/Month Finished": monthFinishedValue + value]
-        ref.updateChildValues(childUpdates)
+        ref.updateChildValues(childUpdates) { (err, _) in
+            if let error = err{
+                self.trainer_label.text = "网络错误，修改尚未保存，请稍后再试！"
+                self.trainer_label.textColor = UIColor.red
+            }
+            self.requireUpdate()
+        }
         self.trainer_label.text = "请稍候……"
         self.trainer_enterButton.isHidden = true
+        self.trainer_minusButton.isHidden = true
+        self.trainer_plusButton.isHidden = true
         self.value = _MINIMUM_ACCEPT_VALUE_
-        self.requireUpdate()
+        
     }
     func requireUpdate(){
         ref.child("student").child("\(MemberID!)").observeSingleEvent(of: .value) { (snapshot) in
@@ -148,6 +184,10 @@ class StudentViewController: UIViewController {
         monthFinishedValue = studentInfo?.value(forKey: "Month Finished") as! Double
         monthTotalValue = studentInfo?.value(forKey: "Month Total") as! Double
         TotalCourseValue = studentInfo?.value(forKey: "Total Course") as! Double
+        reminderTextValue = (studentInfo?.value(forKey: "Reminder") ?? "") as! String
+        
+        reminderText.text = reminderTextValue
+        reminderLabel.text = reminderTextValue
         
         totalRemainedValue = TotalCourseValue - finishedCourseValue
         self.trainer_updateCourseValue()
@@ -166,21 +206,34 @@ class StudentViewController: UIViewController {
         finished.text = "已完成：\(finishedCourseValue)"
         monthFinished.text = "本月已完成：\(monthFinishedValue)"
         
-        switch self.mode {
-        case 1:
+        switch self.group {
+        case "trainer":
             trainer_label.isHidden = false
             trainer_plusButton.isHidden = false
             trainer_minusButton.isHidden = false
             trainer_enterButton.isHidden = false
             trainer_number.isHidden = false
             super_delete.isHidden = true
-        case 2:
+            reminderText.isHidden = true
+            reminderLabel.isHidden = true
+        case "super", "mississauga", "scarbrough", "waterloo":
             trainer_label.isHidden = false
             trainer_plusButton.isHidden = false
             trainer_minusButton.isHidden = false
             trainer_enterButton.isHidden = false
             trainer_number.isHidden = false
             super_delete.isHidden = false
+            reminderText.isHidden = true
+            reminderLabel.isHidden = true
+        case "Back":
+            trainer_label.isHidden = true
+            trainer_plusButton.isHidden = true
+            trainer_minusButton.isHidden = true
+            trainer_enterButton.isHidden = true
+            trainer_number.isHidden = true
+            super_delete.isHidden = true
+            reminderText.isHidden = false
+            reminderLabel.isHidden = true
         default:
             trainer_label.isHidden = true
             trainer_plusButton.isHidden = true
@@ -188,8 +241,15 @@ class StudentViewController: UIViewController {
             trainer_enterButton.isHidden = true
             trainer_number.isHidden = true
             super_delete.isHidden = true
+            reminderText.isHidden = true
+            reminderLabel.isHidden = false
         }
         
+    }
+    
+    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+        reminderText.resignFirstResponder()
+        self.view.frame.origin.y = postView_y
     }
     /*
     // MARK: - Navigation

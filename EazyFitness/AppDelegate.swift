@@ -24,8 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var myStudentBOOL = false
     var allStudentBOOL = false
     var trainerBOOL = false
-    
-    let debug = false
 
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -33,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         FirebaseApp.configure()
         
         self.authUI = FUIAuth.defaultAuthUI()
-
         self.authUI?.delegate = self
 
         let providers: [FUIAuthProvider] = [
@@ -64,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.\
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -98,7 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         }
         return currentViewController
     }
-    func presentTrainerView(user: User, mode:Int){
+    func presentTrainerView(user: User, group:String){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let trainerViewController = storyboard.instantiateViewController(withIdentifier: "TrainerNav") as! TrainerNav
         trainerViewController.user = user
@@ -108,18 +105,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         self.myStudentBOOL = false
         self.trainerBOOL = false
         self.allStudentBOOL = false
-        switch mode {
-        case 1:
-            trainerViewController.mode = 1
-            AppDelegate.getCurrentVC().present(trainerViewController, animated: true)
-            return
-        case 2:
-            trainerViewController.mode = 2
-            AppDelegate.getCurrentVC().present(trainerViewController, animated: true)
-            return
-        default:
-            return
-        }
+        trainerViewController.group = group
+        AppDelegate.getCurrentVC().present(trainerViewController, animated: true)
+        return
     }
     func signout(){
         let firebaseAuth = Auth.auth()
@@ -138,88 +126,90 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         AppDelegate.getCurrentVC().present(alert, animated: true, completion: nil)
     }
-    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
-        if user != nil{
-            if(debug){
-                self.prepareForTrainer(user: user!)
-                return
-            } else {
-                let ref = Database.database().reference()
-                ref.child("trainer").observeSingleEvent(of: .value) { (snapshot) in
-                    let value = snapshot.value as? NSDictionary
-                    if value != nil{
-                        for uuid in (value?.allKeys)!{
-                            if user?.uid == uuid as? String{
-                                self.checkSuper(user: user!)
+    
+    func loginFunc(user:User){
+        print("b")
+        if let vc = AppDelegate.getCurrentVC() as? ViewController{
+            vc.loading.isHidden = false
+            vc.loading.startAnimating()
+        }
+        let ref = Database.database().reference()
+        ref.child("trainer").observeSingleEvent(of: .value) { (snapshot) in
+            if let value = snapshot.value as? NSDictionary{
+                for uuid in (value.allKeys){
+                    if user.uid == uuid as? String{
+                        if let trainervalue = value.value(forKey: uuid as! String) as? NSDictionary{
+                            if let usergroup = trainervalue.value(forKey: "usergroup") as? String{
+                                switch usergroup{
+                                    case "super":
+                                        self.prepare(user: user, group: usergroup)
+                                    default: AppDelegate.sentErrorMessage(message: "用户组无效")
+                                }
+                                return
+                            } else {
+                                AppDelegate.sentErrorMessage(message: "用户组无效")
+                                self.signout()
                                 return
                             }
+                        } else {
+                            AppDelegate.sentErrorMessage(message: "用户数据无效")
+                            self.signout()
+                            return
                         }
-                        AppDelegate.sentErrorMessage(message: "用户无效")
-                        self.signout()
-                        return
                     }
                 }
+                AppDelegate.sentErrorMessage(message: "loginFunc: 用户无效")
+                self.signout()
                 return
             }
+            else {
+                AppDelegate.sentErrorMessage(message: "数据库错误")
+                self.signout()
+                return
+            }
+        }
+        self.signout()
+        return
+    }
+    
+    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+        if user != nil{
+            print("loginFunc")
+            loginFunc(user: user!)
         } else {
             AppDelegate.sentErrorMessage(message: "无用户")
             self.signout()
             return
         }
-
     }
     
-    func checkSuper(user: User){
-        let ref2 = Database.database().reference()
-        ref2.child("superuser").observeSingleEvent(of: .value, with: { (snapshot2) in
-            let value2 = snapshot2.value as? NSDictionary
-            if value2 != nil{
-                for uuid2 in (value2?.allKeys)!{
-                    if user.uid == uuid2 as? String{
-                        self.prepareForSuper(user: user)
-                        return
-                    }
-                }
-                self.prepareForTrainer(user: user)
-                return
-            }
-        })
-    }
-    
-    func prepareForSuper(user: User){
-        print(prepareForSuper)
+    func prepare(user: User, group: String){
         let ref = Database.database().reference()
         ref.child("trainer").child(user.uid).observeSingleEvent(of: .value) { (snapshot) in
             self.myStudent = snapshot.value as? NSDictionary
             self.myStudentBOOL = true
             if ((self.myStudentBOOL && self.allStudentBOOL) && self.trainerBOOL){
-                self.presentTrainerView(user: user, mode:2)
+                self.presentTrainerView(user: user, group: group)
+            } else {
+                print("myStudent")
             }
         }
         ref.child("trainer").observeSingleEvent(of: .value) { (snapshot) in
             self.trainer = snapshot.value as? NSDictionary
             self.trainerBOOL = true
             if ((self.myStudentBOOL && self.allStudentBOOL) && self.trainerBOOL){
-                self.presentTrainerView(user: user, mode:2)
+                self.presentTrainerView(user: user, group: group)
+            } else {
+                print("trainer")
             }
         }
         ref.child("student").observeSingleEvent(of: .value) { (snapshot) in
             self.allStudent = snapshot.value as? NSDictionary
             self.allStudentBOOL = true
             if ((self.myStudentBOOL && self.allStudentBOOL) && self.trainerBOOL){
-                self.presentTrainerView(user: user, mode:2)
-            }
-        }
-    }
-    
-    func prepareForTrainer(user: User){
-        let ref = Database.database().reference()
-        ref.child("trainer").child(user.uid).observeSingleEvent(of: .value) { (snapshot) in
-            self.myStudent = snapshot.value as? NSDictionary
-            self.trainer = snapshot.value as? NSDictionary
-            self.allStudent = snapshot.value as? NSDictionary
-            if ((self.myStudent != nil && self.allStudent != nil) && self.trainer != nil){
-                self.presentTrainerView(user: user, mode:1)
+                self.presentTrainerView(user: user, group: group)
+            } else {
+                print("allStudent")
             }
         }
     }

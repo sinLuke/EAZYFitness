@@ -38,6 +38,7 @@
 		A3BD22B320648E8200E192EB /* EditableTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B220648E8200E192EB /* EditableTableVC.swift */; };
 		A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B420648EF700E192EB /* EditableTableCell.swift */; };
 		A3BD22B72064915300E192EB /* ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22B62064915300E192EB /* ListItem.swift */; };
+		A3F2A1A02079B4AE00ED8A4F /* posterViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		A3BD22B220648E8200E192EB /* EditableTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTableVC.swift; sourceTree = "<group>"; };
 		A3BD22B420648EF700E192EB /* EditableTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTableCell.swift; sourceTree = "<group>"; };
 		A3BD22B62064915300E192EB /* ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItem.swift; sourceTree = "<group>"; };
+		A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = posterViewViewController.swift; sourceTree = "<group>"; };
 		A6DBEDA49BDA1391B374CD7A /* Pods-EazyFitnessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B1C0FD4826D14F9F2B63618A /* Pods-EazyFitnessUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitness.release.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness.release.xcconfig"; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				A3BD22A5206424CD00E192EB /* TrainerViewController.swift */,
 				A3BD22A720642DB100E192EB /* StudentViewController.swift */,
 				A3BD22A92064414900E192EB /* TrainerNav.swift */,
+				A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */,
 			);
 			path = EazyFitness;
 			sourceTree = "<group>";
@@ -600,6 +603,7 @@
 				A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */,
 				A3BD22B72064915300E192EB /* ListItem.swift in Sources */,
 				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
+				A3F2A1A02079B4AE00ED8A4F /* posterViewViewController.swift in Sources */,
 				A3BD22AF2064698900E192EB /* AllStudentTableVC.swift in Sources */,
 				A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */,
 				A3BD22B12064699700E192EB /* TrainerTableVC.swift in Sources */,
