@@ -165,7 +165,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let studentViewController = storyboard.instantiateViewController(withIdentifier: "Student") as! StudentViewController
             studentViewController.studentInfo = userInfo
-            studentViewController.mode = 0
+            studentViewController.group = "student"
             studentViewController.MemberID = userInfo.value(forKey: "MemberID") as! Int
             self.present(studentViewController, animated: true)
         }

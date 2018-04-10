@@ -115,7 +115,7 @@ class MyStudentTableVC: UITableViewController {
         if segue.identifier == "showStudents", let destination = segue.destination as? StudentViewController, let Index = tableView.indexPathForSelectedRow?.row{
             destination.studentInfo = self.dic.value(forKey: self.sortedKeys[Index]) as? NSDictionary
             destination.MemberID = Int(self.sortedKeys[Index])
-            destination.mode = 4
+            destination.group = "Back"
         }
         // Pass the selected object to the new view controller.
     }

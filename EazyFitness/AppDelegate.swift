@@ -72,28 +72,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    class func getCurrentVC() -> UIViewController{
+    class func getCurrentVC() -> UIViewController?{
         let rootViewController = UIApplication.shared.keyWindow?.rootViewController
         let currentViewController = AppDelegate.getCurrentVCFrom(_rootViewController: rootViewController)
         return currentViewController
     }
     
-    class func getCurrentVCFrom(_rootViewController:UIViewController?) -> UIViewController{
+    class func getCurrentVCFrom(_rootViewController:UIViewController?) -> UIViewController?{
         var currentViewController:UIViewController
-        var rootViewController = _rootViewController
-        if (rootViewController?.presentedViewController != nil) {
-            rootViewController = _rootViewController?.presentedViewController!
-        }
-        if (rootViewController?.isKind(of: UITabBarController.self))!  {
-            let rootTabBarViewController = rootViewController as! UITabBarController
-            currentViewController = AppDelegate.getCurrentVCFrom(_rootViewController: rootTabBarViewController.selectedViewController)
-        } else if (rootViewController?.isKind(of: UINavigationController.self))!{
-            let rootNavViewController = rootViewController as! UINavigationController
-            currentViewController = AppDelegate.getCurrentVCFrom(_rootViewController: rootNavViewController.visibleViewController)
+        if var rootViewController = _rootViewController{
+            if (rootViewController.presentedViewController != nil) {
+                rootViewController = (_rootViewController?.presentedViewController!)!
+            }
+            if (rootViewController.isKind(of: UITabBarController.self))  {
+                let rootTabBarViewController = rootViewController as! UITabBarController
+                currentViewController = AppDelegate.getCurrentVCFrom(_rootViewController: rootTabBarViewController.selectedViewController)!
+            } else if (rootViewController.isKind(of: UINavigationController.self)){
+                let rootNavViewController = rootViewController as! UINavigationController
+                currentViewController = AppDelegate.getCurrentVCFrom(_rootViewController: rootNavViewController.visibleViewController)!
+            } else {
+                currentViewController = rootViewController
+            }
+            return currentViewController
         } else {
-            currentViewController = rootViewController!
+            return nil
         }
-        return currentViewController
+        
     }
     func presentTrainerView(user: User, group:String){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -106,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         self.trainerBOOL = false
         self.allStudentBOOL = false
         trainerViewController.group = group
-        AppDelegate.getCurrentVC().present(trainerViewController, animated: true)
+        AppDelegate.getCurrentVC()?.present(trainerViewController, animated: true)
         return
     }
     func signout(){
@@ -124,7 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        AppDelegate.getCurrentVC().present(alert, animated: true, completion: nil)
+        AppDelegate.getCurrentVC()?.present(alert, animated: true, completion: nil)
     }
     
     func loginFunc(user:User){
@@ -143,6 +147,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                                 switch usergroup{
                                     case "super":
                                         self.prepare(user: user, group: usergroup)
+                                    case "trainer":
+                                        self.prepare(user: user, group: usergroup)
+                            
                                     default: AppDelegate.sentErrorMessage(message: "用户组无效")
                                 }
                                 return
