@@ -15,6 +15,11 @@ class StudentViewController: UIViewController {
     let _MINIMUM_ADJEST_VALUE_ = 0.5
     let _MINIMUM_ACCEPT_VALUE_ = 0.5
     
+    var ifBack = false
+    
+    @IBOutlet weak var specialButton: UIBarButtonItem!
+    var special = ""
+    
     var studentInfo: NSDictionary?
     var MemberID: Int!
     var group = "" //4 inside nav
@@ -58,6 +63,13 @@ class StudentViewController: UIViewController {
         self.dismiss(animated: true)
     }
     override func viewDidAppear(_ animated: Bool) {
+        
+        if ifBack{
+            self.backButton.isHidden = true
+        } else {
+            self.backButton.isHidden = false
+        }
+        
         postView_y = self.view.frame.origin.y
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -79,6 +91,13 @@ class StudentViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        
+        
+        if self.special == ""{
+            specialButton.isEnabled = true
+        } else {
+            specialButton.isEnabled = false
+        }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
         if self.group == "Back"{
@@ -109,7 +128,7 @@ class StudentViewController: UIViewController {
         trainer_number.isHidden = false
         trainer_enterButton.isHidden = false
         trainer_label.text = "记录课时"
-        if self.totalRemainedValue == 0 {
+        if self.totalRemainedValue == -2 {
             trainer_plusButton.isHidden = true
             trainer_minusButton.isHidden = true
             trainer_number.isHidden = true
@@ -121,7 +140,7 @@ class StudentViewController: UIViewController {
             if value + _MINIMUM_ADJEST_VALUE_ > self.totalRemainedValue{
                 trainer_plusButton.isHidden = true
             }
-            if value - _MINIMUM_ADJEST_VALUE_ <= 0{
+            if value - _MINIMUM_ADJEST_VALUE_ <= -2{
                 trainer_minusButton.isHidden = true
             }
             if value < _MINIMUM_ACCEPT_VALUE_{
@@ -260,5 +279,15 @@ class StudentViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("prepare")
+        if segue.identifier == "special", let destination = segue.destination as? SpecialViewController, let _studentInfo = self.studentInfo, let _MemberID = self.MemberID{
+            destination.studentInfo = _studentInfo
+            destination.MemberID = _MemberID
+            destination.group = "trainer"
+        }
+        // Pass the selected object to the new view controller.
+    }
 
 }

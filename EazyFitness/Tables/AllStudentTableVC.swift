@@ -110,7 +110,9 @@ class AllStudentTableVC: UITableViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print(segue)
-        if segue.identifier == "show", let destination = segue.destination as? EditableTableVC, let Index = tableView.indexPathForSelectedRow?.row{
+        if segue.identifier == "show",
+            let destination = segue.destination as? EditableTableVC,
+            let Index = tableView.indexPathForSelectedRow?.row{
             destination.dic = (dic.value(forKey: sortedKeys[Index]) as? NSDictionary ?? NSDictionary())!
             destination._path = "/student/\(sortedKeys[Index])"
         }

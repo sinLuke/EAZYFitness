@@ -116,6 +116,7 @@ class MyStudentTableVC: UITableViewController {
             destination.studentInfo = self.dic.value(forKey: self.sortedKeys[Index]) as? NSDictionary
             destination.MemberID = Int(self.sortedKeys[Index])
             destination.group = "Back"
+            destination.ifBack = true
         }
         // Pass the selected object to the new view controller.
     }

@@ -114,6 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         return
     }
     func signout(){
+        print ("signout")
         let firebaseAuth = Auth.auth()
         do {
             try firebaseAuth.signOut()
@@ -154,29 +155,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                                 }
                                 return
                             } else {
+                                print("1")
                                 AppDelegate.sentErrorMessage(message: "用户组无效")
                                 self.signout()
                                 return
                             }
                         } else {
+                            print("2")
                             AppDelegate.sentErrorMessage(message: "用户数据无效")
                             self.signout()
                             return
                         }
                     }
                 }
+                print("3")
                 AppDelegate.sentErrorMessage(message: "loginFunc: 用户无效")
                 self.signout()
                 return
             }
             else {
+                print("4")
                 AppDelegate.sentErrorMessage(message: "数据库错误")
                 self.signout()
                 return
             }
         }
-        self.signout()
-        return
     }
     
     func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {

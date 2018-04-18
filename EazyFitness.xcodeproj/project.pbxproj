@@ -20,6 +20,7 @@
 		A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */; };
 		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
 		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
+		A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A325A372207C56AA00EF00B7 /* SpecialViewController.swift */; };
 		A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BCE205A315B001965F7 /* AppDelegate.swift */; };
 		A3281BD1205A315B001965F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BD0205A315B001965F7 /* ViewController.swift */; };
 		A3281BD4205A315B001965F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3281BD2205A315B001965F7 /* Main.storyboard */; };
@@ -72,6 +73,7 @@
 		A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerDelegate.swift; sourceTree = "<group>"; };
 		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
 		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
+		A325A372207C56AA00EF00B7 /* SpecialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialViewController.swift; sourceTree = "<group>"; };
 		A3281BCB205A315B001965F7 /* EazyFitness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EazyFitness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3281BCE205A315B001965F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A3281BD0205A315B001965F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				A3BD22A720642DB100E192EB /* StudentViewController.swift */,
 				A3BD22A92064414900E192EB /* TrainerNav.swift */,
 				A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */,
+				A325A372207C56AA00EF00B7 /* SpecialViewController.swift */,
 			);
 			path = EazyFitness;
 			sourceTree = "<group>";
@@ -611,6 +614,7 @@
 				A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */,
 				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
 				A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */,
+				A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */,
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
 				A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */,
 				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,

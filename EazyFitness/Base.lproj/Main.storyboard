@@ -412,13 +412,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="unnamed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gwZ-iC-Vzf">
-                                <rect key="frame" x="146" y="149" width="122" height="36"/>
+                                <rect key="frame" x="146" y="105" width="122" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LWc-Tb-NBn">
-                                <rect key="frame" x="16" y="84" width="31" height="30"/>
+                                <rect key="frame" x="16" y="40" width="31" height="30"/>
                                 <state key="normal" title="返回">
                                     <color key="titleColor" red="0.73604060910000002" green="0.0068906322519999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -427,7 +427,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDY-KT-MqL">
-                                <rect key="frame" x="161.66666666666666" y="249" width="91" height="180"/>
+                                <rect key="frame" x="161.66666666666666" y="205" width="91" height="180"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="150"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -457,7 +457,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RAf-S0-8lm">
-                                <rect key="frame" x="308" y="84" width="90" height="30"/>
+                                <rect key="frame" x="308" y="40" width="90" height="30"/>
                                 <color key="backgroundColor" red="0.73604060910000002" green="0.0068906322519999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="SFR-JL-QgR"/>
@@ -468,13 +468,13 @@
                                 </state>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="epp-Uf-lxV">
-                                <rect key="frame" x="184.66666666666666" y="492" width="45" height="36"/>
+                                <rect key="frame" x="184.66666666666666" y="448" width="45" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Ig-f7-ECx">
-                                <rect key="frame" x="323" y="495" width="31" height="30"/>
+                                <rect key="frame" x="323" y="451" width="31" height="30"/>
                                 <state key="normal" title="增加">
                                     <color key="titleColor" red="0.73604060910000002" green="0.0068906322519999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -483,7 +483,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TjR-yg-QA6">
-                                <rect key="frame" x="60" y="495" width="31" height="30"/>
+                                <rect key="frame" x="60" y="451" width="31" height="30"/>
                                 <state key="normal" title="减少">
                                     <color key="titleColor" red="0.73604060910000002" green="0.0068906322519999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -505,7 +505,7 @@
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="记录课时" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uiF-kK-uhc">
-                                <rect key="frame" x="172" y="463" width="70" height="21"/>
+                                <rect key="frame" x="172" y="419" width="70" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="b9j-nW-PpS"/>
                                     <constraint firstAttribute="height" constant="21" id="dtY-aH-6Gr"/>
@@ -515,7 +515,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="余课充足" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="enH-gb-uzP">
-                                <rect key="frame" x="127" y="193" width="161" height="48"/>
+                                <rect key="frame" x="127" y="149" width="161" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -582,6 +582,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Ct2-Ur-tpS"/>
                     </view>
+                    <navigationItem key="navigationItem" id="IWv-nR-jgl">
+                        <barButtonItem key="rightBarButtonItem" title="特殊情况" id="MEZ-r3-YEj">
+                            <connections>
+                                <segue destination="49U-3W-hrk" kind="show" identifier="special" id="Tkd-0L-pbq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="backButton" destination="LWc-Tb-NBn" id="IMf-Vo-pXZ"/>
                         <outlet property="bugNumber" destination="vDY-KT-MqL" id="YsH-fq-5sb"/>
@@ -591,6 +598,7 @@
                         <outlet property="name" destination="gwZ-iC-Vzf" id="bmy-b1-K96"/>
                         <outlet property="reminderLabel" destination="e2b-wT-g4t" id="F0M-2N-95a"/>
                         <outlet property="reminderText" destination="Vfu-s3-CeM" id="6w1-fh-g14"/>
+                        <outlet property="specialButton" destination="MEZ-r3-YEj" id="XzJ-ms-uwU"/>
                         <outlet property="super_delete" destination="RAf-S0-8lm" id="kcn-jp-prk"/>
                         <outlet property="textlabel" destination="enH-gb-uzP" id="ogM-SK-T8l"/>
                         <outlet property="total" destination="4ZK-yE-24g" id="dcg-Rz-YE0"/>
@@ -604,6 +612,50 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dOa-rR-OLn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4059.420289855073" y="131.25"/>
+        </scene>
+        <!--Special View Controller-->
+        <scene sceneID="U3Q-Lg-YjE">
+            <objects>
+                <viewController id="49U-3W-hrk" customClass="SpecialViewController" customModule="EazyFitness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hcE-SV-GAX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pe5-ZY-kqZ">
+                                <rect key="frame" x="129" y="153" width="156" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="没带卡"/>
+                                <connections>
+                                    <action selector="nocard:" destination="49U-3W-hrk" eventType="touchUpInside" id="2eE-CF-gv7"/>
+                                    <segue destination="WH1-4y-l4C" kind="show" identifier="nocard" id="bUT-l6-P3Q"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4PB-cM-CDa">
+                                <rect key="frame" x="129" y="203" width="156" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="没来"/>
+                                <connections>
+                                    <action selector="didntcome:" destination="49U-3W-hrk" eventType="touchUpInside" id="I7c-AG-ITP"/>
+                                    <segue destination="WH1-4y-l4C" kind="show" identifier="didntcome" id="l44-4A-eb7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="r0K-4G-zUK" firstAttribute="trailing" secondItem="pe5-ZY-kqZ" secondAttribute="trailing" constant="129" id="B52-aK-Aav"/>
+                            <constraint firstItem="4PB-cM-CDa" firstAttribute="top" secondItem="pe5-ZY-kqZ" secondAttribute="bottom" constant="8" id="Y9l-WL-Sya"/>
+                            <constraint firstItem="4PB-cM-CDa" firstAttribute="leading" secondItem="r0K-4G-zUK" secondAttribute="leading" constant="129" id="c79-DG-4AA"/>
+                            <constraint firstItem="4PB-cM-CDa" firstAttribute="top" secondItem="pe5-ZY-kqZ" secondAttribute="bottom" constant="8" id="eoS-kD-r5O"/>
+                            <constraint firstItem="r0K-4G-zUK" firstAttribute="trailing" secondItem="4PB-cM-CDa" secondAttribute="trailing" constant="129" id="eoe-Zr-EmF"/>
+                            <constraint firstItem="pe5-ZY-kqZ" firstAttribute="top" secondItem="r0K-4G-zUK" secondAttribute="top" constant="133" id="jFH-Ib-vCj"/>
+                            <constraint firstItem="pe5-ZY-kqZ" firstAttribute="leading" secondItem="r0K-4G-zUK" secondAttribute="leading" constant="129" id="mRM-Gn-LTq"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="r0K-4G-zUK"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IVZ-oy-aTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4747.826086956522" y="132.88043478260872"/>
         </scene>
         <!--所有学生-->
         <scene sceneID="Syy-UD-t94">
@@ -686,4 +738,8 @@
     <resources>
         <image name="EazyFitCard" width="180" height="118"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Tkd-0L-pbq"/>
+        <segue reference="bUT-l6-P3Q"/>
+    </inferredMetricsTieBreakers>
 </document>
