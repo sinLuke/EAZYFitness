@@ -1,0 +1,222 @@
+
+/* Class = "UILabel"; text = "EAZY Fitness"; ObjectID = "09l-Uk-sxa"; */
+"09l-Uk-sxa.text" = "EAZY Fitness";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "0wE-sB-DFK"; */
+"0wE-sB-DFK.text" = "Title";
+
+/* Class = "UILabel"; text = "可以干嘛干嘛干嘛。。。。。。。"; ObjectID = "1F4-CD-hrW"; */
+"1F4-CD-hrW.text" = "可以干嘛干嘛干嘛。。。。。。。";
+
+/* Class = "UIButton"; normalTitle = "增加"; ObjectID = "1Ig-f7-ECx"; */
+"1Ig-f7-ECx.normalTitle" = "增加";
+
+/* Class = "UILabel"; text = "MyStudent"; ObjectID = "2Eo-oH-JCO"; */
+"2Eo-oH-JCO.text" = "MyStudent";
+
+/* Class = "UITabBarItem"; title = "我的学生"; ObjectID = "4L9-wT-HP3"; */
+"4L9-wT-HP3.title" = "我的学生";
+
+/* Class = "UIButton"; normalTitle = "没来"; ObjectID = "4PB-cM-CDa"; */
+"4PB-cM-CDa.normalTitle" = "没来";
+
+/* Class = "UILabel"; text = "总课时：0"; ObjectID = "4ZK-yE-24g"; */
+"4ZK-yE-24g.text" = "总课时：0";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "53F-pb-yQP"; */
+"53F-pb-yQP.text" = "Detail";
+
+/* Class = "UITabBarItem"; title = "所有学生"; ObjectID = "5eK-hj-9DN"; */
+"5eK-hj-9DN.title" = "所有学生";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "7He-JE-xKw"; */
+"7He-JE-xKw.text" = "Title";
+
+/* Class = "UITabBarItem"; title = "主页"; ObjectID = "7fO-aM-Zso"; */
+"7fO-aM-Zso.title" = "主页";
+
+/* Class = "UITextField"; placeholder = "请确认你的密码"; ObjectID = "7fW-p1-fWR"; */
+"7fW-p1-fWR.placeholder" = "请确认你的密码";
+
+/* Class = "UILabel"; text = "通过 App 随时与教练联系"; ObjectID = "7yI-OQ-trk"; */
+"7yI-OQ-trk.text" = "通过 App 随时与教练联系";
+
+/* Class = "UIButton"; normalTitle = "下一步"; ObjectID = "7ya-Qb-3nH"; */
+"7ya-Qb-3nH.normalTitle" = "下一步";
+
+/* Class = "UILabel"; text = "Student"; ObjectID = "8kR-dU-LbQ"; */
+"8kR-dU-LbQ.text" = "Student";
+
+/* Class = "UIButton"; normalTitle = "新用户注册"; ObjectID = "9bm-zn-vCs"; */
+"9bm-zn-vCs.normalTitle" = "新用户注册";
+
+/* Class = "UILabel"; text = "Email Address"; ObjectID = "B1F-PB-7AE"; */
+"B1F-PB-7AE.text" = "Email Address";
+
+/* Class = "UIButton"; normalTitle = "登陆我的 EAZY Fitness"; ObjectID = "DOA-aa-Y5h"; */
+"DOA-aa-Y5h.normalTitle" = "登陆我的 EAZY Fitness";
+
+/* Class = "UILabel"; text = "EAZY Fitness App 为您提供blablabla"; ObjectID = "EH6-cu-14O"; */
+"EH6-cu-14O.text" = "EAZY Fitness App 为您提供blablabla";
+
+/* Class = "UILabel"; text = "All Student"; ObjectID = "F8I-RS-rwd"; */
+"F8I-RS-rwd.text" = "All Student";
+
+/* Class = "UILabel"; text = "Displayed Name"; ObjectID = "FZT-L9-EDv"; */
+"FZT-L9-EDv.text" = "Displayed Name";
+
+/* Class = "UIButton"; normalTitle = "Test"; ObjectID = "GrC-mj-7U3"; */
+"GrC-mj-7U3.normalTitle" = "Test";
+
+/* Class = "UILabel"; text = "Membership 会员卡"; ObjectID = "IDr-2K-rTp"; */
+"IDr-2K-rTp.text" = "Membership 会员卡";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "IHo-tk-KMb"; */
+"IHo-tk-KMb.text" = "Title";
+
+/* Class = "UILabel"; text = "欢迎来到"; ObjectID = "IUK-5T-me6"; */
+"IUK-5T-me6.text" = "欢迎来到";
+
+/* Class = "UILabel"; text = "找人把这些尽快写好"; ObjectID = "IoC-D4-Ljt"; */
+"IoC-D4-Ljt.text" = "找人把这些尽快写好";
+
+/* Class = "UIButton"; normalTitle = "返回"; ObjectID = "LWc-Tb-NBn"; */
+"LWc-Tb-NBn.normalTitle" = "返回";
+
+/* Class = "UILabel"; text = "Welcome"; ObjectID = "LjH-R1-B27"; */
+"LjH-R1-B27.text" = "Welcome";
+
+/* Class = "UIBarButtonItem"; title = "特殊情况"; ObjectID = "MEZ-r3-YEj"; */
+"MEZ-r3-YEj.title" = "特殊情况";
+
+/* Class = "UILabel"; text = "本月完成：0"; ObjectID = "QpS-ub-Qpc"; */
+"QpS-ub-Qpc.text" = "本月完成：0";
+
+/* Class = "UIButton"; normalTitle = "删除该学生"; ObjectID = "RAf-S0-8lm"; */
+"RAf-S0-8lm.normalTitle" = "删除该学生";
+
+/* Class = "UIButton"; normalTitle = "退出登录"; ObjectID = "Rdx-ib-15K"; */
+"Rdx-ib-15K.normalTitle" = "退出登录";
+
+/* Class = "UILabel"; text = "欢迎"; ObjectID = "Rxx-4L-85e"; */
+"Rxx-4L-85e.text" = "欢迎";
+
+/* Class = "UINavigationItem"; title = "所有学生"; ObjectID = "T4B-16-ypO"; */
+"T4B-16-ypO.title" = "所有学生";
+
+/* Class = "UIButton"; normalTitle = "减少"; ObjectID = "TjR-yg-QA6"; */
+"TjR-yg-QA6.normalTitle" = "减少";
+
+/* Class = "UILabel"; text = "扫描你的"; ObjectID = "Uto-au-KiP"; */
+"Uto-au-KiP.text" = "扫描你的";
+
+/* Class = "UIButton"; normalTitle = "完成"; ObjectID = "UuS-Iz-YKb"; */
+"UuS-Iz-YKb.normalTitle" = "完成";
+
+/* Class = "UIButton"; normalTitle = "扫描"; ObjectID = "V0g-0p-vvb"; */
+"V0g-0p-vvb.normalTitle" = "扫描";
+
+/* Class = "UITextField"; placeholder = "添加提醒信息"; ObjectID = "Vfu-s3-CeM"; */
+"Vfu-s3-CeM.placeholder" = "添加提醒信息";
+
+/* Class = "UILabel"; text = "会员中心"; ObjectID = "XaH-xj-l9X"; */
+"XaH-xj-l9X.text" = "会员中心";
+
+/* Class = "UIButton"; normalTitle = "联系我们"; ObjectID = "aCj-pb-Bdr"; */
+"aCj-pb-Bdr.normalTitle" = "联系我们";
+
+/* Class = "UIButton"; normalTitle = "管理教练"; ObjectID = "bDx-LN-CbM"; */
+"bDx-LN-CbM.normalTitle" = "管理教练";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "dDO-on-jEk"; */
+"dDO-on-jEk.text" = "Detail";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "e2b-wT-g4t"; */
+"e2b-wT-g4t.text" = "Label";
+
+/* Class = "UILabel"; text = "超级用户"; ObjectID = "e7d-d4-HrH"; */
+"e7d-d4-HrH.text" = "超级用户";
+
+/* Class = "UITabBarItem"; title = "消息"; ObjectID = "ePe-4d-I4d"; */
+"ePe-4d-I4d.title" = "消息";
+
+/* Class = "UILabel"; text = "余课充足"; ObjectID = "enH-gb-uzP"; */
+"enH-gb-uzP.text" = "余课充足";
+
+/* Class = "UILabel"; text = "0.5"; ObjectID = "epp-Uf-lxV"; */
+"epp-Uf-lxV.text" = "0.5";
+
+/* Class = "UILabel"; text = "Setting"; ObjectID = "fjr-fd-fau"; */
+"fjr-fd-fau.text" = "Setting";
+
+/* Class = "UILabel"; text = "本月课时：0"; ObjectID = "g4d-KJ-WEn"; */
+"g4d-KJ-WEn.text" = "本月课时：0";
+
+/* Class = "UILabel"; text = "unnamed"; ObjectID = "gwZ-iC-Vzf"; */
+"gwZ-iC-Vzf.text" = "unnamed";
+
+/* Class = "UIButton"; normalTitle = "管理所有学生"; ObjectID = "gyS-cq-a1v"; */
+"gyS-cq-a1v.normalTitle" = "管理所有学生";
+
+/* Class = "UIButton"; normalTitle = "如何才能获得会员卡?"; ObjectID = "jG5-OJ-KYh"; */
+"jG5-OJ-KYh.normalTitle" = "如何才能获得会员卡?";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "kty-5X-bCm"; */
+"kty-5X-bCm.text" = "Detail";
+
+/* Class = "UILabel"; text = "EAZY Fitness"; ObjectID = "mYf-py-x0B"; */
+"mYf-py-x0B.text" = "EAZY Fitness";
+
+/* Class = "UIButton"; normalTitle = "计入"; ObjectID = "nRc-uf-nK1"; */
+"nRc-uf-nK1.normalTitle" = "计入";
+
+/* Class = "UITextField"; placeholder = "请设置一个至少六位的密码"; ObjectID = "oAS-HI-C7t"; */
+"oAS-HI-C7t.placeholder" = "请设置一个至少六位的密码";
+
+/* Class = "UIButton"; normalTitle = "扫描遇到问题?"; ObjectID = "oRu-q0-O9a"; */
+"oRu-q0-O9a.normalTitle" = "扫描遇到问题?";
+
+/* Class = "UITextField"; placeholder = "请输入您的邮箱"; ObjectID = "p56-A6-Tpy"; */
+"p56-A6-Tpy.placeholder" = "请输入您的邮箱";
+
+/* Class = "UIButton"; normalTitle = "没带卡"; ObjectID = "pe5-ZY-kqZ"; */
+"pe5-ZY-kqZ.normalTitle" = "没带卡";
+
+/* Class = "UILabel"; text = "已完成：0"; ObjectID = "qK4-bz-weq"; */
+"qK4-bz-weq.text" = "已完成：0";
+
+/* Class = "UITabBarItem"; title = "我的课程"; ObjectID = "qz2-yE-JEB"; */
+"qz2-yE-JEB.title" = "我的课程";
+
+/* Class = "UITabBarItem"; title = "设置"; ObjectID = "tiS-uh-Xur"; */
+"tiS-uh-Xur.title" = "设置";
+
+/* Class = "UILabel"; text = "记录课时"; ObjectID = "uiF-kK-uhc"; */
+"uiF-kK-uhc.text" = "记录课时";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "vDY-KT-MqL"; */
+"vDY-KT-MqL.text" = "0";
+
+/* Class = "UILabel"; text = "请设置您的登录邮箱及密码"; ObjectID = "vTr-xs-1rE"; */
+"vTr-xs-1rE.text" = "请设置您的登录邮箱及密码";
+
+/* Class = "UIButton"; normalTitle = "扫描会员卡"; ObjectID = "vf7-In-rKd"; */
+"vf7-In-rKd.normalTitle" = "扫描会员卡";
+
+/* Class = "UIButton"; normalTitle = "管理我的学生"; ObjectID = "xJX-hG-ubl"; */
+"xJX-hG-ubl.normalTitle" = "管理我的学生";
+
+/* Class = "UILabel"; text = "EAZY Fitness"; ObjectID = "xWs-Jv-RMD"; */
+"xWs-Jv-RMD.text" = "EAZY Fitness";
+
+/* Class = "UILabel"; text = "App Verson 1.3"; ObjectID = "xlz-Ga-Ah5"; */
+"xlz-Ga-Ah5.text" = "App Verson 1.3";
+
+/* Class = "UILabel"; text = "First Last"; ObjectID = "ymn-nf-HPY"; */
+"ymn-nf-HPY.text" = "First Last";
+
+/* Class = "UILabel"; text = "使用 App 查看余课情况"; ObjectID = "z4h-Ju-m4s"; */
+"z4h-Ju-m4s.text" = "使用 App 查看余课情况";
+
+/* Class = "UILabel"; text = "Message"; ObjectID = "znC-1s-DdF"; */
+"znC-1s-DdF.text" = "Message";

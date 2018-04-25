@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WelcomeViewController: UIViewController {
+class WelcomeViewController: DefaultViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +22,7 @@ class WelcomeViewController: UIViewController {
     }
     
     @IBAction func test(_ sender: Any) {
+        AppDelegate.resetMainVC(with: "login")
     }
     
     /*

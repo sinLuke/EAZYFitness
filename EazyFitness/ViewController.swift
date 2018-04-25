@@ -14,8 +14,7 @@ import GoogleSignIn
 import FirebaseAuthUI
 import FirebaseGoogleAuthUI
 
-class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
-    @IBOutlet weak var loading: UIActivityIndicatorView!
+class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate {
     var ref: DatabaseReference!
     @IBOutlet weak var contactUS: UIButton!
     @IBOutlet weak var LoginBtn: UIButton!
@@ -86,13 +85,8 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
         if #available(iOS 10.0, *){
             self.contactUS.isHidden = false
         }
-        
-        loading.isHidden = true
-        loading.stopAnimating()
         print("USER: ",Auth.auth().currentUser)
         if Auth.auth().currentUser != nil {
-            loading.isHidden = false
-            loading.startAnimating()
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             //login
         }
@@ -105,48 +99,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
     }
 
     @IBAction func ScanMyCard(_ sender: Any) {
-        guard checkScanPermissions() else { return }
-        loading.isHidden = false
-        loading.startAnimating()
-        readerVC.modalPresentationStyle = .formSheet
-        readerVC.delegate               = self
-        readerVC.completionBlock = { (result: QRCodeReaderResult?) in
-            if let result = result {
-                print("Completion with result: \(result.value) of type \(result.metadataType)")
-            }
-        }
-        present(readerVC, animated: true, completion: nil)
-    }
-    
-    
-    private func checkScanPermissions() -> Bool {
-        do {
-            return try QRCodeReader.supportsMetadataObjectTypes()
-        } catch let error as NSError {
-            let alert: UIAlertController
-            
-            switch error.code {
-            case -11852:
-                alert = UIAlertController(title: "Error", message: "This app is not authorized to use Back Camera.", preferredStyle: .alert)
-                
-                alert.addAction(UIAlertAction(title: "Setting", style: .default, handler: { (_) in
-                    DispatchQueue.main.async {
-                        if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
-                            UIApplication.shared.openURL(settingsURL)
-                        }
-                    }
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            default:
-                alert = UIAlertController(title: "Error", message: "Reader not supported by the current device", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            }
-            
-            present(alert, animated: true, completion: nil)
-            
-            return false
-        }
+        self.startLoading()
     }
     
     func fetchUserData(CardID:String, ref:DatabaseReference){
@@ -157,8 +110,6 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
     }
     
     func gotUserData(userInfo:NSDictionary){
-        loading.isHidden = true
-        loading.stopAnimating()
         let registered = userInfo.value(forKey: "Registered") as! Int
         var messageString = ""
         if registered == 0{
@@ -241,10 +192,9 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func trainer(_ sender: Any) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let authViewController = appDelegate.authUI!.authViewController()
-        self.present(authViewController, animated: true)
+    @IBAction func signin(_ sender: Any) {
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signin")
+        self.present(vc, animated: true) 
     }
     
 }

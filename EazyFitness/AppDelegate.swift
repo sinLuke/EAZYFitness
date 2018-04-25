@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             ]
         self.authUI?.providers = providers
         if Auth.auth().currentUser == nil{
-            AppDelegate.resetMainVC(with: "login")
+            AppDelegate.resetMainVC(with: "admin")
         } else {
             Auth.auth().currentUser
         }
@@ -175,16 +175,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         }
     }
     
+    
+    class func showError(title:String, err:String, of cvc:UIViewController, handler:(()->())? = nil){
+        let alert: UIAlertController = UIAlertController(title: title, message: err, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {_ in
+            if let _handler = handler{
+                _handler()
+            }
+        }))
+        
+        cvc.present(alert, animated: true)
+    }
     class func showError(title:String, err:String, handler:(()->())? = nil){
         if let cvc = AppDelegate.getCurrentVC(){
-            let alert: UIAlertController = UIAlertController(title: title, message: err, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {_ in
-                if let _handler = handler{
-                    _handler()
-                }
-            }))
-            
-            cvc.present(alert, animated: true)
+            AppDelegate.showError(title: title, err: err, of: cvc, handler: handler)
         }
     }
     
