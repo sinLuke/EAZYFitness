@@ -98,7 +98,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     }
     
     func readerDidCancel(_ reader: QRCodeReaderViewController) {
-        
+        dismiss(animated: true, completion: nil)
     }
     
     func signInCancel()->(){
