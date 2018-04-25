@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var myStudentBOOL = false
     var allStudentBOOL = false
     var trainerBOOL = false
+    
+    var listener:ListenerRegistration?
 
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -37,9 +39,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             FUIGoogleAuth(),
             ]
         self.authUI?.providers = providers
+        if Auth.auth().currentUser == nil{
+            AppDelegate.resetMainVC(with: "login")
+        } else {
+            Auth.auth().currentUser
+        }
         return true
     }
-    
+    /*
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
         let sourceApplication = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String?
         if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
@@ -48,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         // other URL handling goes here.
         return false
     }
-
+*/
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -113,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         AppDelegate.getCurrentVC()?.present(trainerViewController, animated: true)
         return
     }
+    /*
     func signout(){
         print ("signout")
         let firebaseAuth = Auth.auth()
@@ -122,16 +130,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             print ("Error signing out: %@", signOutError)
         }
     }
-    class func sentErrorMessage(message:String){
-        let alert = UIAlertController(
-            title: "验证出现了问题",
-            message: message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        AppDelegate.getCurrentVC()?.present(alert, animated: true, completion: nil)
+    */
+    
+    func signout() -> Void{
+        if let listener = self.listener{
+            listener.remove()
+        }
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+            self.requireUser()
+        } catch let signOutError as NSError {
+            AppDelegate.showError(title: "sign out error", err: signOutError.localizedDescription)
+        }
     }
     
+    func requireUser(){
+        if let cvc = AppDelegate.getCurrentVC(){
+            if Auth.auth().currentUser == nil{
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let authViewController = AppDelegate.AP().authUI!.authViewController()
+                cvc.present(authViewController, animated: true)
+            } else {
+                let db = Firestore.firestore()
+                let userRef = db.collection("users")
+                if let _uid = Auth.auth().currentUser?.uid {
+                    userRef.whereField("profileInfo.uid", isEqualTo: _uid).getDocuments { (snap, error) in
+                        if let err = error {
+                            AppDelegate.showError(title: "Database Error", err: err.localizedDescription, handler: self.signout)
+                        } else {
+                            if(snap?.documents.count == 0){
+                                AppDelegate.showError(title: "Database User Error", err: "Local user cannot find on database", handler: self.signout)
+                            } else {
+                                
+                            }
+                        }
+                    }
+                } else {
+                    AppDelegate.showError(title: "Local User Error", err: "Current User dont have uid", handler: self.signout)
+                }
+            }
+        } else {
+            print("Here")
+        }
+    }
+    
+    class func showError(title:String, err:String, handler:(()->())? = nil){
+        if let cvc = AppDelegate.getCurrentVC(){
+            let alert: UIAlertController = UIAlertController(title: title, message: err, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {_ in
+                if let _handler = handler{
+                    _handler()
+                }
+            }))
+            
+            cvc.present(alert, animated: true)
+        }
+    }
+    
+    /*
     func loginFunc(user:User){
         print("b")
         if let vc = AppDelegate.getCurrentVC() as? ViewController{
@@ -181,7 +238,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             }
         }
     }
-    
+    */
+    /*
     func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
         if user != nil{
             print("loginFunc")
@@ -192,7 +250,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             return
         }
     }
-    
+ */
+    /*
     func prepare(user: User, group: String){
         let ref = Database.database().reference()
         ref.child("trainer").child(user.uid).observeSingleEvent(of: .value) { (snapshot) in
@@ -222,6 +281,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                 print("allStudent")
             }
         }
+    }*/
+    class func AP() -> AppDelegate{
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate
+    }
+    class func resetMainVC(with ID: String){
+        AppDelegate.AP().window = UIWindow(frame: UIScreen.main.bounds)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: ID)
+        
+        AppDelegate.AP().window?.rootViewController = initialViewController
+        AppDelegate.AP().window?.makeKeyAndVisible()
     }
 }
 

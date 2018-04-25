@@ -94,7 +94,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
             loading.isHidden = false
             loading.startAnimating()
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.loginFunc(user: Auth.auth().currentUser!)
+            //login
         }
         // Do any additional setup after loading the view, typically from a nib.
     }

@@ -30,6 +30,15 @@
 		A3281BEF205A315C001965F7 /* EazyFitnessUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BEE205A315C001965F7 /* EazyFitnessUITests.swift */; };
 		A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BFC205A3372001965F7 /* Alphanumeric.swift */; };
 		A32C595E20637CB70024519D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32C595D20637CB60024519D /* GoogleService-Info.plist */; };
+		A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34923592090DD81004C5455 /* StudentTabBarController.swift */; };
+		A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235B2090DD90004C5455 /* TrainerTabBarController.swift */; };
+		A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235D2090DDA0004C5455 /* AdminTabBarController.swift */; };
+		A34923602090E38F004C5455 /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235F2090E38F004C5455 /* SettingVC.swift */; };
+		A34923622090E3D0004C5455 /* MessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34923612090E3D0004C5455 /* MessageVC.swift */; };
+		A34923642090E4F8004C5455 /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34923632090E4F8004C5455 /* SigninViewController.swift */; };
+		A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B183E2090315E0058EA7B /* WelcomeViewController.swift */; };
+		A35B1843209031990058EA7B /* StudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1842209031990058EA7B /* StudentVC.swift */; };
+		A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1844209031AD0058EA7B /* MyStudentVC.swift */; };
 		A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A5206424CD00E192EB /* TrainerViewController.swift */; };
 		A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A720642DB100E192EB /* StudentViewController.swift */; };
 		A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A92064414900E192EB /* TrainerNav.swift */; };
@@ -89,6 +98,15 @@
 		A3281BF0205A315C001965F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3281BFC205A3372001965F7 /* Alphanumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alphanumeric.swift; sourceTree = "<group>"; };
 		A32C595D20637CB60024519D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A34923592090DD81004C5455 /* StudentTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentTabBarController.swift; sourceTree = "<group>"; };
+		A349235B2090DD90004C5455 /* TrainerTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerTabBarController.swift; sourceTree = "<group>"; };
+		A349235D2090DDA0004C5455 /* AdminTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTabBarController.swift; sourceTree = "<group>"; };
+		A349235F2090E38F004C5455 /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
+		A34923612090E3D0004C5455 /* MessageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageVC.swift; sourceTree = "<group>"; };
+		A34923632090E4F8004C5455 /* SigninViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
+		A35B183E2090315E0058EA7B /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		A35B1842209031990058EA7B /* StudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentVC.swift; sourceTree = "<group>"; };
+		A35B1844209031AD0058EA7B /* MyStudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStudentVC.swift; sourceTree = "<group>"; };
 		A3BD22A02064184D00E192EB /* EazyFitness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EazyFitness.entitlements; sourceTree = "<group>"; };
 		A3BD22A5206424CD00E192EB /* TrainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerViewController.swift; sourceTree = "<group>"; };
 		A3BD22A720642DB100E192EB /* StudentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentViewController.swift; sourceTree = "<group>"; };
@@ -202,6 +220,7 @@
 		A3281BCD205A315B001965F7 /* EazyFitness */ = {
 			isa = PBXGroup;
 			children = (
+				A35B183D2090313A0058EA7B /* ViewController */,
 				A3BD22AB2064642B00E192EB /* Tables */,
 				A3BD22A02064184D00E192EB /* EazyFitness.entitlements */,
 				A307795C205B74E400512378 /* QRCode */,
@@ -237,6 +256,30 @@
 				A3281BF0205A315C001965F7 /* Info.plist */,
 			);
 			path = EazyFitnessUITests;
+			sourceTree = "<group>";
+		};
+		A34923582090DD48004C5455 /* TabBarVC */ = {
+			isa = PBXGroup;
+			children = (
+				A34923592090DD81004C5455 /* StudentTabBarController.swift */,
+				A349235B2090DD90004C5455 /* TrainerTabBarController.swift */,
+				A349235D2090DDA0004C5455 /* AdminTabBarController.swift */,
+			);
+			path = TabBarVC;
+			sourceTree = "<group>";
+		};
+		A35B183D2090313A0058EA7B /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A34923582090DD48004C5455 /* TabBarVC */,
+				A35B183E2090315E0058EA7B /* WelcomeViewController.swift */,
+				A35B1842209031990058EA7B /* StudentVC.swift */,
+				A35B1844209031AD0058EA7B /* MyStudentVC.swift */,
+				A349235F2090E38F004C5455 /* SettingVC.swift */,
+				A34923612090E3D0004C5455 /* MessageVC.swift */,
+				A34923632090E4F8004C5455 /* SigninViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		A3BD22AB2064642B00E192EB /* Tables */ = {
@@ -602,13 +645,19 @@
 			files = (
 				A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */,
 				A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */,
+				A34923642090E4F8004C5455 /* SigninViewController.swift in Sources */,
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
 				A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */,
 				A3BD22B72064915300E192EB /* ListItem.swift in Sources */,
 				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
+				A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */,
+				A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */,
+				A34923622090E3D0004C5455 /* MessageVC.swift in Sources */,
 				A3F2A1A02079B4AE00ED8A4F /* posterViewViewController.swift in Sources */,
 				A3BD22AF2064698900E192EB /* AllStudentTableVC.swift in Sources */,
+				A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */,
 				A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */,
+				A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */,
 				A3BD22B12064699700E192EB /* TrainerTableVC.swift in Sources */,
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
 				A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */,
@@ -619,9 +668,12 @@
 				A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */,
 				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
+				A35B1843209031990058EA7B /* StudentVC.swift in Sources */,
 				A3BD22B320648E8200E192EB /* EditableTableVC.swift in Sources */,
 				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
 				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
+				A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */,
+				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,
 				A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */,
 				A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */,
 			);
