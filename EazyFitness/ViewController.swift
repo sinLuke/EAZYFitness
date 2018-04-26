@@ -150,6 +150,7 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
                 qrref.observeSingleEvent(of: .value, with: { (snapshot) in
                     print (snapshot)
                     // Get user value
+                    
                     if let value = snapshot.value as? NSDictionary{
                         if let numberValue = value.value(forKey: "MemberID"){
                             self.fetchUserData(CardID: "\(numberValue)" as! String, ref:self.ref)

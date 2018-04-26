@@ -63,7 +63,6 @@ class StudentViewController: UIViewController {
         self.dismiss(animated: true)
     }
     override func viewDidAppear(_ animated: Bool) {
-        
         if ifBack{
             self.backButton.isHidden = true
         } else {
