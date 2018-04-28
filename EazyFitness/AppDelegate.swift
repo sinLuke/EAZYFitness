@@ -15,8 +15,10 @@ import FirebaseGoogleAuthUI
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
-    var authUI: FUIAuth? = nil
+    var usergroup:String?
     
+    var authUI: FUIAuth? = nil
+    var ref: DatabaseReference!
     var myStudent:NSDictionary?
     var allStudent:NSDictionary?
     var trainer:NSDictionary?
@@ -28,9 +30,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var listener:ListenerRegistration?
 
     var window: UIWindow?
+    
+    
+    func login()->(){
+        if let vc = AppDelegate.getCurrentVC() as? DefaultViewController{
+            print("Hello")
+            vc.startLoading()
+        }
+        
+        ref = Database.database().reference()
+        if let cuser = Auth.auth().currentUser{
+            ref.child("users").child(cuser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let vc = AppDelegate.getCurrentVC() as? DefaultViewController{
+                    print("Hello")
+                    vc.endLoading()
+                }
+                if let document = snapshot.value as? NSDictionary{
+                    
+                    if let Usergroup = document.value(forKey: "Type") as? String{
+                        print(Usergroup)
+                        self.usergroup = Usergroup
+                        switch Usergroup{
+                        case "Student":
+                            AppDelegate.resetMainVC(with: "student")
+                        case "Super":
+                            AppDelegate.resetMainVC(with: "super")
+                        case "Mississauga":
+                            AppDelegate.resetMainVC(with: "admin")
+                        case "Waterloo":
+                            AppDelegate.resetMainVC(with: "admin")
+                        case "Scarborough":
+                            AppDelegate.resetMainVC(with: "admin")
+                        case "Trainer":
+                            AppDelegate.resetMainVC(with: "trainer")
+                        default:
+                            AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
+                        }
+                    }
+                }
+            }) { (err) in
+                AppDelegate.showError(title: "登陆发生错误", err: err.localizedDescription)
+            }
+        } else {
+            AppDelegate.resetMainVC(with: "login")
+        }
+    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
         FirebaseApp.configure()
+        
         
         self.authUI = FUIAuth.defaultAuthUI()
         self.authUI?.delegate = self
@@ -39,11 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             FUIGoogleAuth(),
             ]
         self.authUI?.providers = providers
-        if Auth.auth().currentUser == nil{
-            AppDelegate.resetMainVC(with: "admin")
-        } else {
-            Auth.auth().currentUser
-        }
+        self.login()
         return true
     }
     /*
@@ -139,10 +184,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         let firebaseAuth = Auth.auth()
         do {
             try firebaseAuth.signOut()
-            self.requireUser()
         } catch let signOutError as NSError {
             AppDelegate.showError(title: "sign out error", err: signOutError.localizedDescription)
         }
+        AppDelegate.resetMainVC(with: "login")
     }
     
     func requireUser(){

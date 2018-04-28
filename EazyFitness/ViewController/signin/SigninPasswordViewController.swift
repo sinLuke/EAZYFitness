@@ -16,7 +16,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     
     var fname = "Name"
     var lname = "Undefine"
-    var userInfo:NSDictionary?
+    var userInfo:NSDictionary!
     var ref: DatabaseReference!
     
     @IBOutlet weak var nameLabel: UILabel!
@@ -66,13 +66,27 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     func createUserComplete(user:User?, error:Error?)->(){
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
+            self.endLoading()
         } else {
-            ref.child("users").child(user!.uid).setValue(
-                [
-                    "MemberID": userInfo!.value(forKey: "MemberID"),
-                    "Type": "Student"
-                ])
-            
+            if let cuser = Auth.auth().currentUser{
+                let cardID = "\(userInfo.value(forKey: "MemberID")!)"
+                print(cuser.uid)
+                ref.child("users").child(cuser.uid).setValue(
+                    [
+                        "First Name": self.fname,
+                        "Last Name": self.lname,
+                        "MemberID": cardID,
+                        "Type": "Student",
+                        "Email": self.emailField.text!
+                        ])
+                print("2")
+                let userUpdate = [
+                    "/student/\(cardID)/Registered": 2
+                ]
+                ref.updateChildValues(userUpdate)
+                print("3")
+                AppDelegate.resetMainVC(with: "student")
+            }
         }
     }
     
@@ -93,7 +107,6 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
                 AppDelegate.showError(title: "邮箱错误", err: "请输入一个正确的邮箱(#0102#)")
             }
         }
-        
     }
     /*
     // MARK: - Navigation

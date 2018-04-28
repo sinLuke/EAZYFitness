@@ -20,6 +20,8 @@
 		A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */; };
 		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
 		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
+		A3252A9A2094F14D00FD5EC3 /* blankVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */; };
+		A3252A9D2094F42B00FD5EC3 /* TimeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */; };
 		A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A325A372207C56AA00EF00B7 /* SpecialViewController.swift */; };
 		A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BCE205A315B001965F7 /* AppDelegate.swift */; };
 		A3281BD1205A315B001965F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3281BD0205A315B001965F7 /* ViewController.swift */; };
@@ -45,6 +47,8 @@
 		A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B183E2090315E0058EA7B /* WelcomeViewController.swift */; };
 		A35B1843209031990058EA7B /* StudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1842209031990058EA7B /* StudentVC.swift */; };
 		A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1844209031AD0058EA7B /* MyStudentVC.swift */; };
+		A39C5D892092B2A600D46739 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39C5D882092B2A600D46739 /* LoginViewController.swift */; };
+		A39C5D8B2092B4DA00D46739 /* LoginPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */; };
 		A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A5206424CD00E192EB /* TrainerViewController.swift */; };
 		A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A720642DB100E192EB /* StudentViewController.swift */; };
 		A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A92064414900E192EB /* TrainerNav.swift */; };
@@ -88,6 +92,8 @@
 		A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerDelegate.swift; sourceTree = "<group>"; };
 		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
 		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
+		A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blankVCViewController.swift; sourceTree = "<group>"; };
+		A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTable.swift; sourceTree = "<group>"; };
 		A325A372207C56AA00EF00B7 /* SpecialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialViewController.swift; sourceTree = "<group>"; };
 		A3281BCB205A315B001965F7 /* EazyFitness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EazyFitness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3281BCE205A315B001965F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,6 +127,8 @@
 		A35B183E2090315E0058EA7B /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		A35B1842209031990058EA7B /* StudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentVC.swift; sourceTree = "<group>"; };
 		A35B1844209031AD0058EA7B /* MyStudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStudentVC.swift; sourceTree = "<group>"; };
+		A39C5D882092B2A600D46739 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPasswordViewController.swift; sourceTree = "<group>"; };
 		A3BD22A02064184D00E192EB /* EazyFitness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EazyFitness.entitlements; sourceTree = "<group>"; };
 		A3BD22A5206424CD00E192EB /* TrainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerViewController.swift; sourceTree = "<group>"; };
 		A3BD22A720642DB100E192EB /* StudentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentViewController.swift; sourceTree = "<group>"; };
@@ -208,9 +216,18 @@
 			path = QRCode;
 			sourceTree = "<group>";
 		};
+		A3252A9B2094F40800FD5EC3 /* TimeTable */ = {
+			isa = PBXGroup;
+			children = (
+				A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */,
+			);
+			path = TimeTable;
+			sourceTree = "<group>";
+		};
 		A3281BC2205A315B001965F7 = {
 			isa = PBXGroup;
 			children = (
+				A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */,
 				A32C595D20637CB60024519D /* GoogleService-Info.plist */,
 				A3281BCD205A315B001965F7 /* EazyFitness */,
 				A3281BE2205A315C001965F7 /* EazyFitnessTests */,
@@ -234,6 +251,7 @@
 		A3281BCD205A315B001965F7 /* EazyFitness */ = {
 			isa = PBXGroup;
 			children = (
+				A3252A9B2094F40800FD5EC3 /* TimeTable */,
 				A349236E2090EF00004C5455 /* other */,
 				A34923652090EAB7004C5455 /* HexColor.swift */,
 				A34923672090EB34004C5455 /* DefaultViewController.swift */,
@@ -307,15 +325,25 @@
 		A35B183D2090313A0058EA7B /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A39C5D862092ACFE00D46739 /* Setting */,
 				A34923692090EB8F004C5455 /* signin */,
 				A34923582090DD48004C5455 /* TabBarVC */,
 				A35B183E2090315E0058EA7B /* WelcomeViewController.swift */,
 				A35B1842209031990058EA7B /* StudentVC.swift */,
 				A35B1844209031AD0058EA7B /* MyStudentVC.swift */,
-				A349235F2090E38F004C5455 /* SettingVC.swift */,
 				A34923612090E3D0004C5455 /* MessageVC.swift */,
+				A39C5D882092B2A600D46739 /* LoginViewController.swift */,
+				A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		A39C5D862092ACFE00D46739 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				A349235F2090E38F004C5455 /* SettingVC.swift */,
+			);
+			path = Setting;
 			sourceTree = "<group>";
 		};
 		A3BD22AB2064642B00E192EB /* Tables */ = {
@@ -686,6 +714,7 @@
 				A3492377209113E2004C5455 /* specialUserSigninViewController.swift in Sources */,
 				A3BD22B72064915300E192EB /* ListItem.swift in Sources */,
 				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
+				A39C5D8B2092B4DA00D46739 /* LoginPasswordViewController.swift in Sources */,
 				A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */,
 				A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */,
 				A34923622090E3D0004C5455 /* MessageVC.swift in Sources */,
@@ -699,6 +728,7 @@
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
 				A34923662090EAB7004C5455 /* HexColor.swift in Sources */,
 				A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */,
+				A3252A9A2094F14D00FD5EC3 /* blankVCViewController.swift in Sources */,
 				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
 				A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */,
 				A34923702090EF15004C5455 /* scan.swift in Sources */,
@@ -706,6 +736,7 @@
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
 				A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */,
 				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,
+				A39C5D892092B2A600D46739 /* LoginViewController.swift in Sources */,
 				A34923682090EB34004C5455 /* DefaultViewController.swift in Sources */,
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
 				A35B1843209031990058EA7B /* StudentVC.swift in Sources */,
@@ -715,6 +746,7 @@
 				A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */,
 				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,
 				A349236B2090EBAF004C5455 /* SigninScanViewController.swift in Sources */,
+				A3252A9D2094F42B00FD5EC3 /* TimeTable.swift in Sources */,
 				A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */,
 				A3281BCF205A315B001965F7 /* AppDelegate.swift in Sources */,
 			);

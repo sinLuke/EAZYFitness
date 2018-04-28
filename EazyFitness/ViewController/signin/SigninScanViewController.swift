@@ -33,19 +33,19 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                         let numberValue = "\(_numberValue)"
                         switch numberValue {
                         case "SUPER":
-                            self.userInfo = ["usergroup":"super"]
+                            self.userInfo = ["usergroup":"Super", "qrvalue":result.value]
                             self.performSegue(withIdentifier: "special", sender: self)
                         case "MISSISSAUGA":
-                            self.userInfo = ["usergroup":"mississauga"]
+                            self.userInfo = ["usergroup":"Mississauga", "qrvalue":result.value]
                             self.performSegue(withIdentifier: "special", sender: self)
                         case "WATERLOO":
-                            self.userInfo = ["usergroup":"waterloo"]
+                            self.userInfo = ["usergroup":"Waterloo", "qrvalue":result.value]
                             self.performSegue(withIdentifier: "special", sender: self)
                         case "SCARBOROUGH":
-                            self.userInfo = ["usergroup":"scarborough"]
+                            self.userInfo = ["usergroup":"Scarborough", "qrvalue":result.value]
                             self.performSegue(withIdentifier: "special", sender: self)
                         case "TRAINER":
-                            self.userInfo = ["usergroup":"trainer"]
+                            self.userInfo = ["usergroup":"Trainer", "qrvalue":result.value]
                             self.performSegue(withIdentifier: "special", sender: self)
                         default:
                             self.fetchUserData(CardID: "\(numberValue)" , ref:self.ref)

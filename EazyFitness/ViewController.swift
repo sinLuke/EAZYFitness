@@ -99,7 +99,7 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
     }
 
     @IBAction func ScanMyCard(_ sender: Any) {
-        self.startLoading()
+        
     }
     
     func fetchUserData(CardID:String, ref:DatabaseReference){

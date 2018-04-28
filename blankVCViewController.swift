@@ -1,18 +1,18 @@
 //
-//  SettingVC.swift
+//  blankVCViewController.swift
 //  EazyFitness
 //
-//  Created by Luke on 2018/4/25.
+//  Created by Luke on 2018/4/28.
 //  Copyright © 2018年 luke. All rights reserved.
 //
 
 import UIKit
 
-class SettingVC: DefaultViewController {
+class blankVCViewController: DefaultViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.startLoading()
         // Do any additional setup after loading the view.
     }
 

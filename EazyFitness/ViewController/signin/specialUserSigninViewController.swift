@@ -12,7 +12,7 @@ import FirebaseDatabase
 
 class specialUserSigninViewController: DefaultViewController, UITextFieldDelegate{
     
-    var userInfo:NSDictionary?
+    var userInfo:NSDictionary!
     var ref: DatabaseReference!
     
     @IBOutlet weak var emailField: UITextField!
@@ -69,12 +69,27 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
         } else {
-            ref.child("users").child(user!.uid).setValue(
-                [
-                    "MemberID": userInfo!.value(forKey: "MemberID"),
-                    "Type": usergroup.text
-                ])
-            
+            if Auth.auth().currentUser != nil{
+                let qrvalue = userInfo?.value(forKey: "qrvalue") as! String
+                ref.child("users").child(user!.uid).setValue(
+                    [
+                        "First Name": self.fnameField.text,
+                        "Last Name": self.lnameField.text,
+                        "Email": self.emailField.text,
+                        "Type": usergroup.text
+                    ])
+                let userUpdate = [
+                    "/QRCODE/\(qrvalue)/MemberID": "nil"
+                ]
+                switch usergroup.text{
+                case "super":
+                    AppDelegate.resetMainVC(with: "super")
+                case "trainer":
+                    AppDelegate.resetMainVC(with: "trainer")
+                default:
+                    AppDelegate.resetMainVC(with: "admin")
+                }
+            }
         }
     }
     
