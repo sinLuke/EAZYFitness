@@ -153,7 +153,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="YKD-mp-WBM"/>
                     </view>
-                    <navigationItem key="navigationItem" id="nNL-QM-CLN"/>
+                    <navigationItem key="navigationItem" id="nNL-QM-CLN">
+                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="stop" id="Gcy-HC-026">
+                            <connections>
+                                <action selector="backbtn:" destination="r1M-Jb-w1b" id="ZJx-LA-fPi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3WH-wS-eMr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -642,7 +648,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Tvc-QB-dEa"/>
                     </view>
-                    <navigationItem key="navigationItem" id="wgb-Ro-WQT"/>
+                    <navigationItem key="navigationItem" id="wgb-Ro-WQT">
+                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="stop" id="4FT-ZK-VOk">
+                            <connections>
+                                <action selector="backbtn:" destination="bIQ-te-tym" id="ags-hK-6sG"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="emailField" destination="E06-NH-HPA" id="wJ6-ey-87d"/>
                         <outlet property="nextButton" destination="zha-da-ngL" id="4Ie-Xf-rxX"/>
@@ -1216,13 +1228,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GQq-7h-6Xf">
-                                <rect key="frame" x="16" y="57" width="343" height="233"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GQq-7h-6Xf">
+                                <rect key="frame" x="0.0" y="49" width="375" height="569"/>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="GQq-7h-6Xf" firstAttribute="top" secondItem="LjH-R1-B27" secondAttribute="bottom" id="4G6-CM-XFR"/>
+                            <constraint firstItem="SR3-LB-YVi" firstAttribute="trailing" secondItem="GQq-7h-6Xf" secondAttribute="trailing" id="9dv-Hy-nvw"/>
+                            <constraint firstItem="GQq-7h-6Xf" firstAttribute="leading" secondItem="SR3-LB-YVi" secondAttribute="leading" id="Ev5-oe-S0S"/>
+                            <constraint firstItem="SR3-LB-YVi" firstAttribute="bottom" secondItem="GQq-7h-6Xf" secondAttribute="bottom" id="LKo-Mm-vpO"/>
                             <constraint firstItem="LjH-R1-B27" firstAttribute="centerX" secondItem="VMc-ts-Z2r" secondAttribute="centerX" id="rMr-Rd-M2h"/>
                             <constraint firstItem="LjH-R1-B27" firstAttribute="top" secondItem="SR3-LB-YVi" secondAttribute="top" constant="8" id="vcw-uo-NCf"/>
                         </constraints>

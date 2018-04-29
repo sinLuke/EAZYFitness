@@ -8,7 +8,6 @@
 
 import UIKit
 import FirebaseAuth
-import FirebaseDatabase
 import Firebase
 
 class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
@@ -17,12 +16,12 @@ class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
     var lname = "Undefine"
     var email = "email"
     var userInfo:NSDictionary!
-    var ref: DatabaseReference!
+    var db: Firestore!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var passwordField: UITextField!
     
     override func viewDidLoad() {
-        ref = Database.database().reference()
+        db = Firestore.firestore()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         print(userInfo)

@@ -8,12 +8,11 @@
 
 import UIKit
 import Firebase
-import FirebaseDatabase
 
 class specialUserSigninViewController: DefaultViewController, UITextFieldDelegate{
     
     var userInfo:NSDictionary!
-    var ref: DatabaseReference!
+    var db: Firestore!
     
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
@@ -25,7 +24,8 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     
     override func viewDidLoad() {
         
-        ref = Database.database().reference()
+        db = Firestore.firestore()
+        
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
@@ -69,18 +69,17 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
         } else {
-            if Auth.auth().currentUser != nil{
-                let qrvalue = userInfo?.value(forKey: "qrvalue") as! String
-                ref.child("users").child(user!.uid).setValue(
-                    [
-                        "First Name": self.fnameField.text,
-                        "Last Name": self.lnameField.text,
-                        "Email": self.emailField.text,
-                        "Type": usergroup.text
+            if let cuser = Auth.auth().currentUser{
+                let cardID = "\(userInfo.value(forKey: "MemberID")!)"
+                
+                self.db.collection("users").document(cuser.uid).setData([
+                    "First Name": self.fnameField.text,
+                    "Last Name": self.lnameField.text,
+                    "MemberID": cardID,
+                    "Type": usergroup.text,
+                    "Email": self.emailField.text!
                     ])
-                let userUpdate = [
-                    "/QRCODE/\(qrvalue)/MemberID": "nil"
-                ]
+                
                 switch usergroup.text{
                 case "super":
                     AppDelegate.resetMainVC(with: "super")

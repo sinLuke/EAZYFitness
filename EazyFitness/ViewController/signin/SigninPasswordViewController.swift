@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import FirebaseDatabase
 import Firebase
 
 //#02
@@ -17,7 +16,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     var fname = "Name"
     var lname = "Undefine"
     var userInfo:NSDictionary!
-    var ref: DatabaseReference!
+    var db: Firestore!
     
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -26,8 +25,9 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     @IBOutlet weak var password2Field: UITextField!
     
     override func viewDidLoad() {
-
-        ref = Database.database().reference()
+        
+        self.db = Firestore.firestore()
+        
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
@@ -70,21 +70,15 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
         } else {
             if let cuser = Auth.auth().currentUser{
                 let cardID = "\(userInfo.value(forKey: "MemberID")!)"
-                print(cuser.uid)
-                ref.child("users").child(cuser.uid).setValue(
-                    [
-                        "First Name": self.fname,
-                        "Last Name": self.lname,
-                        "MemberID": cardID,
-                        "Type": "Student",
-                        "Email": self.emailField.text!
-                        ])
-                print("2")
-                let userUpdate = [
-                    "/student/\(cardID)/Registered": 2
-                ]
-                ref.updateChildValues(userUpdate)
-                print("3")
+                
+                db.collection("users").document(cuser.uid).setData([
+                    "First Name": self.fname,
+                    "Last Name": self.lname,
+                    "MemberID": cardID,
+                    "Type": "Student",
+                    "Email": self.emailField.text!
+                    ])
+
                 AppDelegate.resetMainVC(with: "student")
             }
         }

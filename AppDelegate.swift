@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-
 import FirebaseAuthUI
 import FirebaseGoogleAuthUI
 
@@ -17,8 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     var usergroup:String?
     
+    var UserDoc:NSDictionary?
+    var StudentDoc:NSDictionary?
+    
     var authUI: FUIAuth? = nil
-    var ref: DatabaseReference!
+    var db: Firestore!
     var myStudent:NSDictionary?
     var allStudent:NSDictionary?
     var trainer:NSDictionary?
@@ -30,48 +32,87 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var listener:ListenerRegistration?
 
     var window: UIWindow?
-    
-    
+    /*
+    func Special(){
+        print("***special**")
+        var db = Firestore.firestore()
+        ref = Database.database().reference()
+        ref.child("QRCODE").observeSingleEvent(of: .value) { (snap) in
+            if let docList = snap.value as? NSDictionary{
+                for allKeyMemberID in docList.allKeys{
+                    if let StringMemberID = allKeyMemberID as? String{
+                        
+                        if let dic = docList[StringMemberID] as? NSDictionary{
+
+                            db.collection("QRCODE").document(StringMemberID).setData(["MemberID" : dic["MemberID"]])
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+    */
     func login()->(){
+        print("Login")
         if let vc = AppDelegate.getCurrentVC() as? DefaultViewController{
-            print("Hello")
             vc.startLoading()
         }
         
-        ref = Database.database().reference()
+        self.db = Firestore.firestore()
         if let cuser = Auth.auth().currentUser{
-            ref.child("users").child(cuser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            db.collection("users").document(cuser.uid).getDocument { (snap, err) in
                 if let vc = AppDelegate.getCurrentVC() as? DefaultViewController{
-                    print("Hello")
                     vc.endLoading()
                 }
-                if let document = snapshot.value as? NSDictionary{
-                    
-                    if let Usergroup = document.value(forKey: "Type") as? String{
-                        print(Usergroup)
-                        self.usergroup = Usergroup
-                        switch Usergroup{
-                        case "Student":
-                            AppDelegate.resetMainVC(with: "student")
-                        case "Super":
-                            AppDelegate.resetMainVC(with: "super")
-                        case "Mississauga":
-                            AppDelegate.resetMainVC(with: "admin")
-                        case "Waterloo":
-                            AppDelegate.resetMainVC(with: "admin")
-                        case "Scarborough":
-                            AppDelegate.resetMainVC(with: "admin")
-                        case "Trainer":
-                            AppDelegate.resetMainVC(with: "trainer")
-                        default:
-                            AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
+                if let err = err{
+                    AppDelegate.showError(title: "读取用户时发生错误", err: err.localizedDescription)
+                } else {
+                    print(snap)
+                    if let document = snap?.data() as? NSDictionary{
+                        self.UserDoc = document
+                        print(document)
+                        if let Usergroup = document.value(forKey: "Type") as? String{
+                            self.usergroup = Usergroup
+                            switch Usergroup{
+                            case "Student":
+                                if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
+                                    
+                                    self.db.collection("student").document(memberid).getDocument(completion: { (snap, err) in
+                                        if let err = err{
+                                            AppDelegate.showError(title: "读取用户时发生错误", err: err.localizedDescription)
+                                        } else {
+                                            if let studentdocument = snap?.data() as? NSDictionary{
+                                                self.StudentDoc = studentdocument
+                                                AppDelegate.resetMainVC(with: "student")
+                                            }
+                                        }
+                                    })
+                                    
+
+                                }
+                            case "Super":
+                                AppDelegate.resetMainVC(with: "super")
+                            case "Mississauga":
+                                AppDelegate.resetMainVC(with: "admin")
+                            case "Waterloo":
+                                AppDelegate.resetMainVC(with: "admin")
+                            case "Scarborough":
+                                AppDelegate.resetMainVC(with: "admin")
+                            case "Trainer":
+                                AppDelegate.resetMainVC(with: "trainer")
+                            default:
+                                AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
+                            }
                         }
+                    } else {
+                        AppDelegate.showError(title: "登陆发生错误", err:"未找到用户", handler: self.signout)
                     }
                 }
-            }) { (err) in
-                AppDelegate.showError(title: "登陆发生错误", err: err.localizedDescription)
             }
+            
         } else {
+            print("else")
             AppDelegate.resetMainVC(with: "login")
         }
     }
@@ -80,6 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         
         FirebaseApp.configure()
         
+        //Special()
         
         self.authUI = FUIAuth.defaultAuthUI()
         self.authUI?.delegate = self
@@ -207,7 +249,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                             if(snap?.documents.count == 0){
                                 AppDelegate.showError(title: "Database User Error", err: "Local user cannot find on database", handler: self.signout)
                             } else {
-                                
+                                if let doc = snap?.documents[0].data(){
+                                    print(doc)
+                                }
                             }
                         }
                     }
@@ -222,6 +266,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     
     class func showError(title:String, err:String, of cvc:UIViewController, handler:(()->())? = nil){
+        print(title)
+        print(err)
         let alert: UIAlertController = UIAlertController(title: title, message: err, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {_ in
             if let _handler = handler{

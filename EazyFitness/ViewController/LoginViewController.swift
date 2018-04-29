@@ -7,17 +7,17 @@
 //
 
 import UIKit
-import FirebaseDatabase
+import Firebase
 
 class LoginViewController: DefaultViewController, UITextFieldDelegate {
-    var ref: DatabaseReference!
+    var db: Firestore!
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var nextButton: UIButton!
     var userInfo:NSDictionary?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
+        db = Firestore.firestore()
         // Do any additional setup after loading the view.
     }
 
@@ -50,21 +50,28 @@ class LoginViewController: DefaultViewController, UITextFieldDelegate {
         return emailTest.evaluate(with: testStr)
     }
 
+    @IBAction func backbtn(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+    
     @IBAction func nextSetp(_ sender: Any) {
         if let email = self.emailField.text{
             if isValidEmail(testStr: self.emailField.text!) == false{
                 AppDelegate.showError(title: "邮箱错误", err: "这不是有效的邮箱")
             } else {
-                ref.child("users").queryOrdered(byChild: "Email").queryEqual(toValue: email).observeSingleEvent(of: .value) { (snap) in
-                    if let doc = snap.value as? NSDictionary{
-                        for keys in doc.allKeys{
-                            self.userInfo = doc.value(forKey: keys as! String) as? NSDictionary
-                            self.performSegue(withIdentifier: "next", sender: self)
-                        }
+                
+                db.collection("users").whereField("Email", isEqualTo: email).getDocuments { (snap, err) in
+                    if let err = err{
+                        AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
                     } else {
-                        AppDelegate.showError(title: "未知错误", err: "未知错误")
+                        if let _snap = snap{
+                            if _snap.documents.count == 0{
+                                AppDelegate.showError(title: "邮箱错误", err: "未找到该用户")
+                            } else {
+                                self.userInfo = _snap.documents[0].data() as NSDictionary
+                            }
+                        }
                     }
-                    
                 }
             }
         } else {

@@ -7,60 +7,56 @@
 //
 
 import UIKit
-import FirebaseDatabase
 import AVFoundation
-
+import Firebase
 //#01
 
 class SigninScanViewController: DefaultViewController, QRCodeReaderViewControllerDelegate {
     
     var userInfo:NSDictionary?
-    var ref: DatabaseReference!
+    var db: Firestore!
     
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
         dismiss(animated: true, completion: nil)
         let charset = CharacterSet(charactersIn: ".#$[]")
         if result.value.rangeOfCharacter(from: charset) != nil {
+            self.endLoading()
             AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0101#)", of: self)
         } else{
-            let qrref = self.ref.child("QRCODE").child(result.value)
-            self.startLoading()
-            qrref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print (snapshot)
-                if let value = snapshot.value as? NSDictionary{
-                    if let _numberValue = value.value(forKey: "MemberID"){
-                        let numberValue = "\(_numberValue)"
-                        switch numberValue {
-                        case "SUPER":
-                            self.userInfo = ["usergroup":"Super", "qrvalue":result.value]
-                            self.performSegue(withIdentifier: "special", sender: self)
-                        case "MISSISSAUGA":
-                            self.userInfo = ["usergroup":"Mississauga", "qrvalue":result.value]
-                            self.performSegue(withIdentifier: "special", sender: self)
-                        case "WATERLOO":
-                            self.userInfo = ["usergroup":"Waterloo", "qrvalue":result.value]
-                            self.performSegue(withIdentifier: "special", sender: self)
-                        case "SCARBOROUGH":
-                            self.userInfo = ["usergroup":"Scarborough", "qrvalue":result.value]
-                            self.performSegue(withIdentifier: "special", sender: self)
-                        case "TRAINER":
-                            self.userInfo = ["usergroup":"Trainer", "qrvalue":result.value]
-                            self.performSegue(withIdentifier: "special", sender: self)
-                        default:
-                            self.fetchUserData(CardID: "\(numberValue)" , ref:self.ref)
-                        }
-                    } else {
-                        self.endLoading()
-                        AppDelegate.showError(title: "未知错误", err: "请稍后再试(#0102#)", of: self)
-                    }
-                } else {
+            db.collection("QRCODE").document(result.value).getDocument { (snap, err) in
+                if let err = err{
                     self.endLoading()
-                    AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0103#)", of: self)
+                    AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
+                } else {
+                    if let document = snap?.data() as? NSDictionary{
+                        if let _numberValue = document.value(forKey: "MemberID"){
+                            let numberValue = "\(_numberValue)"
+                            switch numberValue {
+                            case "SUPER":
+                                self.userInfo = ["usergroup":"Super", "qrvalue":result.value]
+                                self.performSegue(withIdentifier: "special", sender: self)
+                            case "MISSISSAUGA":
+                                self.userInfo = ["usergroup":"Mississauga", "qrvalue":result.value]
+                                self.performSegue(withIdentifier: "special", sender: self)
+                            case "WATERLOO":
+                                self.userInfo = ["usergroup":"Waterloo", "qrvalue":result.value]
+                                self.performSegue(withIdentifier: "special", sender: self)
+                            case "SCARBOROUGH":
+                                self.userInfo = ["usergroup":"Scarborough", "qrvalue":result.value]
+                                self.performSegue(withIdentifier: "special", sender: self)
+                            case "TRAINER":
+                                self.userInfo = ["usergroup":"Trainer", "qrvalue":result.value]
+                                self.performSegue(withIdentifier: "special", sender: self)
+                            default:
+                                self.fetchUserData(CardID: "\(numberValue)")
+                            }
+                        } else {
+                            self.endLoading()
+                            AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0103#)", of: self)
+                        }
+                    }
                 }
-                
-            }) { (error) in
-                print(error.localizedDescription)
             }
         }
     }
@@ -69,19 +65,22 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
         self.navigationController?.isNavigationBarHidden = false
     }
     
-    func fetchUserData(CardID:String, ref:DatabaseReference){
-        ref.child("student").child(CardID).observeSingleEvent(of: .value) { (snapshot) in
-            if let value = snapshot.value as? NSDictionary{
-                self.userInfo = value
-                self.gotUserData()
-            } else {
+    func fetchUserData(CardID:String){
+        db.collection("student").document(CardID).getDocument { (snap, err) in
+            if let err = err{
                 self.endLoading()
-                AppDelegate.showError(title: "未知错误", err: "请稍后再试(#0104#)", of: self)
+                AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
+            } else {
+                if let value = snap?.data() as? NSDictionary{
+                    self.userInfo = value
+                    self.gotUserData()
+                }
             }
         }
     }
     
     func gotUserData(){
+        print(userInfo!.value(forKey: "Registered"))
         let registered = userInfo!.value(forKey: "Registered") as! Int
 
         if registered == 0{
@@ -107,8 +106,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
-        
+        self.db = Firestore.firestore()
         // Do any additional setup after loading the view.
     }
 
@@ -124,10 +122,8 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         self.endLoading()
         if let vc = segue.destination as? SigninPasswordViewController{
-            print("1")
             vc.userInfo = self.userInfo
         } else if let vc = segue.destination as? specialUserSigninViewController{
-            print("2")
             vc.userInfo = self.userInfo
         }
     }
