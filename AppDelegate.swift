@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     var usergroup:String?
     
+    var currentMemberID:String?
+    
     var UserDoc:NSDictionary?
     var StudentDoc:NSDictionary?
     
@@ -53,6 +55,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         }
     }
     */
+    
+    class func refresh() {
+        if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
+            cvc.refresh()
+        }
+    }
+    
     func login()->(){
         print("Login")
         if let vc = AppDelegate.getCurrentVC() as? DefaultViewController{
@@ -77,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                             switch Usergroup{
                             case "Student":
                                 if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
-                                    
+                                    self.currentMemberID = memberid
                                     self.db.collection("student").document(memberid).getDocument(completion: { (snap, err) in
                                         if let err = err{
                                             AppDelegate.showError(title: "读取用户时发生错误", err: err.localizedDescription)
