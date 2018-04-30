@@ -11,7 +11,8 @@ import UIKit
 class AllCourseCell: UICollectionViewCell {
     @IBOutlet weak var remainCourseLabel: UILabel!
     @IBOutlet weak var totalCourseLabel: UILabel!
-
+    @IBOutlet weak var title: UILabel!
+    
     @IBAction func goCourseRecord(_ sender: Any) {
     }
     

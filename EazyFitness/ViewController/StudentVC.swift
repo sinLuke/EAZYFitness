@@ -32,6 +32,8 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     var requestTimeEndDic:[String:Date] = [:]
     var requestDBREFDic:[String:DocumentReference] = [:]
     
+    var timeTableRef:CollectionReference!
+    
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
@@ -41,6 +43,9 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
         print("refresh")
         if let cMemberID = AppDelegate.AP().currentMemberID{
             let dbref = db.collection("student").document(cMemberID)
+            
+            
+            timeTableRef = dbref.collection("CourseRecorded")
             
             //读取总课时
             dbref.collection("CourseRegistered").whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
@@ -187,9 +192,10 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                                                           for: indexPath) as! AllCourseCell
             if self.CourseRegisteredNumber - self.TotalCourseFinished < 10{
                 cell.backgroundColor = HexColor.init(displayP3Red: 250/255, green: 232/255, blue: 210/255, alpha: 1)
-
+                cell.title.text = "请及时充值"
             } else {
                 cell.backgroundColor = HexColor.lightColor
+                cell.title.text = "剩余课程"
             }
             cell.totalCourseLabel.text = "/\(prepareCourseNumber(self.CourseRegisteredNumber))"
             cell.remainCourseLabel.text = "\(prepareCourseNumber(self.CourseRegisteredNumber - self.TotalCourseFinished))"
@@ -225,10 +231,14 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
+    
     */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let dvc = segue.destination as? TimeTableViewController{
+            dvc.collectionRef = timeTableRef
+        }
+        
+    }
 
 }

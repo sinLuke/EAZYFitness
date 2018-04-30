@@ -49,6 +49,7 @@
 		A3573599209651FA00995346 /* ThisMonthViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3573598209651FA00995346 /* ThisMonthViewCell.swift */; };
 		A357359B2096521300995346 /* RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A357359A2096521300995346 /* RequestCell.swift */; };
 		A357359E2096583D00995346 /* refreshableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A357359D2096583D00995346 /* refreshableVC.swift */; };
+		A35735B02096890400995346 /* TimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35735AF2096890400995346 /* TimeTableViewController.swift */; };
 		A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B183E2090315E0058EA7B /* WelcomeViewController.swift */; };
 		A35B1843209031990058EA7B /* StudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1842209031990058EA7B /* StudentVC.swift */; };
 		A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1844209031AD0058EA7B /* MyStudentVC.swift */; };
@@ -134,6 +135,7 @@
 		A3573598209651FA00995346 /* ThisMonthViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThisMonthViewCell.swift; sourceTree = "<group>"; };
 		A357359A2096521300995346 /* RequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestCell.swift; sourceTree = "<group>"; };
 		A357359D2096583D00995346 /* refreshableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refreshableVC.swift; sourceTree = "<group>"; };
+		A35735AF2096890400995346 /* TimeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableViewController.swift; sourceTree = "<group>"; };
 		A35B183E2090315E0058EA7B /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		A35B1842209031990058EA7B /* StudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentVC.swift; sourceTree = "<group>"; };
 		A35B1844209031AD0058EA7B /* MyStudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStudentVC.swift; sourceTree = "<group>"; };
@@ -340,6 +342,7 @@
 				A3573596209651A900995346 /* AllCourseCell.swift */,
 				A3573598209651FA00995346 /* ThisMonthViewCell.swift */,
 				A357359A2096521300995346 /* RequestCell.swift */,
+				A35735AF2096890400995346 /* TimeTableViewController.swift */,
 			);
 			path = StudentCells;
 			sourceTree = "<group>";
@@ -771,6 +774,7 @@
 				A35B1843209031990058EA7B /* StudentVC.swift in Sources */,
 				A3BD22B320648E8200E192EB /* EditableTableVC.swift in Sources */,
 				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
+				A35735B02096890400995346 /* TimeTableViewController.swift in Sources */,
 				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
 				A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */,
 				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,

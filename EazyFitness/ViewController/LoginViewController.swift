@@ -55,26 +55,36 @@ class LoginViewController: DefaultViewController, UITextFieldDelegate {
     }
     
     @IBAction func nextSetp(_ sender: Any) {
+        print("4")
         if let email = self.emailField.text{
             if isValidEmail(testStr: self.emailField.text!) == false{
+                print("2")
                 AppDelegate.showError(title: "邮箱错误", err: "这不是有效的邮箱")
             } else {
-                
+                self.startLoading()
                 db.collection("users").whereField("Email", isEqualTo: email).getDocuments { (snap, err) in
                     if let err = err{
+                        self.endLoading()
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
                     } else {
                         if let _snap = snap{
                             if _snap.documents.count == 0{
+                                self.endLoading()
                                 AppDelegate.showError(title: "邮箱错误", err: "未找到该用户")
                             } else {
+                                self.endLoading()
                                 self.userInfo = _snap.documents[0].data() as NSDictionary
+                                self.performSegue(withIdentifier: "next", sender: self)
                             }
+                        } else {
+                            print("snap")
                         }
                     }
                 }
+                
             }
         } else {
+            print("3")
             AppDelegate.showError(title: "邮箱错误", err: "请输入有效的邮箱")
         }
     }

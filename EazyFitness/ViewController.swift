@@ -193,11 +193,6 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func signin(_ sender: Any) {
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signin")
-        self.present(vc, animated: true) 
-    }
-    
 }
 
 
