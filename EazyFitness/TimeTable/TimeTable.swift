@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+
 extension Date {
     func findDateToday() -> Int{
         let calendar = NSCalendar.init(calendarIdentifier: .gregorian)
@@ -20,32 +22,74 @@ class TimeTable: NSObject {
     static let dateToday = 0
     
     static let VERTICALRATIO:CGFloat = 20
-    static let HORZAONRATIO:CGFloat = 8
+    static let HORZAONRATIO:CGFloat = 7
+    static let LEFTWIDTH:CGFloat = 47
+    static let TOPHEIGHT:CGFloat = 34
     
-    class func makeTimeTable(on view:UIView, with timetable:[String: [String:[[Int]]]]){
+    var numberOfStudent:Int!
+    var finishedStudent:Int = 0
+    
+    static var currentTimeTabel:TimeTable?
+    
+    func LoadFinished(view:TimeTableView, timetable:[String: [String:[[Int]]]], handeler:(_:CGFloat)->()){
+        finishedStudent += 1
+        if finishedStudent >= numberOfStudent{
+            handeler(TimeTable.makeTimeTable(on: view, with: timetable))
+        }
+    }
+    
+    class func makeTimeTable(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], handeler: @escaping (_:CGFloat)->()){
+        
+        print("makeTimeTable")
+        
+        currentTimeTabel = TimeTable()
+        currentTimeTabel!.numberOfStudent = _collectionRef.keys.count
+        view.backgroundColor = UIColor.white
+        var timetableDicWithName: [String: [String:[[Int]]]] = [:]
+        for names in Array(_collectionRef.keys){
+            if let collectionRef = _collectionRef[names]{
+                var timetableDic: [String:[[Int]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
+                collectionRef.whereField("Date", isGreaterThan: Date().startOfWeek()).whereField("Date", isLessThan: Date().endOfWeek()).whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
+                    if let err = err{
+                        AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
+                    } else {
+                        for doc in snap!.documents{
+                            if let startTime = doc.data()["Date"] as? Date, let duration = doc.data()["Amount"] as? Int{
+                                
+                                let numberHour:Int = Calendar.current.component(.hour, from: startTime)*100 + Calendar.current.component(.minute, from: startTime)
+                                let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: startTime)]
+                                if var oldList = timetableDic[weekDayName]{
+                                    oldList.append([numberHour, duration])
+                                    timetableDic.updateValue(oldList, forKey: weekDayName)
+                                }
+                            }
+                        }
+                        timetableDicWithName.updateValue(timetableDic, forKey: names)
+                        currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, handeler:handeler)
+                    }
+                }
+            } else {
+            }
+        }
+    }
+    
+    class func makeTimeTable(on view:TimeTableView, with timetable:[String: [String:[[Int]]]], colorList:[UIColor]? = HexColor.colorList) -> CGFloat{
         let timetableList = Array(timetable.values)
         
         let (timeScope, startTime) = TimeTable.findTimeScope(timetable: (timetableList))
-        let MaxWidth = view.frame.width
-        let MaxHeight = view.frame.height
         
-        let eachTimeScopeHeight = (9*MaxHeight/10)/CGFloat(timeScope)
+        if timeScope == 0 {
+            return 0
+        }
         
-        var viewForEachDay:[UIView] = []
-        var topView:UIView
-        var background:UIView
-        var DayLabele:[UILabel] = []
-        var timeScopeLabelList:[UILabel] = []
-        var CourseViewList:[UIView] = []
-        
-        background = UIView(frame: CGRect(x: 0, y: 0, width: MaxWidth, height: MaxHeight))
-        topView = UIView(frame: CGRect(x: MaxWidth/HORZAONRATIO, y: 0, width: MaxWidth-MaxWidth/HORZAONRATIO, height: MaxHeight/VERTICALRATIO))
-        topView.backgroundColor = UIColor.gray
+        view.background = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        view.topView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: TOPHEIGHT))
+        view.topView!.backgroundColor = UIColor.gray
         
         for i in 0...7{
             let _i = CGFloat(i)
-            let singleDayView = UIView(frame: CGRect(x: _i*(MaxWidth/HORZAONRATIO), y: MaxHeight/VERTICALRATIO, width: MaxWidth/8, height: (VERTICALRATIO-1)*MaxHeight/VERTICALRATIO))
-            let singleDayLabel = UILabel(frame: CGRect(x: (_i-1)*(MaxWidth/HORZAONRATIO) + MaxWidth*0.01, y: MaxHeight*0.005, width: MaxWidth/HORZAONRATIO-MaxWidth*0.02, height: MaxHeight/VERTICALRATIO-MaxHeight*0.01))
+            let singleDayView = UIView(frame: CGRect(x: LEFTWIDTH+(_i-1)*((view.frame.width-LEFTWIDTH)/HORZAONRATIO), y: TOPHEIGHT, width: (view.frame.width-LEFTWIDTH)/HORZAONRATIO, height: (VERTICALRATIO-1)*TOPHEIGHT))
+            let singleDayLabel = UILabel(frame: CGRect(x: LEFTWIDTH + (_i-1)*((view.frame.width-LEFTWIDTH)/HORZAONRATIO) + 375*0.01, y: 667*0.005, width: (view.frame.width-LEFTWIDTH)/HORZAONRATIO-375*0.02, height: TOPHEIGHT-667*0.01))
             singleDayLabel.numberOfLines = 1
             singleDayLabel.adjustsFontSizeToFitWidth = true
             singleDayLabel.textColor = UIColor.white
@@ -56,40 +100,25 @@ class TimeTable: NSObject {
                 let _DicForOneStudent = timetable[eachTimetable]
                 if let DicForOneStudent = _DicForOneStudent{
                     for eachDay in Array(DicForOneStudent.keys){
-                        var weekDay = 1
-                        switch eachDay{
-                        case "mon":
-                            weekDay = 2
-                        case "tue":
-                            weekDay = 3
-                        case "wed":
-                            weekDay = 4
-                        case "thu":
-                            weekDay = 5
-                        case "fri":
-                            weekDay = 6
-                        case "sat":
-                            weekDay = 7
-                        case "sun":
-                            weekDay = 1
-                        default:
-                            weekDay = 1
-                        }
-                        if let _courseTimeList = DicForOneStudent[eachDay] as? [[Int]]{
+                        var weekDay = Date.getWeekDayNumber(str: eachDay)
+                        if let _courseTimeList = DicForOneStudent[eachDay]{
                             for courseTimeList in _courseTimeList{
-                                if (weekDay == i) && (courseTimeList[1] != 0){
-                                    let value1 = CGFloat(courseTimeList[0])-CGFloat(startTime*100)
-                                    let height = CGFloat(courseTimeList[1])*CGFloat(eachTimeScopeHeight)/2
-                                    let CourseView = UIView(frame: CGRect(x: 0, y: (value1)*eachTimeScopeHeight/100 + eachTimeScopeHeight/2, width: MaxWidth/8, height: height))
-                                    CourseView.backgroundColor = HexColor.colorList[count%HexColor.colorList.count]
-                                    
-                                    let courseLabel = UILabel(frame: CGRect(x: 0, y: 0, width: CourseView.frame.width, height: CourseView.frame.height))
-                                    courseLabel.text = "\(eachTimetable)"
-                                    courseLabel.adjustsFontSizeToFitWidth = true
-                                    courseLabel.textAlignment = .center
-                                    courseLabel.textColor = UIColor.white
-                                    CourseView.addSubview(courseLabel)
-                                    singleDayView.addSubview(CourseView)
+                                if courseTimeList.count >= 2{
+                                    if (weekDay == i) && (courseTimeList[1] != 0){
+                                        
+                                        let value1 = CGFloat((courseTimeList[0]/100)*100 + (courseTimeList[0]%100)*100/60)-CGFloat(startTime*100)
+                                        let height = CGFloat(courseTimeList[1])*CGFloat(view.eachTimeScopeHeight)/2
+                                        let CourseView = UIView(frame: CGRect(x: 0, y: (value1)*view.eachTimeScopeHeight/100 + view.eachTimeScopeHeight/2, width: (view.frame.width-LEFTWIDTH)/7, height: height))
+                                        CourseView.backgroundColor = colorList![count%HexColor.colorList.count]
+                                        
+                                        let courseLabel = UILabel(frame: CGRect(x: 0, y: 0, width: CourseView.frame.width, height: CourseView.frame.height))
+                                        courseLabel.text = "\(eachTimetable)"
+                                        courseLabel.adjustsFontSizeToFitWidth = true
+                                        courseLabel.textAlignment = .center
+                                        courseLabel.textColor = UIColor.white
+                                        CourseView.addSubview(courseLabel)
+                                        singleDayView.addSubview(CourseView)
+                                    }
                                 }
                             }
                         }
@@ -97,65 +126,73 @@ class TimeTable: NSObject {
                 }
                 count += 1
             }
-            
-            switch i{
-            case 0:
+            if i == 0{
                 singleDayLabel.text = ""
                 singleDayView.backgroundColor = UIColor.gray
                 
-                for j in 0...timeScope-1{
+                singleDayView.frame = CGRect(x: 0, y: TOPHEIGHT, width: LEFTWIDTH, height: singleDayView.frame.height)
+                
+                for j in 0...timeScope - 1{
                     let _j = CGFloat(j)
                     
-                    let eachTimeScopeLabel = UILabel(frame: CGRect(x: MaxWidth*0.01, y: MaxHeight*0.005 + _j*eachTimeScopeHeight, width: MaxWidth/HORZAONRATIO - MaxWidth*0.02, height: eachTimeScopeHeight - MaxHeight*0.01))
+                    let eachTimeScopeLabel = UILabel(frame: CGRect(x: 375*0.01, y: _j*view.eachTimeScopeHeight, width: LEFTWIDTH - 375*0.02, height: view.eachTimeScopeHeight))
                     
                     eachTimeScopeLabel.text = "\(j+startTime)"
+                    if j+startTime == 12{
+                        eachTimeScopeLabel.text = "上午\n下午"
+                    }
                     eachTimeScopeLabel.textColor = UIColor.white
                     eachTimeScopeLabel.lineBreakMode = .byWordWrapping
-                    eachTimeScopeLabel.numberOfLines = 1
+                    eachTimeScopeLabel.numberOfLines = 0
                     eachTimeScopeLabel.adjustsFontSizeToFitWidth = true
                     eachTimeScopeLabel.textAlignment = .center
-                    timeScopeLabelList.append(eachTimeScopeLabel)
+                    view.timeScopeLabelList.append(eachTimeScopeLabel)
                     singleDayView.addSubview(eachTimeScopeLabel)
                     
-                    let hourLine = UIView(frame: CGRect(x: MaxWidth/8, y: MaxHeight/VERTICALRATIO + _j*eachTimeScopeHeight - eachTimeScopeHeight/2, width: MaxWidth, height: 1))
+                    let hourLine = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight/2, width: view.frame.width-LEFTWIDTH, height: 1))
                     hourLine.backgroundColor = UIColor.gray
-                    background.addSubview(hourLine)
+                    view.background.addSubview(hourLine)
+                    
+                    let hourLine2 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight, width: view.frame.width-LEFTWIDTH, height: 1))
+                    hourLine2.backgroundColor = UIColor.gray.withAlphaComponent(0.2)
+                    view.background.addSubview(hourLine2)
+                    
+                    let hourLine3 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight/4, width: view.frame.width-LEFTWIDTH, height: 1))
+                    hourLine3.backgroundColor = UIColor.gray.withAlphaComponent(0.05)
+                    view.background.addSubview(hourLine3)
+                    
+                    let hourLine4 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight*3/4, width: view.frame.width-LEFTWIDTH, height: 1))
+                    hourLine4.backgroundColor = UIColor.gray.withAlphaComponent(0.05)
+                    view.background.addSubview(hourLine4)
                 }
-                
-            case 2:
-                singleDayLabel.text = "一"
-            case 3:
-                singleDayLabel.text = "二"
-                singleDayView.backgroundColor = HexColor.lightColor
-            case 4:
-                singleDayLabel.text = "三"
-            case 5:
-                singleDayLabel.text = "四"
-                singleDayView.backgroundColor = HexColor.lightColor
-            case 6:
-                singleDayLabel.text = "五"
-            case 7:
-                singleDayLabel.text = "六"
-                singleDayView.backgroundColor = HexColor.weekEndColor
-            case 1:
-                singleDayLabel.text = "日"
-                singleDayView.backgroundColor = HexColor.weekEndLightColor
-            default:
-                continue
             }
             
+            singleDayLabel.text = Date.weekLongName[i]
+            if (i%2 == 0) && (i != 0){
+                singleDayView.backgroundColor = HexColor.lightColor
+            }
             if (Date().findDateToday())%7 == i{
                 singleDayLabel.text = "今天"
+                singleDayView.backgroundColor = HexColor.Blue.withAlphaComponent(0.15)
             }
             
-            viewForEachDay.append(singleDayView)
+            view.viewForEachDay.append(singleDayView)
             
             view.addSubview(singleDayView)
-            topView.addSubview(singleDayLabel)
+            view.topView!.addSubview(singleDayLabel)
             
-            view.addSubview(topView)
-            view.addSubview(background)
+            view.addSubview(view.topView!)
+            view.addSubview(view.background)
         }
+        
+        let maxHeight = CGFloat(view.eachTimeScopeHeight) * CGFloat(timeScope) + CGFloat(TOPHEIGHT)
+        
+        for views in view.viewForEachDay{
+            views.frame =  CGRect(x: views.frame.minX, y: views.frame.minY, width: views.frame.width, height: maxHeight)
+        }
+        
+        return maxHeight
+        
     }
     
     class func isValidTime(timeNumber:Int) -> Bool{
@@ -218,16 +255,19 @@ class TimeTable: NSObject {
         
         for eachTimetable in timetable{
             for eachDay in Array(eachTimetable.keys){
-                if let timelist = eachTimetable[eachDay] as? [[Int]]{
+                if let timelist = eachTimetable[eachDay]{
                     for eachCourse in timelist{
-                        if eachCourse[1] == 0{
-                        } else {
-                            if minTime > eachCourse[0]{
-                                minTime = eachCourse[0]
+                        if eachCourse.count >= 2{
+                            if eachCourse[1] == 0{
+                            } else {
+                                if minTime > eachCourse[0]{
+                                    minTime = eachCourse[0]
+                                }
+                                if maxTime < eachCourse[0]+((eachCourse[1])/2)*100 + ((eachCourse[1]%2)*30){
+                                    maxTime = eachCourse[0]+((eachCourse[1])/2)*100 + ((eachCourse[1]%2)*30)
+                                }
                             }
-                            if maxTime < eachCourse[0]{
-                                maxTime = eachCourse[0]+((eachCourse[1])/2)*100 + ((eachCourse[1]%2)*30)
-                            }
+                            
                         }
                     }
                 }
@@ -236,8 +276,8 @@ class TimeTable: NSObject {
         if maxTime < minTime{
             return (0,0)
         }
-        let minTableTime = minTime/100
-        let maxTableTime = (maxTime+1)/100
+        let minTableTime = max(minTime/100, 0)
+        let maxTableTime = min((maxTime+100)/100, 24)
         return ((maxTableTime - minTableTime + 1), minTableTime)
     }
 }

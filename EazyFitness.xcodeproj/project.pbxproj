@@ -10,6 +10,8 @@
 		179A6386A61CC74C4E594210 /* Pods_EazyFitnessTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21608D02244DD67E8A7BCB5D /* Pods_EazyFitnessTests.framework */; };
 		375780039CA37C47D458F855 /* Pods_EazyFitness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2DF9C6DF394FF6D84356AF9 /* Pods_EazyFitness.framework */; };
 		980291F209AB19C83C6FC585 /* Pods_EazyFitnessUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4AA104B60E7AE848C7C8D8 /* Pods_EazyFitnessUITests.framework */; };
+		A302A83C2096A6840055C15D /* dateext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A302A83B2096A6840055C15D /* dateext.swift */; };
+		A302A83E2096E32D0055C15D /* TimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A302A83D2096E32D0055C15D /* TimeTableView.swift */; };
 		A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */; };
 		A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795E205B750700512378 /* SwitchCameraButton.swift */; };
 		A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795F205B750700512378 /* QRCodeReaderViewController.swift */; };
@@ -88,6 +90,8 @@
 		21608D02244DD67E8A7BCB5D /* Pods_EazyFitnessTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EazyFitnessTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		307E003CBF4A4C843CE1A52C /* Pods-EazyFitness.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitness.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness.debug.xcconfig"; sourceTree = "<group>"; };
 		5B4AA104B60E7AE848C7C8D8 /* Pods_EazyFitnessUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EazyFitnessUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A302A83B2096A6840055C15D /* dateext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dateext.swift; sourceTree = "<group>"; };
+		A302A83D2096E32D0055C15D /* TimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableView.swift; sourceTree = "<group>"; };
 		A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerBuilder.swift; sourceTree = "<group>"; };
 		A307795E205B750700512378 /* SwitchCameraButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCameraButton.swift; sourceTree = "<group>"; };
 		A307795F205B750700512378 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
@@ -232,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */,
+				A302A83D2096E32D0055C15D /* TimeTableView.swift */,
 			);
 			path = TimeTable;
 			sourceTree = "<group>";
@@ -284,6 +289,7 @@
 				A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */,
 				A325A372207C56AA00EF00B7 /* SpecialViewController.swift */,
 				A3BD22A92064414900E192EB /* TrainerNav.swift */,
+				A302A83B2096A6840055C15D /* dateext.swift */,
 			);
 			path = EazyFitness;
 			sourceTree = "<group>";
@@ -737,8 +743,10 @@
 				A34923642090E4F8004C5455 /* SigninViewController.swift in Sources */,
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
 				A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */,
+				A302A83C2096A6840055C15D /* dateext.swift in Sources */,
 				A3492377209113E2004C5455 /* specialUserSigninViewController.swift in Sources */,
 				A3BD22B72064915300E192EB /* ListItem.swift in Sources */,
+				A302A83E2096E32D0055C15D /* TimeTableView.swift in Sources */,
 				A307796B205B750800512378 /* QRCodeReaderView.swift in Sources */,
 				A39C5D8B2092B4DA00D46739 /* LoginPasswordViewController.swift in Sources */,
 				A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */,
@@ -972,7 +980,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos11.2;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = arm64;
 			};
 			name = Debug;
@@ -995,7 +1003,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos11.2;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = arm64;
 			};
 			name = Release;

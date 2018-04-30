@@ -22,19 +22,23 @@ class RequestCell: UICollectionViewCell {
         approveBtn.isHidden = true
         waitView.startAnimating()
         UIView.animate(withDuration: 0.5, animations: {
-            self.backgroundColor = HexColor.lightColor
+            self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
         }) { (_) in
             self.docRef.updateData(["Approved" : true]) { (err) in
                 if let err = err {
                     AppDelegate.showError(title: "网络发生问题", err: err.localizedDescription)
                 } else {
-                    UIView.animate(withDuration: 0.5, animations: {
+                    UIView.animate(withDuration: 0.3, animations: {
                         //D9FAD9
-                        self.backgroundColor = HexColor.init(displayP3Red: 217/255, green: 250/255, blue: 217/255, alpha: 1)
+                        self.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
                     }, completion: { (_) in
-                        self.waitView.isHidden = true
-                        self.waitView.stopAnimating()
-                        AppDelegate.refresh()
+                        UIView.animate(withDuration: 0.2, animations: {
+                            self.alpha = 0
+                        }, completion: { (_) in
+                            self.waitView.isHidden = true
+                            self.waitView.stopAnimating()
+                            AppDelegate.refresh()
+                        })
                     })
                 }
             }

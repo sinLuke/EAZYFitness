@@ -15,7 +15,7 @@ import FirebaseGoogleAuthUI
 class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     var usergroup:String?
-    
+    var myName:String?
     var currentMemberID:String?
     
     var UserDoc:NSDictionary?
