@@ -21,7 +21,7 @@ extension Date {
 
 class TimeTableViewController: UIViewController {
     
-    var timetableDic: [String:[[Int]]] = ["mon":[[0,0]], "tue":[[0,0]], "wed":[[0,0]], "thu":[[0,0]], "fri":[[0,0]], "sat":[[0,0]], "sun":[[0,0]]]
+    var timetableDic: [String:[[Int]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
     var collectionRef: CollectionReference!
     
     override func viewDidLoad() {
@@ -31,8 +31,13 @@ class TimeTableViewController: UIViewController {
                 AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
             } else {
                 for doc in snap!.documents{
-                    
+                    if let startTime = doc.data()["Date"] as? Date, let duration = doc.data()["Amount"] as? Int{
+                        let numberHour:Int = Calendar.current.component(.hour, from: startTime)*100 + Calendar.current.component(.minute, from: startTime)
+                        
+                        self.ListOfCourse.append([numberHour, duration])
+                    }
                 }
+                
             }
         }
         
