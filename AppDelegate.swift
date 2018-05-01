@@ -14,6 +14,10 @@ import FirebaseGoogleAuthUI
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
+    var myStudentListGeneral:[String] = []
+    var myStudentListMultiple:[String] = []
+    //教练
+    
     var usergroup:String?
     var myName:String?
     var currentMemberID:String?
@@ -54,7 +58,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             }
         }
     }
-    */
+
+    func trainerID(){
+        var db = Firestore.firestore()
+        db.collection("QRCODE").whereField("MemberID", isEqualTo: 0).addSnapshotListener { (snap, error) in
+            if let _snap = snap{
+                print("Here")
+                for doc in _snap.documents{
+                    print(doc.documentID)
+                    print(doc.data())
+                    self.db.collection("QRCODE").document(doc.documentID).delete()
+                }
+            }
+        }
+    }
+        */
+    
+    func getAllMystudent(){
+        print("=====")
+        print(currentMemberID)
+        if let _currentMemberID = self.currentMemberID{
+            print("=====")
+            print(_currentMemberID)
+            let dbref = db.collection("trainer").document(_currentMemberID)
+            //获取所有学生ID
+            dbref.collection("trainee").getDocuments { (snap, err) in
+                if let err = err {
+                    AppDelegate.showError(title: "获取所有学生时发生错误", err: err.localizedDescription)
+                } else {
+                    if let studentDocs = snap?.documents{
+                        for studentDoc in studentDocs{
+                            print(studentDoc)
+                            if let studentType = studentDoc.data() as? [String:String]{
+                                if studentType["Type"] == "General"{
+                                    self.myStudentListGeneral.append(studentDoc.documentID)
+                                    print(self.myStudentListGeneral)
+                                } else if studentType["Type"] == "Multiple"{
+                                    self.myStudentListMultiple.append(studentDoc.documentID)
+                                } else {
+                                    AppDelegate.showError(title: "获取所有学生时发生错误", err: "无效的学生类别")
+                                }
+                            } else {
+                                AppDelegate.showError(title: "获取所有学生时发生错误", err: "无法转换数据")
+                            }
+                        }
+                    } else {
+                        AppDelegate.showError(title: "获取所有学生时发生错误", err: "无法获取数据")
+                    }
+                }
+            }
+        }
+    }
     
     class func refresh() {
         if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
@@ -83,10 +137,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                         print(document)
                         if let Usergroup = document.value(forKey: "Type") as? String{
                             self.usergroup = Usergroup
-                            switch Usergroup{
-                            case "Student":
-                                if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
-                                    self.currentMemberID = memberid
+                            
+                            if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
+                                self.currentMemberID = memberid
+                                switch Usergroup{
+                                case "Student":
+                                    
+                                    
+                                    //获取我的所有学生
                                     self.db.collection("student").document(memberid).getDocument(completion: { (snap, err) in
                                         if let err = err{
                                             AppDelegate.showError(title: "读取用户时发生错误", err: err.localizedDescription)
@@ -97,22 +155,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                                             }
                                         }
                                     })
-                                    
-
+                                case "Super":
+                                    AppDelegate.resetMainVC(with: "super")
+                                case "Mississauga":
+                                    AppDelegate.resetMainVC(with: "admin")
+                                case "Waterloo":
+                                    AppDelegate.resetMainVC(with: "admin")
+                                case "Scarborough":
+                                    AppDelegate.resetMainVC(with: "admin")
+                                case "trainer":
+                                    self.getAllMystudent()
+                                    AppDelegate.resetMainVC(with: "trainer")
+                                default:
+                                    AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
                                 }
-                            case "Super":
-                                AppDelegate.resetMainVC(with: "super")
-                            case "Mississauga":
-                                AppDelegate.resetMainVC(with: "admin")
-                            case "Waterloo":
-                                AppDelegate.resetMainVC(with: "admin")
-                            case "Scarborough":
-                                AppDelegate.resetMainVC(with: "admin")
-                            case "Trainer":
-                                AppDelegate.resetMainVC(with: "trainer")
-                            default:
-                                AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
                             }
+                            
                         }
                     } else {
                         AppDelegate.showError(title: "登陆发生错误", err:"未找到用户", handler: self.signout)
@@ -131,6 +189,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         FirebaseApp.configure()
         
         //Special()
+        //trainerID()
         
         self.authUI = FUIAuth.defaultAuthUI()
         self.authUI?.delegate = self
@@ -391,6 +450,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         return appDelegate
     }
     class func resetMainVC(with ID: String){
+        print(ID)
         AppDelegate.AP().window = UIWindow(frame: UIScreen.main.bounds)
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

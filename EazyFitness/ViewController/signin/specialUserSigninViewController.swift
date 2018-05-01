@@ -66,12 +66,15 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     }
     
     func createUserComplete(user:User?, error:Error?)->(){
+        print("createUserComplete")
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
         } else {
+            print("Auth.auth().currentUser")
             if let cuser = Auth.auth().currentUser{
                 let cardID = "\(userInfo.value(forKey: "MemberID")!)"
-                
+                print(cardID)
+                print(cuser.uid)
                 self.db.collection("users").document(cuser.uid).setData([
                     "First Name": self.fnameField.text,
                     "Last Name": self.lnameField.text,
@@ -81,7 +84,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     ])
                 
                 switch usergroup.text{
-                case "super":
+                case "Super":
                     AppDelegate.resetMainVC(with: "super")
                 case "trainer":
                     AppDelegate.resetMainVC(with: "trainer")

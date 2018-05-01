@@ -24,11 +24,12 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let theTop = timetable?.topView{
+            timetable?.bringSubview(toFront: theTop)
             if scrollView.contentOffset.y >= 0{
                 theTop.layer.shadowColor = UIColor.black.cgColor
-                theTop.layer.shadowOpacity = 0.3
-                theTop.layer.shadowOffset = CGSize(width: 0, height: 3)
-                theTop.layer.shadowRadius = 6
+                theTop.layer.shadowOpacity = 0.15
+                theTop.layer.shadowOffset = CGSize(width: 0, height: 1)
+                theTop.layer.shadowRadius = 3
                 if scrollView.contentOffset.y != 0{
                     theTop.clipsToBounds = false
                 } else {
@@ -38,6 +39,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
                 
             }else {
                 theTop.clipsToBounds = true
+                theTop.frame = CGRect(x: 0, y: 0, width: theTop.frame.width, height: theTop.frame.height)
             }
         }
     }

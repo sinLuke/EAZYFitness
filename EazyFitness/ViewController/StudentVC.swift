@@ -35,7 +35,6 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     }
     
     func refresh() {
-        print("refresh")
         if let cMemberID = AppDelegate.AP().currentMemberID{
             let dbref = db.collection("student").document(cMemberID)
             
@@ -52,7 +51,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                     } else {
                         self.nextCourse = [:]
                     }
-                    self.collectionView?.reloadData()
+                    self.reload()
                 }
             }
             
@@ -77,7 +76,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                     } else {
                         self.thisCourse = [:]
                     }
-                    self.collectionView?.reloadData()
+                    self.reload()
                 }
             }
             
@@ -90,7 +89,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                     for allDocs in snap!.documents{
                         self.CourseRegisteredNumber += allDocs.data()["Amount"] as! Int
                     }
-                    self.collectionView?.reloadData()
+                    self.reload()
                 }
             }
             
@@ -103,7 +102,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                     for allDocs in snap!.documents{
                         self.TotalCourseFinished += allDocs.data()["Amount"] as! Int
                     }
-                    self.collectionView?.reloadData()
+                    self.reload()
                 }
             }
             
@@ -116,7 +115,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                     for allDocs in snap!.documents{
                         self.MonthCourseFinished += allDocs.data()["Amount"] as! Int
                     }
-                    self.collectionView?.reloadData()
+                    self.reload()
                 }
             }
             
@@ -141,7 +140,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                             }
                         }
                     }
-                    self.collectionView?.reloadData()
+                    self.reload()
                 }
             }
         }
@@ -177,7 +176,6 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     
     var studentInfo: NSDictionary?
     var MemberID: Int!
-    var ref: DatabaseReference!
     
     var firstName = ""
     var lastName = ""
@@ -205,6 +203,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
             return String(float)
         }
     }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.row{
             //课程表
@@ -241,7 +240,6 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 cell.noteLabel.text = ""
                 cell.report.isHidden = true
                 cell.requirChangeBtn.isHidden = true
-                
             }
             cell.layer.cornerRadius = 10
             return cell

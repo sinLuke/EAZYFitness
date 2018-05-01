@@ -84,7 +84,7 @@ class TimeTable: NSObject {
         
         view.background = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         view.topView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: TOPHEIGHT))
-        view.topView!.backgroundColor = UIColor.gray
+        view.topView!.backgroundColor = UIColor.white
         
         for i in 0...7{
             let _i = CGFloat(i)
@@ -92,7 +92,7 @@ class TimeTable: NSObject {
             let singleDayLabel = UILabel(frame: CGRect(x: LEFTWIDTH + (_i-1)*((view.frame.width-LEFTWIDTH)/HORZAONRATIO) + 375*0.01, y: 667*0.005, width: (view.frame.width-LEFTWIDTH)/HORZAONRATIO-375*0.02, height: TOPHEIGHT-667*0.01))
             singleDayLabel.numberOfLines = 1
             singleDayLabel.adjustsFontSizeToFitWidth = true
-            singleDayLabel.textColor = UIColor.white
+            singleDayLabel.textColor = UIColor.gray
             singleDayLabel.textAlignment = .center
             
             var count = 0
@@ -115,7 +115,7 @@ class TimeTable: NSObject {
                                         courseLabel.text = "\(eachTimetable)"
                                         courseLabel.adjustsFontSizeToFitWidth = true
                                         courseLabel.textAlignment = .center
-                                        courseLabel.textColor = UIColor.white
+                                        courseLabel.textColor = UIColor.gray
                                         CourseView.addSubview(courseLabel)
                                         singleDayView.addSubview(CourseView)
                                     }
@@ -128,7 +128,7 @@ class TimeTable: NSObject {
             }
             if i == 0{
                 singleDayLabel.text = ""
-                singleDayView.backgroundColor = UIColor.gray
+                singleDayView.backgroundColor = UIColor.white
                 
                 singleDayView.frame = CGRect(x: 0, y: TOPHEIGHT, width: LEFTWIDTH, height: singleDayView.frame.height)
                 
@@ -141,7 +141,7 @@ class TimeTable: NSObject {
                     if j+startTime == 12{
                         eachTimeScopeLabel.text = "上午\n下午"
                     }
-                    eachTimeScopeLabel.textColor = UIColor.white
+                    eachTimeScopeLabel.textColor = UIColor.gray
                     eachTimeScopeLabel.lineBreakMode = .byWordWrapping
                     eachTimeScopeLabel.numberOfLines = 0
                     eachTimeScopeLabel.adjustsFontSizeToFitWidth = true
@@ -149,20 +149,20 @@ class TimeTable: NSObject {
                     view.timeScopeLabelList.append(eachTimeScopeLabel)
                     singleDayView.addSubview(eachTimeScopeLabel)
                     
-                    let hourLine = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight/2, width: view.frame.width-LEFTWIDTH, height: 1))
-                    hourLine.backgroundColor = UIColor.gray
+                    let hourLine = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight/2, width: view.frame.width-LEFTWIDTH, height: 0.5))
+                    hourLine.backgroundColor = UIColor.lightGray
                     view.background.addSubview(hourLine)
                     
-                    let hourLine2 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight, width: view.frame.width-LEFTWIDTH, height: 1))
-                    hourLine2.backgroundColor = UIColor.gray.withAlphaComponent(0.2)
+                    let hourLine2 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight, width: view.frame.width-LEFTWIDTH, height: 0.5))
+                    hourLine2.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
                     view.background.addSubview(hourLine2)
                     
-                    let hourLine3 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight/4, width: view.frame.width-LEFTWIDTH, height: 1))
-                    hourLine3.backgroundColor = UIColor.gray.withAlphaComponent(0.05)
+                    let hourLine3 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight/4, width: view.frame.width-LEFTWIDTH, height: 0.5))
+                    hourLine3.backgroundColor = UIColor.lightGray.withAlphaComponent(0.05)
                     view.background.addSubview(hourLine3)
                     
-                    let hourLine4 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight*3/4, width: view.frame.width-LEFTWIDTH, height: 1))
-                    hourLine4.backgroundColor = UIColor.gray.withAlphaComponent(0.05)
+                    let hourLine4 = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT + (_j+1)*view.eachTimeScopeHeight - view.eachTimeScopeHeight*3/4, width: view.frame.width-LEFTWIDTH, height: 0.5))
+                    hourLine4.backgroundColor = UIColor.lightGray.withAlphaComponent(0.05)
                     view.background.addSubview(hourLine4)
                 }
             }
@@ -172,7 +172,7 @@ class TimeTable: NSObject {
                 singleDayView.backgroundColor = HexColor.lightColor
             }
             if (Date().findDateToday())%7 == i{
-                singleDayLabel.text = "今天"
+                singleDayLabel.textColor = HexColor.Blue
                 singleDayView.backgroundColor = HexColor.Blue.withAlphaComponent(0.15)
             }
             
@@ -185,13 +185,21 @@ class TimeTable: NSObject {
             view.addSubview(view.background)
         }
         
-        let maxHeight = CGFloat(view.eachTimeScopeHeight) * CGFloat(timeScope) + CGFloat(TOPHEIGHT)
+        let maxHeight = (CGFloat(view.eachTimeScopeHeight) * CGFloat(timeScope) + CGFloat(TOPHEIGHT)) + view.frame.height
+        
+        let LeftLine = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT, width: 0.5, height: maxHeight))
+        LeftLine.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        view.background.addSubview(LeftLine)
+        
+        let TopLeftLine = UIView(frame: CGRect(x: LEFTWIDTH, y: 0, width: 0.5, height: TOPHEIGHT))
+        TopLeftLine.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        view.topView!.addSubview(TopLeftLine)
         
         for views in view.viewForEachDay{
             views.frame =  CGRect(x: views.frame.minX, y: views.frame.minY, width: views.frame.width, height: maxHeight)
         }
         
-        return maxHeight
+        return maxHeight - view.frame.height
         
     }
     

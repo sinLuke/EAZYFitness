@@ -45,9 +45,6 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             case "SCARBOROUGH":
                                 self.userInfo = ["usergroup":"Scarborough", "qrvalue":result.value]
                                 self.performSegue(withIdentifier: "special", sender: self)
-                            case "TRAINER":
-                                self.userInfo = ["usergroup":"Trainer", "qrvalue":result.value]
-                                self.performSegue(withIdentifier: "special", sender: self)
                             default:
                                 self.fetchUserData(CardID: "\(numberValue)")
                             }
@@ -66,21 +63,45 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     }
     
     func fetchUserData(CardID:String){
-        db.collection("student").document(CardID).getDocument { (snap, err) in
-            if let err = err{
-                self.endLoading()
-                AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
+        if let CardIDNumber = Int(CardID){
+            print(CardIDNumber)
+            if CardIDNumber > 1000 && CardIDNumber < 2000{
+                db.collection("student").document(CardID).getDocument { (snap, err) in
+                    if let err = err{
+                        self.endLoading()
+                        AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
+                    } else {
+                        if let value = snap?.data() as? NSDictionary{
+                            self.userInfo = value
+                            self.gotUserData()
+                        } else {
+                            AppDelegate.showError(title: "二维码无效", err: "请与客服联系", of: self)
+                        }
+                    }
+                }
             } else {
-                if let value = snap?.data() as? NSDictionary{
-                    self.userInfo = value
-                    self.gotUserData()
+                db.collection("trainer").document(CardID).getDocument { (snap, err) in
+                    if let err = err{
+                        self.endLoading()
+                        AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
+                    } else {
+                        if let value = snap?.data() as? NSDictionary{
+                            self.userInfo = value
+                            self.gotUserData()
+                        } else {
+                            AppDelegate.showError(title: "二维码无效", err: "请与客服联系", of: self)
+                        }
+                    }
                 }
             }
+        } else {
+            AppDelegate.showError(title: "二维码无效", err: "无法将卡号转化为ID", of: self)
         }
+        
+        
     }
     
     func gotUserData(){
-        print(userInfo!.value(forKey: "Registered"))
         let registered = userInfo!.value(forKey: "Registered") as! Int
 
         if registered == 0{
@@ -92,7 +113,18 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
             dismiss(animated: true, completion: nil)
         } else {
             self.endLoading()
-            performSegue(withIdentifier: "password", sender: self)
+            print(userInfo)
+            if let usergroup = userInfo?.value(forKey: "usergroup") as? String{
+                if usergroup == "student"{
+                    performSegue(withIdentifier: "password", sender: self)
+                } else {
+                    performSegue(withIdentifier: "special", sender: self)
+                }
+            } else {
+                self.endLoading()
+                AppDelegate.showError(title: "用户错误", err: "用户组不存在", of: self, handler: self.signInCancel)
+                
+            }
         }
     }
     
