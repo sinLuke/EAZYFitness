@@ -73,6 +73,43 @@ class TimeTable: NSObject {
         }
     }
     
+    class func makeTimeTableForTrainerApprovedCourse(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], handeler: @escaping (_:CGFloat)->()){
+        
+        print("makeTimeTable")
+        
+        currentTimeTabel = TimeTable()
+        currentTimeTabel!.numberOfStudent = _collectionRef.keys.count
+        view.backgroundColor = UIColor.white
+        var timetableDicWithName: [String: [String:[[Int]]]] = [:]
+        for names in Array(_collectionRef.keys){
+            if let collectionRef = _collectionRef[names]{
+                var timetableDic: [String:[[Int]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
+                collectionRef.whereField("Date", isGreaterThan: Date().startOfWeek()).whereField("Date", isLessThan: Date().endOfWeek()).whereField("TrainerApproved", isEqualTo: true).getDocuments { (snap, err) in
+                    if let err = err{
+                        AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
+                    } else {
+                        for doc in snap!.documents{
+                            if let startTime = doc.data()["Date"] as? Date, let duration = doc.data()["Amount"] as? Int{
+                                
+                                let numberHour:Int = Calendar.current.component(.hour, from: startTime)*100 + Calendar.current.component(.minute, from: startTime)
+                                let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: startTime)]
+                                if var oldList = timetableDic[weekDayName]{
+                                    oldList.append([numberHour, duration])
+                                    timetableDic.updateValue(oldList, forKey: weekDayName)
+                                }
+                            }
+                        }
+                        timetableDicWithName.updateValue(timetableDic, forKey: names)
+                        currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, handeler:handeler)
+                    }
+                }
+            } else {
+            }
+        }
+    }
+    
+    
+    
     class func makeTimeTable(on view:TimeTableView, with timetable:[String: [String:[[Int]]]], colorList:[UIColor]? = HexColor.colorList) -> CGFloat{
         let timetableList = Array(timetable.values)
         

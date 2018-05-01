@@ -18,6 +18,8 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     var userInfo:NSDictionary!
     var db: Firestore!
     
+    var theUserRefrence: DocumentReference!
+    
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var emailField: UITextField!
@@ -75,9 +77,11 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
                     "First Name": self.fname,
                     "Last Name": self.lname,
                     "MemberID": cardID,
-                    "Type": "Student",
+                    "Type": "student",
                     "Email": self.emailField.text!
                     ])
+                
+                theUserRefrence.updateData(["Registered":2])
 
                 AppDelegate.resetMainVC(with: "student")
             }

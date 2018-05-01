@@ -36,7 +36,7 @@ class TrainerMyStudentCell: UICollectionViewCell, UICollectionViewDelegate, UICo
         dateFormatter2.dateStyle = .none
         dateFormatter2.timeStyle = .short
         
-        if thisStudentNextCourseDic == nil{
+        if thisStudentNextCourseDic == nil || thisStudentNextCourseDic?.count == 0{
             cell.DateTimeLabel.text = "暂无课程"
         } else {
             cell.DateTimeLabel.text = "\((thisStudentNextCourseDic!["Date"] as! Date).getThisWeekDayLongName()) \(dateFormatter2.string(from: (thisStudentNextCourseDic!["Date"] as! Date)))"

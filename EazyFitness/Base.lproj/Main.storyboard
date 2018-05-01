@@ -1705,7 +1705,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <imageView key="backgroundView" hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" id="PGl-8l-leN">
-                            <rect key="frame" x="0.0" y="-46" width="375" height="667"/>
+                            <rect key="frame" x="0.0" y="229" width="375" height="667"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <cells>
@@ -1751,6 +1751,9 @@
                                                 <constraint firstAttribute="width" constant="30" id="WOc-6g-bh4"/>
                                             </constraints>
                                             <state key="normal" title="Button" image="scan"/>
+                                            <connections>
+                                                <action selector="scaCard:" destination="7ow-7V-Qog" eventType="touchUpInside" id="lgt-0N-Wcg"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                 </view>
@@ -1768,6 +1771,11 @@
                                     <constraint firstItem="mm6-Sn-pdc" firstAttribute="top" secondItem="7ow-7V-Qog" secondAttribute="topMargin" constant="12" id="htf-zw-u9X"/>
                                 </constraints>
                                 <size key="customSize" width="375" height="91"/>
+                                <connections>
+                                    <outlet property="NameLabel" destination="LyJ-Dz-DC0" id="xRG-hE-EzC"/>
+                                    <outlet property="TitleLabel" destination="mm6-Sn-pdc" id="Usc-dr-cgl"/>
+                                    <outlet property="scanButton" destination="Jpw-xU-vfC" id="AKJ-5S-5gS"/>
+                                </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TimeTableBoard" id="HDZ-K6-FBF" customClass="TrainerNextCell" customModule="EazyFitness" customModuleProvider="target">
                                 <rect key="frame" x="8" y="119" width="375" height="224"/>
@@ -1974,7 +1982,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQu-zX-qDH">
-                                                                <rect key="frame" x="20" y="117" width="77" height="30"/>
+                                                                <rect key="frame" x="20" y="107" width="77" height="30"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="30" id="4bS-n4-uTM"/>
                                                                     <constraint firstAttribute="width" constant="77" id="ln7-yT-bjt"/>
@@ -2054,6 +2062,21 @@
                                             </view>
                                             <blurEffect style="light"/>
                                         </visualEffectView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="总计课时数：0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nma-kv-tNk">
+                                            <rect key="frame" x="170" y="91" width="185" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="IVx-U7-qfp"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Mf-Qa-vIy">
+                                            <rect key="frame" x="123" y="8" width="232" height="84"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="64"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="本月已完成" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b7O-4p-3Ri">
                                             <rect key="frame" x="20" y="20" width="87" height="21"/>
                                             <constraints>
@@ -2064,14 +2087,11 @@
                                             <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Mf-Qa-vIy">
-                                            <rect key="frame" x="123" y="24" width="232" height="84"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="64"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ES-14-H43">
                                             <rect key="frame" x="20" y="90" width="138" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="138" id="nZA-RO-rDT"/>
+                                            </constraints>
                                             <color key="tintColor" red="0.73604060910000002" green="0.0068906322519999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="查看所有已完成课程"/>
                                             <connections>
@@ -2081,22 +2101,26 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="bottomMargin" secondItem="4Mf-Qa-vIy" secondAttribute="bottom" constant="16" id="1Vu-J2-vix"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="4Mf-Qa-vIy" secondAttribute="bottom" constant="32" id="1Vu-J2-vix"/>
                                     <constraint firstItem="4Mf-Qa-vIy" firstAttribute="leading" secondItem="b7O-4p-3Ri" secondAttribute="trailing" constant="16" id="7P7-NM-6Mg"/>
                                     <constraint firstItem="2ES-14-H43" firstAttribute="leading" secondItem="GO4-z1-bPI" secondAttribute="leadingMargin" constant="12" id="9P0-Eb-lFZ"/>
-                                    <constraint firstItem="4Mf-Qa-vIy" firstAttribute="top" secondItem="GO4-z1-bPI" secondAttribute="topMargin" constant="16" id="Fm5-vF-OAW"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="nma-kv-tNk" secondAttribute="bottom" constant="12" id="FbS-pJ-Hfc"/>
+                                    <constraint firstItem="4Mf-Qa-vIy" firstAttribute="top" secondItem="GO4-z1-bPI" secondAttribute="topMargin" id="Fm5-vF-OAW"/>
                                     <constraint firstAttribute="bottom" secondItem="HDj-TW-FNz" secondAttribute="bottom" id="JyG-jW-N7A"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="2ES-14-H43" secondAttribute="bottom" constant="4" id="O6c-5H-Sy7"/>
                                     <constraint firstItem="b7O-4p-3Ri" firstAttribute="leading" secondItem="GO4-z1-bPI" secondAttribute="leadingMargin" constant="12" id="PWl-g6-rvF"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="4Mf-Qa-vIy" secondAttribute="trailing" constant="12" id="RNJ-YM-fRH"/>
                                     <constraint firstItem="HDj-TW-FNz" firstAttribute="top" secondItem="GO4-z1-bPI" secondAttribute="top" id="SEE-a1-PdI"/>
                                     <constraint firstItem="b7O-4p-3Ri" firstAttribute="top" secondItem="GO4-z1-bPI" secondAttribute="topMargin" constant="12" id="Txn-Sh-A2F"/>
+                                    <constraint firstItem="nma-kv-tNk" firstAttribute="leading" secondItem="2ES-14-H43" secondAttribute="trailing" constant="12" id="mRu-CU-Imd"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="nma-kv-tNk" secondAttribute="trailing" constant="12" id="p5C-o8-OhL"/>
                                     <constraint firstAttribute="trailing" secondItem="HDj-TW-FNz" secondAttribute="trailing" id="sgG-vd-aCP"/>
                                     <constraint firstItem="HDj-TW-FNz" firstAttribute="leading" secondItem="GO4-z1-bPI" secondAttribute="leading" id="z3o-0D-jmh"/>
                                 </constraints>
                                 <size key="customSize" width="375" height="132"/>
                                 <connections>
                                     <outlet property="monthFinishedLabel" destination="4Mf-Qa-vIy" id="4U1-in-41E"/>
+                                    <outlet property="totalCourse" destination="nma-kv-tNk" id="23m-Rh-Eus"/>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="RequestBoard" id="v5b-24-N6h" customClass="TrainerRequestCell" customModule="EazyFitness" customModuleProvider="target">

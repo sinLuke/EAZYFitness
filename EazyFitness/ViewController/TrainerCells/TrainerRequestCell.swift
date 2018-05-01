@@ -23,7 +23,7 @@ class TrainerRequestCell: UICollectionViewCell {
         UIView.animate(withDuration: 0.5, animations: {
             self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
         }) { (_) in
-            self.docRef.updateData(["Approved" : true]) { (err) in
+            self.docRef.updateData(["TrainerApproved" : true]) { (err) in
                 if let err = err {
                     AppDelegate.showError(title: "网络发生问题", err: err.localizedDescription)
                 } else {

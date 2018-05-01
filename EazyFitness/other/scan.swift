@@ -45,5 +45,26 @@ class scan: NSObject {
             }
             vc.present(readerVC, animated: true, completion: nil)
         }
+        
+        if let vc = _vc as? DefaultCollectionViewController{
+            let readerVC: QRCodeReaderViewController = {
+                let builder = QRCodeReaderViewControllerBuilder {
+                    $0.reader          = QRCodeReader(metadataObjectTypes: [.qr], captureDevicePosition: .back)
+                    $0.showTorchButton = true
+                    
+                    $0.reader.stopScanningWhenCodeIsFound = false
+                }
+                return QRCodeReaderViewController(builder: builder)
+            }()
+            guard scan.checkScanPermissions() else { return }
+            readerVC.modalPresentationStyle = .formSheet
+            readerVC.delegate               = vc as! QRCodeReaderViewControllerDelegate
+            readerVC.completionBlock = { (result: QRCodeReaderResult?) in
+                if let result = result {
+                    print("Completion with result: \(result.value) of type \(result.metadataType)")
+                }
+            }
+            vc.present(readerVC, animated: true, completion: nil)
+        }
     }
 }

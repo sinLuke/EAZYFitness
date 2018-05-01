@@ -22,6 +22,8 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     @IBOutlet weak var lnameField: UITextField!
     @IBOutlet weak var usergroup: UILabel!
     
+    var theUserRefrence: DocumentReference!
+    
     override func viewDidLoad() {
         
         db = Firestore.firestore()
@@ -83,10 +85,13 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     "Email": self.emailField.text!
                     ])
                 
+                theUserRefrence.updateData(["Registered": 2])
+                
                 switch usergroup.text{
                 case "Super":
                     AppDelegate.resetMainVC(with: "super")
                 case "trainer":
+                    AppDelegate.AP().getAllMystudent()
                     AppDelegate.resetMainVC(with: "trainer")
                 default:
                     AppDelegate.resetMainVC(with: "admin")

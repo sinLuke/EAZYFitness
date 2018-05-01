@@ -10,7 +10,7 @@ import UIKit
 
 class TrainerMonthCell: UICollectionViewCell {
     @IBOutlet weak var monthFinishedLabel: UILabel!
-    
+    @IBOutlet weak var totalCourse: UILabel!
     @IBAction func goCourseRecord(_ sender: Any) {
     }
 }

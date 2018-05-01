@@ -9,7 +9,8 @@
 import UIKit
 import Firebase
 
-class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectionViewDelegateFlowLayout {
+class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UICollectionViewDelegateFlowLayout, QRCodeReaderViewControllerDelegate {
+    
     
     let _refreshControl = UIRefreshControl()
     let TimeTolerant = 30
@@ -19,7 +20,10 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
     
     var nextCourse:[String:[String:Any]] = [:]
     var thisCourse:[String:[String:Any]] = [:]
-    var thisCourseStudentName:String = ""
+    var thisCourseDBREFDic:[String:DocumentReference] = [:]
+    
+    var monthTotal:Int = 0
+    var allTotal:Int = 0
     
     var requestTextDic:[String:String] = [:]
     var requestTimeDic:[String:Date] = [:]
@@ -43,6 +47,8 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
                 self.checkIfDuringCourse(studentID: eachStudentID)
                 self.getRequest(studentID: eachStudentID)
             }
+            
+            self.getTrainerMonthTotal()
         }
     }
     
@@ -63,7 +69,7 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
             } else {
                 if let docSnap = snap{
                     if let docData = docSnap.data(){
-                        self.myStudentsName[studentID] = "\(docData["First Name"] ?? "No") \(docData["Last Name"] ?? "Name")"
+                        self.myStudentsName[studentID] = "\(docData["First Name"] ?? "N2o") \(docData["Last Name"] ?? "Name")"
                     }
                 } else {
                     AppDelegate.showError(title: "读取学生信息时发生错误", err: "无法读取数据")
@@ -108,8 +114,9 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
                             let calendar = Calendar.current
                             if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30 + self.TimeTolerant, to: startTime),
                                 let NewStartTime = calendar.date(byAdding: .minute, value: 0 - self.TimeTolerant, to: startTime){
-                                if Date() > startTime && Date() < endTime{
+                                if Date() > NewStartTime && Date() < endTime{
                                     self.thisCourse[studentID] = allDocs.data()
+                                    self.thisCourseDBREFDic[studentID] = allDocs.reference
                                 }
                             }
                         }
@@ -149,6 +156,94 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
                 self.reload()
             }
         }
+    }
+    
+    func getTrainerMonthTotal(){
+        //获取总课数
+        if let memberID = AppDelegate.AP().currentMemberID{
+            
+            self.allTotal = 0
+            self.monthTotal = 0
+            
+            let dbref = db.collection("trainer").document(memberID).collection("Finished")
+            dbref.getDocuments { (snap, err) in
+                if let err = err {
+                    AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
+                } else {
+                    for allDocs in snap!.documents{
+                        print(allDocs.data())
+                        if let courseDate = allDocs.data()["Date"] as? Date{
+                            if courseDate > Date().startOfMonth(){
+                                self.monthTotal += (allDocs.data()["Amount"] as? Int) ?? 0
+                            }
+                            self.allTotal += (allDocs.data()["Amount"] as? Int) ?? 0
+                        }
+                    }
+                    self.reload()
+                }
+            }
+        } else {
+            AppDelegate.showError(title: "未知错误", err: "获取当前用户失败，请重新登录", handler: AppDelegate.AP().signout)
+        }
+    }
+    
+    func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
+        reader.stopScanning()
+        dismiss(animated: true, completion: nil)
+        
+        print(thisCourseDBREFDic)
+        print(result.value)
+        
+        let charset = CharacterSet(charactersIn: ".#$[]")
+        if result.value.rangeOfCharacter(from: charset) != nil {
+            self.endLoading()
+            AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0101#)", of: self)
+        } else{
+            db.collection("QRCODE").document(result.value).getDocument { (snap, err) in
+                if let err = err{
+                    self.endLoading()
+                    AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
+                } else {
+                    if let document = snap?.data() as? NSDictionary{
+                        if let _numberValue = document.value(forKey: "MemberID") as? Int{
+                            print(_numberValue)
+                            self.recordACourse(studentID: "\(_numberValue)")
+                        } else {
+                            self.endLoading()
+                            AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0103#)", of: self)
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    func recordACourse(studentID:String){
+        if let docref = self.thisCourseDBREFDic[studentID]{
+            if let memberID = AppDelegate.AP().currentMemberID{
+                docref.getDocument { (snap, err) in
+                    if let err = err {
+                        AppDelegate.showError(title: "记录课程时出现问题", err: err.localizedDescription)
+                    } else {
+                        let amount = snap!.data()!["Amount"]
+                        self.db.collection("trainer").document(memberID).collection("Finished").addDocument(data: ["CourseID" : docref.documentID, "StudentID": studentID, "FinishedType": "Scaned", "Note":"正常", "Amount":amount, "Date":Date()])
+                        docref.updateData(["Record":true, "RecordDate":Date(), "Traier":memberID])
+                        self.refresh()
+                    }
+                }
+            } else {
+                AppDelegate.showError(title: "未知错误", err: "获取当前用户失败，请重新登录", handler: AppDelegate.AP().signout)
+            }
+            self.refresh()
+        } else {
+            AppDelegate.showError(title: "扫码错误", err: "未找到该学生", of: self)
+        }
+    }
+    
+    func readerDidCancel(_ reader: QRCodeReaderViewController) {
+        dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -213,7 +308,7 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.row{
-        case self.thisCourse.count + requestTextDic.keys.count://当前课程
+        case self.thisCourse.count + requestTextDic.keys.count://下一节课
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TimeTableBoard",
                                                           for: indexPath) as! TrainerNextCell
             let dateFormatter = DateFormatter()
@@ -226,20 +321,27 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
             
             var latestTime:Date? = nil
             var theNextCourse:[String:Any]? = [:]
+            
+            var theName = "unnamed"
+            
             for upcomingCourses in Array(self.nextCourse.keys){
                 if let thisDate = self.nextCourse[upcomingCourses]!["Date"] as? Date{
                     if latestTime == nil{
                         latestTime = thisDate as? Date
                         theNextCourse = self.nextCourse[upcomingCourses]
-                    } else {
-                        latestTime = min(thisDate, latestTime!)
+                        theName = self.myStudentsName[upcomingCourses]!
+                    } else if thisDate < latestTime!{
+                        latestTime = thisDate
                         theNextCourse = self.nextCourse[upcomingCourses]
+                        theName = self.myStudentsName[upcomingCourses]!
                     }
+                    print(latestTime)
                 }
             }
             
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.titleLabel.text = "下一节课"
+            cell.studentNameLabel.text = theName
             
             if self.nextCourse.keys.count != 0{
                 cell.dateLabel.text = "\(dateFormatter.string(from: (theNextCourse!["Date"] as! Date))) \((theNextCourse!["Date"] as! Date).getThisWeekDayLongName())"
@@ -266,9 +368,12 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
             cell.layer.cornerRadius = 10
             return cell
         case self.thisCourse.count + requestTextDic.keys.count + 2:
+            //当月
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MonthFinishedBoard",
                                                           for: indexPath) as! TrainerMonthCell
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+            cell.totalCourse.text = "总计课时数：\(prepareCourseNumber(self.allTotal))"
+            cell.monthFinishedLabel.text = "\(prepareCourseNumber(self.monthTotal))"
             cell.layer.cornerRadius = 10
             return cell
         default:
@@ -277,7 +382,26 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "scanBoard",
                                                               for: indexPath) as! TrainerScanCell
                 cell.layer.cornerRadius = 10
-                cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
+                cell.rootViewComtroller = self
+                
+                
+                let studentIDs = Array(thisCourse.keys)
+                let studentID = studentIDs[indexPath.row]
+                cell.studentID = studentID
+                
+                cell.NameLabel.text = myStudentsName[studentID]
+                
+                if (thisCourse[studentID]!["Record"] as! Bool == true){
+                    cell.TitleLabel.text = "课程已扫码"
+                    cell.backgroundColor = UIColor.green.withAlphaComponent(0.3)
+                    cell.scanButton.isHidden = true
+                } else {
+                    cell.TitleLabel.text = "课程尚未扫码"
+                    cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
+                    cell.scanButton.isHidden = false
+                }
+                
+                
                 return cell
             } else {
                 //申请视图
@@ -287,6 +411,7 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
                 cell.waitView.isHidden = true
                 cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
                 cell.approveBtn.isHidden = false
+                cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
                 cell.layer.cornerRadius = 10
                 let keyArray = Array(self.requestTextDic.keys)
                 print(self.myStudentsName)
@@ -303,10 +428,10 @@ class trainerMyStudentVC: UICollectionViewController, refreshableVC, UICollectio
                 let dateFormatter2 = DateFormatter()
                 dateFormatter2.dateStyle = .none
                 dateFormatter2.timeStyle = .short
-                
-                cell.requestDiscriptionLabel.text = "由\(self.myStudentsName[self.requestNameDic[keyArray[indexPath.row]]!])更改为自\(dateFormatter1.string(from: startTime!)) \(startTime!.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime!))至\(dateFormatter2.string(from: endTime!))的课程"
+                let i = indexPath.row-self.thisCourse.count
+                cell.requestDiscriptionLabel.text = "由\(self.myStudentsName[self.requestNameDic[keyArray[i]]!]!)更改为自\(dateFormatter1.string(from: startTime!)) \(startTime!.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime!))至\(dateFormatter2.string(from: endTime!))的课程"
                 cell.layer.cornerRadius = 10
-                cell.docRef = self.requestDBREFDic[keyArray[indexPath.row]]
+                cell.docRef = self.requestDBREFDic[keyArray[i]]
                 return cell
             }
         }

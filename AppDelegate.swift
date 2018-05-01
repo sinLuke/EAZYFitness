@@ -141,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                             if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
                                 self.currentMemberID = memberid
                                 switch Usergroup{
-                                case "Student":
+                                case "student":
                                     
                                     
                                     //获取我的所有学生
@@ -155,13 +155,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                                             }
                                         }
                                     })
-                                case "Super":
+                                case "super":
                                     AppDelegate.resetMainVC(with: "super")
-                                case "Mississauga":
+                                case "mississauga":
                                     AppDelegate.resetMainVC(with: "admin")
-                                case "Waterloo":
+                                case "waterloo":
                                     AppDelegate.resetMainVC(with: "admin")
-                                case "Scarborough":
+                                case "scarborough":
                                     AppDelegate.resetMainVC(with: "admin")
                                 case "trainer":
                                     self.getAllMystudent()
