@@ -15,6 +15,8 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     
     let TimeTolerant = 30
     
+    var cMemberID:String?
+    
     var db:Firestore!
     var CourseRegisteredNumber:Int = 0
     var TotalCourseFinished:Int = 0
@@ -35,10 +37,12 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     }
     
     func refresh() {
-        if let cMemberID = AppDelegate.AP().currentMemberID{
-            let dbref = db.collection("student").document(cMemberID)
+       
+        if let _MemberID = AppDelegate.AP().currentMemberID{
             
+            self.cMemberID = _MemberID
             
+            let dbref = db.collection("student").document(_MemberID)
             timeTableRef = dbref.collection("CourseRecorded")
             
             //获取下一节课
@@ -46,6 +50,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 if let err = err{
                     AppDelegate.showError(title: "读取下一节课时发生错误", err: err.localizedDescription)
                 } else {
+                    
                     if snap!.documents.count >= 1{
                         self.nextCourse = snap!.documents[0].data()
                     } else {
@@ -124,6 +129,8 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 if let err = err{
                     AppDelegate.showError(title: "读取申请信息时发生错误", err: err.localizedDescription)
                 } else {
+                    print(snap!.documents)
+                    print(_MemberID)
                     self.requestTextDic = [:]
                     self.requestTimeDic = [:]
                     self.requestTimeEndDic = [:]
@@ -303,7 +310,26 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? TimeTableViewController{
-            dvc.collectionRef = timeTableRef
+            if let _timeTableRef = self.timeTableRef{
+                dvc.collectionRef = ["": _timeTableRef]
+            }
+            
+        }
+        
+        if let dvc = segue.destination as? StudentPurchaseTableViewController{
+            if let MemberID = self.cMemberID{
+                dvc.dref = db.collection("student").document(MemberID).collection("CourseRegistered")
+            }
+        }
+        if let dvc = segue.destination as? StudentAllCoursesTableViewController{
+            if let MemberID = self.cMemberID{
+                dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
+            }
+        }
+        if let dvc = segue.destination as? StudentFinishedTableViewController{
+            if let MemberID = self.cMemberID{
+                dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
+            }
         }
         
     }

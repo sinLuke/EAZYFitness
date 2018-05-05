@@ -8,22 +8,35 @@
 
 import UIKit
 import Firebase
+import WebKit
 
-class WelcomeViewController: DefaultViewController {
+class WelcomeViewController: DefaultViewController, UIWebViewDelegate {
 
+    @IBOutlet weak var homepage: UIWebView!
     
-    @IBOutlet weak var timetablescrollview: UIScrollView!
     var ref:DatabaseReference!
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        let url:URL = URL(string:"https://www.eazy.fitness/")!
+        let request:URLRequest = URLRequest(url:url)
+        homepage.loadRequest(request)
+        homepage.scalesPageToFit = true
         // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func webViewDidStartLoad(_ webView: UIWebView) {
+        self.startLoading()
+        self.view.isUserInteractionEnabled = true
+    }
+    
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        self.endLoading()
     }
     
     /*

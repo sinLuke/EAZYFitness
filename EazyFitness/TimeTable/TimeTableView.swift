@@ -15,6 +15,9 @@ class TimeTableView: UIView {
     
     let eachTimeScopeHeight:CGFloat = 50
     
+    var startTime:Int = 0
+    var timeScope:Int = 0
+    
     var viewForEachDay:[UIView] = []
     var topView:UIView?
     var background:UIView!

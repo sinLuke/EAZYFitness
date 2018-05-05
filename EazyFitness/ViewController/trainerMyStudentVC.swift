@@ -16,6 +16,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     let TimeTolerant = 30
     var db:Firestore!
     
+    var timeTableRef:[String:CollectionReference] = [:]
+    
     var myStudentCollectionView:UICollectionView?
     
     var nextCourse:[String:[String:Any]] = [:]
@@ -41,6 +43,16 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     
     func refresh() {
         if let cMemberID = AppDelegate.AP().currentMemberID{
+            
+            thisCourse = [:]
+            nextCourse = [:]
+            requestTextDic = [:]
+            requestTimeDic = [:]
+            requestTimeEndDic = [:]
+            requestDBREFDic = [:]
+            requestNameDic = [:]
+            myStudentsName = [:]
+            
             for eachStudentID in AppDelegate.AP().myStudentListGeneral{
                 self.getStudentsName(studentID: eachStudentID)
                 self.getNextCourse(studentID: eachStudentID)
@@ -92,7 +104,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                 if snap!.documents.count >= 1{
                     self.nextCourse[studentID] = snap!.documents[0].data()
                 } else {
-                    self.nextCourse[studentID] = [:]
                 }
                 self.reload()
             }
@@ -122,7 +133,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                         }
                     }
                 } else {
-                    self.thisCourse = [:]
                 }
                 self.reload()
             }
@@ -229,7 +239,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                     } else {
                         let amount = snap!.data()!["Amount"]
                         self.db.collection("trainer").document(memberID).collection("Finished").addDocument(data: ["CourseID" : docref.documentID, "StudentID": studentID, "FinishedType": "Scaned", "Note":"正常", "Amount":amount, "Date":Date()])
-                        docref.updateData(["Record":true, "RecordDate":Date(), "Traier":memberID])
+                        docref.updateData(["Record":true, "RecordDate":Date(), "Traier":memberID, "Type":"General"])
                         self.refresh()
                     }
                 }
@@ -294,6 +304,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(self.thisCourse.count)
+        print(requestTextDic.keys.count)
         return self.thisCourse.count + 3 + requestTextDic.keys.count
     }
     
@@ -407,36 +419,49 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                 //申请视图
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RequestBoard",
                                                               for: indexPath) as! TrainerRequestCell
-                cell.self.alpha = 1
-                cell.waitView.isHidden = true
-                cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-                cell.approveBtn.isHidden = false
-                cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
-                cell.layer.cornerRadius = 10
-                let keyArray = Array(self.requestTextDic.keys)
-                print(self.myStudentsName)
-                print(self.requestTextDic)
-                print(self.thisCourse)
-                cell.requestTitleLabel.text = self.requestTextDic[keyArray[indexPath.row - self.thisCourse.count]]
-                let startTime = self.requestTimeDic[keyArray[indexPath.row - self.thisCourse.count]]
-                let endTime = self.requestTimeEndDic[keyArray[indexPath.row - self.thisCourse.count]]
+                if self.requestTextDic.keys.count != 0{
+                    cell.self.alpha = 1
+                    cell.waitView.isHidden = true
+                    cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                    cell.approveBtn.isHidden = false
+                    cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
+                    cell.layer.cornerRadius = 10
+                    let keyArray = Array(self.requestTextDic.keys)
+                    
+                    cell.requestTitleLabel.text = self.requestTextDic[keyArray[indexPath.row - self.thisCourse.count]]
+                    let startTime = self.requestTimeDic[keyArray[indexPath.row - self.thisCourse.count]]
+                    let endTime = self.requestTimeEndDic[keyArray[indexPath.row - self.thisCourse.count]]
+                    
+                    let dateFormatter1 = DateFormatter()
+                    dateFormatter1.dateStyle = .medium
+                    dateFormatter1.timeStyle = .none
+                    
+                    let dateFormatter2 = DateFormatter()
+                    dateFormatter2.dateStyle = .none
+                    dateFormatter2.timeStyle = .short
+                    let i = indexPath.row-self.thisCourse.count
+                    cell.requestDiscriptionLabel.text = "由\(self.myStudentsName[self.requestNameDic[keyArray[i]]!]!)更改为自\(dateFormatter1.string(from: startTime!)) \(startTime!.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime!))至\(dateFormatter2.string(from: endTime!))的课程"
+                    cell.layer.cornerRadius = 10
+                    cell.docRef = self.requestDBREFDic[keyArray[i]]
+                }
                 
-                let dateFormatter1 = DateFormatter()
-                dateFormatter1.dateStyle = .medium
-                dateFormatter1.timeStyle = .none
-                
-                let dateFormatter2 = DateFormatter()
-                dateFormatter2.dateStyle = .none
-                dateFormatter2.timeStyle = .short
-                let i = indexPath.row-self.thisCourse.count
-                cell.requestDiscriptionLabel.text = "由\(self.myStudentsName[self.requestNameDic[keyArray[i]]!]!)更改为自\(dateFormatter1.string(from: startTime!)) \(startTime!.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime!))至\(dateFormatter2.string(from: endTime!))的课程"
-                cell.layer.cornerRadius = 10
-                cell.docRef = self.requestDBREFDic[keyArray[i]]
                 return cell
             }
         }
         
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let dvc = segue.destination as? TimeTableViewController{
+            for allID in (AppDelegate.AP().myStudentListGeneral){
+                timeTableRef["\(myStudentsName[allID]!)"] = db.collection("student").document(allID).collection("CourseRecorded")
+            }
+            dvc.collectionRef = timeTableRef
+        }
+        
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -31,24 +31,24 @@ class TimeTable: NSObject {
     
     static var currentTimeTabel:TimeTable?
     
-    func LoadFinished(view:TimeTableView, timetable:[String: [String:[[Int]]]], handeler:(_:CGFloat)->()){
+    func LoadFinished(view:TimeTableView, timetable:[String: [String:[[Any]]]], handeler:(_:CGFloat)->()){
         finishedStudent += 1
         if finishedStudent >= numberOfStudent{
-            handeler(TimeTable.makeTimeTable(on: view, with: timetable))
+            handeler(TimeTable.makeTimeTable(on: view, with: timetable, startoftheweek: Date()))
         }
     }
     
-    class func makeTimeTable(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], handeler: @escaping (_:CGFloat)->()){
+    class func makeTimeTable(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], startoftheweek:Date? = Date(), handeler: @escaping (_:CGFloat)->()){
         
         print("makeTimeTable")
         
         currentTimeTabel = TimeTable()
         currentTimeTabel!.numberOfStudent = _collectionRef.keys.count
         view.backgroundColor = UIColor.white
-        var timetableDicWithName: [String: [String:[[Int]]]] = [:]
+        var timetableDicWithName: [String: [String:[[Any]]]] = [:]
         for names in Array(_collectionRef.keys){
             if let collectionRef = _collectionRef[names]{
-                var timetableDic: [String:[[Int]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
+                var timetableDic: [String:[[Any]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
                 collectionRef.whereField("Date", isGreaterThan: Date().startOfWeek()).whereField("Date", isLessThan: Date().endOfWeek()).whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
                     if let err = err{
                         AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
@@ -59,7 +59,7 @@ class TimeTable: NSObject {
                                 let numberHour:Int = Calendar.current.component(.hour, from: startTime)*100 + Calendar.current.component(.minute, from: startTime)
                                 let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: startTime)]
                                 if var oldList = timetableDic[weekDayName]{
-                                    oldList.append([numberHour, duration])
+                                    oldList.append([numberHour, duration, doc.documentID])
                                     timetableDic.updateValue(oldList, forKey: weekDayName)
                                 }
                             }
@@ -73,14 +73,14 @@ class TimeTable: NSObject {
         }
     }
     
-    class func makeTimeTableForTrainerApprovedCourse(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], handeler: @escaping (_:CGFloat)->()){
+    class func makeTimeTableForTrainerApprovedCourse(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
         
         print("makeTimeTable")
         
         currentTimeTabel = TimeTable()
         currentTimeTabel!.numberOfStudent = _collectionRef.keys.count
         view.backgroundColor = UIColor.white
-        var timetableDicWithName: [String: [String:[[Int]]]] = [:]
+        var timetableDicWithName: [String: [String:[[Any]]]] = [:]
         for names in Array(_collectionRef.keys){
             if let collectionRef = _collectionRef[names]{
                 var timetableDic: [String:[[Int]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
@@ -110,12 +110,12 @@ class TimeTable: NSObject {
     
     
     
-    class func makeTimeTable(on view:TimeTableView, with timetable:[String: [String:[[Int]]]], colorList:[UIColor]? = HexColor.colorList) -> CGFloat{
+    class func makeTimeTable(on view:TimeTableView, with timetable:[String: [String:[[Any]]]], colorList:[UIColor]? = HexColor.colorList, startoftheweek:Date) -> CGFloat{
         let timetableList = Array(timetable.values)
         
-        let (timeScope, startTime) = TimeTable.findTimeScope(timetable: (timetableList))
+        (view.timeScope, view.startTime) = TimeTable.findTimeScope(timetable: (timetableList))
         
-        if timeScope == 0 {
+        if view.timeScope == 0 {
             return 0
         }
         
@@ -134,27 +134,32 @@ class TimeTable: NSObject {
             
             var count = 0
             for eachTimetable in Array(timetable.keys){
-                let _DicForOneStudent = timetable[eachTimetable]
-                if let DicForOneStudent = _DicForOneStudent{
+                if let DicForOneStudent = timetable[eachTimetable]{
                     for eachDay in Array(DicForOneStudent.keys){
                         var weekDay = Date.getWeekDayNumber(str: eachDay)
                         if let _courseTimeList = DicForOneStudent[eachDay]{
                             for courseTimeList in _courseTimeList{
                                 if courseTimeList.count >= 2{
-                                    if (weekDay == i) && (courseTimeList[1] != 0){
+                                    if (weekDay == i) && (courseTimeList[1] as! Int != 0){
                                         
-                                        let value1 = CGFloat((courseTimeList[0]/100)*100 + (courseTimeList[0]%100)*100/60)-CGFloat(startTime*100)
-                                        let height = CGFloat(courseTimeList[1])*CGFloat(view.eachTimeScopeHeight)/2
-                                        let CourseView = UIView(frame: CGRect(x: 0, y: (value1)*view.eachTimeScopeHeight/100 + view.eachTimeScopeHeight/2, width: (view.frame.width-LEFTWIDTH)/7, height: height))
-                                        CourseView.backgroundColor = colorList![count%HexColor.colorList.count]
+                                        let value1 = CGFloat(((courseTimeList[0] as! Int) / 100)*100 + ((courseTimeList[0] as! Int) % 100)*100/60)-CGFloat(view.startTime*100)
+                                        let height = CGFloat(courseTimeList[1] as! Int)*CGFloat(view.eachTimeScopeHeight)/2
+                                        let courseView = CourseBlock(frame: CGRect(x: 0, y: (value1)*view.eachTimeScopeHeight/100 + view.eachTimeScopeHeight/2, width: (view.frame.width-LEFTWIDTH)/7, height: height))
                                         
-                                        let courseLabel = UILabel(frame: CGRect(x: 0, y: 0, width: CourseView.frame.width, height: CourseView.frame.height))
+                                        courseView.startOfTheWeek = startoftheweek
+                                        courseView.superView = view
+                                        courseView.courseID = courseTimeList[2] as! String
+                                        courseView.backgroundColor = colorList![count%HexColor.colorList.count]
+                                        
+                                        let courseLabel = UILabel(frame: CGRect(x: 0, y: 0, width: courseView.frame.width, height: courseView.frame.height))
                                         courseLabel.text = "\(eachTimetable)"
                                         courseLabel.adjustsFontSizeToFitWidth = true
+                                        courseLabel.numberOfLines = 0
+                                        courseLabel.font = UIFont.boldSystemFont(ofSize: 10)
                                         courseLabel.textAlignment = .center
-                                        courseLabel.textColor = UIColor.gray
-                                        CourseView.addSubview(courseLabel)
-                                        singleDayView.addSubview(CourseView)
+                                        courseLabel.textColor = UIColor.white
+                                        courseView.addSubview(courseLabel)
+                                        singleDayView.addSubview(courseView)
                                     }
                                 }
                             }
@@ -169,13 +174,13 @@ class TimeTable: NSObject {
                 
                 singleDayView.frame = CGRect(x: 0, y: TOPHEIGHT, width: LEFTWIDTH, height: singleDayView.frame.height)
                 
-                for j in 0...timeScope - 1{
+                for j in 0...view.timeScope - 1{
                     let _j = CGFloat(j)
                     
                     let eachTimeScopeLabel = UILabel(frame: CGRect(x: 375*0.01, y: _j*view.eachTimeScopeHeight, width: LEFTWIDTH - 375*0.02, height: view.eachTimeScopeHeight))
                     
-                    eachTimeScopeLabel.text = "\(j+startTime)"
-                    if j+startTime == 12{
+                    eachTimeScopeLabel.text = "\(j + view.startTime)"
+                    if j + view.startTime == 12{
                         eachTimeScopeLabel.text = "上午\n下午"
                     }
                     eachTimeScopeLabel.textColor = UIColor.gray
@@ -222,7 +227,7 @@ class TimeTable: NSObject {
             view.addSubview(view.background)
         }
         
-        let maxHeight = (CGFloat(view.eachTimeScopeHeight) * CGFloat(timeScope) + CGFloat(TOPHEIGHT)) + view.frame.height
+        let maxHeight = (CGFloat(view.eachTimeScopeHeight) * CGFloat(view.timeScope) + CGFloat(TOPHEIGHT)) + view.frame.height
         
         let LeftLine = UIView(frame: CGRect(x: LEFTWIDTH, y: TOPHEIGHT, width: 0.5, height: maxHeight))
         LeftLine.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
@@ -272,7 +277,6 @@ class TimeTable: NSObject {
     class func convertHourIntoString(timeNumber:Int) -> String{
         if TimeTable.isValidTime(timeNumber: timeNumber){
             let hour = timeNumber/100
-            let min = (timeNumber%100)
             var am = "AM"
             var returnHour = 0
             if (hour/12 == 0) {
@@ -293,7 +297,7 @@ class TimeTable: NSObject {
         }
     }
 
-    class func findTimeScope(timetable:[[String:[[Int]]]]) -> (Int, Int){
+    class func findTimeScope(timetable:[[String:[[Any]]]]) -> (Int, Int){
 
         var minTime = 2400
         var maxTime = 0
@@ -303,13 +307,13 @@ class TimeTable: NSObject {
                 if let timelist = eachTimetable[eachDay]{
                     for eachCourse in timelist{
                         if eachCourse.count >= 2{
-                            if eachCourse[1] == 0{
+                            if (eachCourse[1] as! Int) == 0{
                             } else {
-                                if minTime > eachCourse[0]{
-                                    minTime = eachCourse[0]
+                                if minTime > (eachCourse[0] as! Int){
+                                    minTime = (eachCourse[0] as! Int)
                                 }
-                                if maxTime < eachCourse[0]+((eachCourse[1])/2)*100 + ((eachCourse[1]%2)*30){
-                                    maxTime = eachCourse[0]+((eachCourse[1])/2)*100 + ((eachCourse[1]%2)*30)
+                                if maxTime < (eachCourse[0] as! Int)+((eachCourse[1] as! Int)/2)*100 + (((eachCourse[1] as! Int)%2)*30){
+                                    maxTime = (eachCourse[0] as! Int)+((eachCourse[1] as! Int)/2)*100 + (((eachCourse[1] as! Int)%2)*30)
                                 }
                             }
                             

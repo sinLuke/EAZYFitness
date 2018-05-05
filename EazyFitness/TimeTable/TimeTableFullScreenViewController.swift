@@ -1,19 +1,19 @@
 //
-//  TimeTableViewController.swift
+//  TimeTableFullScreenViewController.swift
 //  EazyFitness
 //
-//  Created by Luke on 2018/4/29.
+//  Created by Luke on 2018/5/1.
 //  Copyright © 2018年 luke. All rights reserved.
 //
 
 import UIKit
 import Firebase
 
-class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
-    
-    var collectionRef: CollectionReference!
+class TimeTableFullScreenViewController: DefaultViewController {
+
+    var collectionRef: [String: CollectionReference]!
     let _refreshControl = UIRefreshControl()
-    @IBOutlet weak var noCourseLabel: UILabel!
+    @IBOutlet weak var noCourseLabel: UIView!
     @IBOutlet weak var timetableView: UIScrollView!
     var timetable:TimeTableView?
     
@@ -51,7 +51,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
             existTimetable.removeFromSuperview()
         }
         timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
-        TimeTable.makeTimeTable(on: timetable!, withRef: [" " : collectionRef], handeler: self.resizeViews)
+        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, handeler: self.resizeViews)
         timetableView.addSubview(timetable!)
     }
     
@@ -78,7 +78,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         self.refresh()
     }
-
+    
     
     func resizeViews(maxHeight:CGFloat)->(){
         if maxHeight == 0{
@@ -91,7 +91,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
             self.timetable?.frame = CGRect(x: (self.timetable?.frame.minX)!, y: (self.timetable?.frame.minY)!, width: self.view.frame.width, height: maxHeight)
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -109,3 +109,11 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate {
     */
 
 }
+
+//
+//  TimeTableViewController.swift
+//  EazyFitness
+//
+//  Created by Luke on 2018/4/29.
+//  Copyright © 2018年 luke. All rights reserved.
+//
