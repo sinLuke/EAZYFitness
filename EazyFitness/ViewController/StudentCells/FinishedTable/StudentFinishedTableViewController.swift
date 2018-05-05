@@ -1,5 +1,5 @@
 //
-//  StudentPurchaseTableViewController.swift
+//  StudentFinishedTableViewController.swift
 //  EazyFitness
 //
 //  Created by Luke on 2018/5/1.
@@ -9,24 +9,52 @@
 import UIKit
 import Firebase
 
-class StudentPurchaseTableViewController: UITableViewController, refreshableVC {
+class StudentFinishedTableViewController: DefaultTableViewController, refreshableVC {
+    
+    let _refreshControl = UIRefreshControl()
+    var CourseList:[[String:Any]] = []
+    
+    var dref:CollectionReference!
+    
     func refresh() {
-        
+        CourseList = []
+        dref.whereField("Record", isEqualTo: true).order(by: "Date").getDocuments { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
+            } else {
+                if let documentList = snap?.documents{
+                    for docDic in documentList{
+                        self.CourseList.append(docDic.data())
+                    }
+                }
+                self.reload()
+            }
+        }
     }
     
     func reload() {
-        
+        tableView.reloadData()
     }
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
     }
-    
-    var dref:CollectionReference?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        self.refresh()
+        let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
+        _refreshControl.attributedTitle = NSAttributedString(string: title)
+        _refreshControl.addTarget(self, action:
+            #selector(handleRefresh(_:)),
+                                  for: UIControlEvents.valueChanged)
+        _refreshControl.tintColor = HexColor.Pirmary
+        
+        self.tableView.refreshControl = self._refreshControl
+        self.tableView.addSubview(self._refreshControl)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -43,24 +71,48 @@ class StudentPurchaseTableViewController: UITableViewController, refreshableVC {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return CourseList.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "finishedCell", for: indexPath) as! FinishedTableViewCell
+        if let courseDic = CourseList[indexPath.row] as? [String:Any]{
+            cell.courseLabel.text = "课时：\(prepareCourseNumber(courseDic["Amount"] as! Int))"
+            cell.noteLabel.text = courseDic["Note"] as! String
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .long
+            dateFormatter.timeStyle = .none
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateStyle = .none
+            timeFormatter.timeStyle = .short
+            if let date = courseDic["Date"] as? Date{
+                cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
+            }
+            if (courseDic["Type"] as! String) == "General"{
+                cell.typeLabel.text = "状态：正常"
+                cell.typeLabel.textColor = HexColor.Green
+            } else {
+                cell.typeLabel.text = "状态：异常"
+                cell.typeLabel.textColor = HexColor.Red
+            }
+        }
         return cell
     }
-    */
 
+    func prepareCourseNumber(_ int:Int) -> String{
+        let float = Float(int)/2.0
+        if int%2 == 0{
+            return String(format: "%.0f", float)
+        } else {
+            return String(float)
+        }
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

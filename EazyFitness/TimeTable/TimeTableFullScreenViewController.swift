@@ -51,7 +51,7 @@ class TimeTableFullScreenViewController: DefaultViewController {
             existTimetable.removeFromSuperview()
         }
         timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
-        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, handeler: self.resizeViews)
+        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, startoftheweek: Date().startOfWeek(), handeler: self.resizeViews)
         timetableView.addSubview(timetable!)
     }
     

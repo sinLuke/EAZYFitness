@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var authUI: FUIAuth? = nil
     var db: Firestore!
     var myStudent:NSDictionary?
-    var allStudent:NSDictionary?
+    var allStudent:[String:String]?
     var trainer:NSDictionary?
     
     var myStudentBOOL = false
@@ -266,7 +266,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         let trainerViewController = storyboard.instantiateViewController(withIdentifier: "TrainerNav") as! TrainerNav
         trainerViewController.user = user
         trainerViewController.myStudentDic = self.myStudent
-        trainerViewController.allStudentDic = self.allStudent
+        trainerViewController.allStudentDic = self.allStudent as! NSDictionary
         trainerViewController.trainerDic = self.trainer
         self.myStudentBOOL = false
         self.trainerBOOL = false

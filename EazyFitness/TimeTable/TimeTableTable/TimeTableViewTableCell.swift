@@ -1,24 +1,22 @@
 //
-//  FinishedTableViewCell.swift
+//  TimeTableViewTableCell.swift
 //  EazyFitness
 //
-//  Created by Luke on 2018/5/4.
+//  Created by Luke on 2018/5/5.
 //  Copyright © 2018年 luke. All rights reserved.
 //
 
 import UIKit
 
-class FinishedTableViewCell: UITableViewCell {
+class TimeTableViewTableCell: UITableViewCell {
 
     @IBOutlet weak var noteLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var courseLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        typeLabel.textColor = HexColor.Red
-        
+        self.selectionStyle = .none
         // Initialization code
     }
 

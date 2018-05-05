@@ -40,6 +40,10 @@
 		A32EEE3A209CED5B0018FBB5 /* EventTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A32EEE38209CED5B0018FBB5 /* EventTextCell.xib */; };
 		A32EEE50209CF4DA0018FBB5 /* SendTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE4E209CF4DA0018FBB5 /* SendTextCell.swift */; };
 		A32EEE51209CF4DA0018FBB5 /* SendTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A32EEE4F209CF4DA0018FBB5 /* SendTextCell.xib */; };
+		A32EEE54209D6D570018FBB5 /* AllCourseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE53209D6D570018FBB5 /* AllCourseTableViewCell.swift */; };
+		A32EEE57209D6EFE0018FBB5 /* TimeTableViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */; };
+		A32EEE5A209D78CE0018FBB5 /* PurchaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */; };
+		A32EEE5C209D78DC0018FBB5 /* PurchaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */; };
 		A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34923592090DD81004C5455 /* StudentTabBarController.swift */; };
 		A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235B2090DD90004C5455 /* TrainerTabBarController.swift */; };
 		A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235D2090DDA0004C5455 /* AdminTabBarController.swift */; };
@@ -70,7 +74,6 @@
 		A39FE30F2099279000A16619 /* CourseInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FE30E2099279000A16619 /* CourseInfoViewController.swift */; };
 		A39FE311209929D600A16619 /* StudentFinishedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FE310209929D600A16619 /* StudentFinishedTableViewController.swift */; };
 		A39FE31320992A0400A16619 /* StudentAllCoursesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FE31220992A0400A16619 /* StudentAllCoursesTableViewController.swift */; };
-		A39FE31520992A4300A16619 /* StudentPurchaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FE31420992A4300A16619 /* StudentPurchaseTableViewController.swift */; };
 		A3BD22A6206424CD00E192EB /* TrainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A5206424CD00E192EB /* TrainerViewController.swift */; };
 		A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A720642DB100E192EB /* StudentViewController.swift */; };
 		A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BD22A92064414900E192EB /* TrainerNav.swift */; };
@@ -148,6 +151,10 @@
 		A32EEE38209CED5B0018FBB5 /* EventTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventTextCell.xib; sourceTree = "<group>"; };
 		A32EEE4E209CF4DA0018FBB5 /* SendTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTextCell.swift; sourceTree = "<group>"; };
 		A32EEE4F209CF4DA0018FBB5 /* SendTextCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendTextCell.xib; sourceTree = "<group>"; };
+		A32EEE53209D6D570018FBB5 /* AllCourseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCourseTableViewCell.swift; sourceTree = "<group>"; };
+		A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableViewTableCell.swift; sourceTree = "<group>"; };
+		A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTableViewCell.swift; sourceTree = "<group>"; };
+		A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTableViewController.swift; sourceTree = "<group>"; };
 		A34923592090DD81004C5455 /* StudentTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentTabBarController.swift; sourceTree = "<group>"; };
 		A349235B2090DD90004C5455 /* TrainerTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerTabBarController.swift; sourceTree = "<group>"; };
 		A349235D2090DDA0004C5455 /* AdminTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTabBarController.swift; sourceTree = "<group>"; };
@@ -180,7 +187,6 @@
 		A39FE30E2099279000A16619 /* CourseInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseInfoViewController.swift; sourceTree = "<group>"; };
 		A39FE310209929D600A16619 /* StudentFinishedTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentFinishedTableViewController.swift; sourceTree = "<group>"; };
 		A39FE31220992A0400A16619 /* StudentAllCoursesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentAllCoursesTableViewController.swift; sourceTree = "<group>"; };
-		A39FE31420992A4300A16619 /* StudentPurchaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentPurchaseTableViewController.swift; sourceTree = "<group>"; };
 		A3BD22A02064184D00E192EB /* EazyFitness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EazyFitness.entitlements; sourceTree = "<group>"; };
 		A3BD22A5206424CD00E192EB /* TrainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerViewController.swift; sourceTree = "<group>"; };
 		A3BD22A720642DB100E192EB /* StudentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentViewController.swift; sourceTree = "<group>"; };
@@ -279,6 +285,7 @@
 		A3252A9B2094F40800FD5EC3 /* TimeTable */ = {
 			isa = PBXGroup;
 			children = (
+				A32EEE55209D6EE30018FBB5 /* TimeTableTable */,
 				A39FE30C2099248000A16619 /* TimeTableFullScreenViewController.swift */,
 				A35735AF2096890400995346 /* TimeTableViewController.swift */,
 				A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */,
@@ -362,13 +369,13 @@
 			path = EazyFitnessUITests;
 			sourceTree = "<group>";
 		};
-		A32EEE2E209CDEF60018FBB5 /* FinishedTabel */ = {
+		A32EEE2E209CDEF60018FBB5 /* FinishedTable */ = {
 			isa = PBXGroup;
 			children = (
 				A39FE310209929D600A16619 /* StudentFinishedTableViewController.swift */,
 				A32EEE2F209CDF120018FBB5 /* FinishedTableViewCell.swift */,
 			);
-			path = FinishedTabel;
+			path = FinishedTable;
 			sourceTree = "<group>";
 		};
 		A32EEE31209CEAB60018FBB5 /* Message */ = {
@@ -382,6 +389,32 @@
 				A32EEE4F209CF4DA0018FBB5 /* SendTextCell.xib */,
 			);
 			path = Message;
+			sourceTree = "<group>";
+		};
+		A32EEE52209D6D360018FBB5 /* AllTable */ = {
+			isa = PBXGroup;
+			children = (
+				A39FE31220992A0400A16619 /* StudentAllCoursesTableViewController.swift */,
+				A32EEE53209D6D570018FBB5 /* AllCourseTableViewCell.swift */,
+			);
+			path = AllTable;
+			sourceTree = "<group>";
+		};
+		A32EEE55209D6EE30018FBB5 /* TimeTableTable */ = {
+			isa = PBXGroup;
+			children = (
+				A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */,
+			);
+			path = TimeTableTable;
+			sourceTree = "<group>";
+		};
+		A32EEE58209D78BB0018FBB5 /* Purchase */ = {
+			isa = PBXGroup;
+			children = (
+				A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */,
+				A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */,
+			);
+			path = Purchase;
 			sourceTree = "<group>";
 		};
 		A34923582090DD48004C5455 /* TabBarVC */ = {
@@ -416,13 +449,13 @@
 		A357359120964FF500995346 /* StudentCells */ = {
 			isa = PBXGroup;
 			children = (
-				A32EEE2E209CDEF60018FBB5 /* FinishedTabel */,
-				A39FE31220992A0400A16619 /* StudentAllCoursesTableViewController.swift */,
+				A32EEE58209D78BB0018FBB5 /* Purchase */,
+				A32EEE52209D6D360018FBB5 /* AllTable */,
+				A32EEE2E209CDEF60018FBB5 /* FinishedTable */,
 				A35735922096502500995346 /* TimeTabelCell.swift */,
 				A3573596209651A900995346 /* AllCourseCell.swift */,
 				A3573598209651FA00995346 /* ThisMonthViewCell.swift */,
 				A357359A2096521300995346 /* RequestCell.swift */,
-				A39FE31420992A4300A16619 /* StudentPurchaseTableViewController.swift */,
 			);
 			path = StudentCells;
 			sourceTree = "<group>";
@@ -873,9 +906,12 @@
 				A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */,
 				A34923702090EF15004C5455 /* scan.swift in Sources */,
 				A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */,
+				A32EEE5C209D78DC0018FBB5 /* PurchaseTableViewController.swift in Sources */,
 				A3CEFF6B2098409100B05FC1 /* StudentCell.swift in Sources */,
+				A32EEE5A209D78CE0018FBB5 /* PurchaseTableViewCell.swift in Sources */,
 				A39FE30B20991A5C00A16619 /* CourseBlock.swift in Sources */,
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
+				A32EEE54209D6D570018FBB5 /* AllCourseTableViewCell.swift in Sources */,
 				A3573597209651A900995346 /* AllCourseCell.swift in Sources */,
 				A3CEFF652098099700B05FC1 /* TrainerMyStudentCell.swift in Sources */,
 				A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */,
@@ -884,7 +920,6 @@
 				A39FE30D2099248000A16619 /* TimeTableFullScreenViewController.swift in Sources */,
 				A3573590209639D100995346 /* AppDelegate.swift in Sources */,
 				A34923682090EB34004C5455 /* DefaultViewController.swift in Sources */,
-				A39FE31520992A4300A16619 /* StudentPurchaseTableViewController.swift in Sources */,
 				A357359B2096521300995346 /* RequestCell.swift in Sources */,
 				A3CEFF69209809F100B05FC1 /* TrainerRequestCell.swift in Sources */,
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
@@ -895,6 +930,7 @@
 				A35735B02096890400995346 /* TimeTableViewController.swift in Sources */,
 				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
 				A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */,
+				A32EEE57209D6EFE0018FBB5 /* TimeTableViewTableCell.swift in Sources */,
 				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,
 				A349236B2090EBAF004C5455 /* SigninScanViewController.swift in Sources */,
 				A32EEE35209CEADF0018FBB5 /* MessageCollectionViewController.swift in Sources */,

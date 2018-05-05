@@ -311,12 +311,16 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? TimeTableViewController{
             if let _timeTableRef = self.timeTableRef{
-                dvc.collectionRef = ["": _timeTableRef]
+                if let MemberID = self.cMemberID{
+                    dvc.collectionRef = ["": _timeTableRef]
+                    dvc.cMemberID = self.cMemberID
+                    dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
+                }
+                
             }
             
         }
-        
-        if let dvc = segue.destination as? StudentPurchaseTableViewController{
+        if let dvc = segue.destination as? PurchaseTableViewController{
             if let MemberID = self.cMemberID{
                 dvc.dref = db.collection("student").document(MemberID).collection("CourseRegistered")
             }

@@ -31,16 +31,14 @@ class TimeTable: NSObject {
     
     static var currentTimeTabel:TimeTable?
     
-    func LoadFinished(view:TimeTableView, timetable:[String: [String:[[Any]]]], handeler:(_:CGFloat)->()){
+    func LoadFinished(view:TimeTableView, timetable:[String: [String:[[Any]]]], startoftheweek:Date, handeler:(_:CGFloat)->()){
         finishedStudent += 1
         if finishedStudent >= numberOfStudent{
-            handeler(TimeTable.makeTimeTable(on: view, with: timetable, startoftheweek: Date()))
+            handeler(TimeTable.makeTimeTable(on: view, with: timetable, startoftheweek: startoftheweek))
         }
     }
     
-    class func makeTimeTable(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], startoftheweek:Date? = Date(), handeler: @escaping (_:CGFloat)->()){
-        
-        print("makeTimeTable")
+    class func makeTimeTable(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
         
         currentTimeTabel = TimeTable()
         currentTimeTabel!.numberOfStudent = _collectionRef.keys.count
@@ -49,7 +47,7 @@ class TimeTable: NSObject {
         for names in Array(_collectionRef.keys){
             if let collectionRef = _collectionRef[names]{
                 var timetableDic: [String:[[Any]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
-                collectionRef.whereField("Date", isGreaterThan: Date().startOfWeek()).whereField("Date", isLessThan: Date().endOfWeek()).whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
+                collectionRef.whereField("Date", isGreaterThan: startoftheweek).whereField("Date", isLessThan: startoftheweek.endOfWeek()).whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
                     if let err = err{
                         AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
                     } else {
@@ -65,7 +63,7 @@ class TimeTable: NSObject {
                             }
                         }
                         timetableDicWithName.updateValue(timetableDic, forKey: names)
-                        currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, handeler:handeler)
+                        currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, startoftheweek: startoftheweek, handeler:handeler)
                     }
                 }
             } else {
@@ -74,8 +72,6 @@ class TimeTable: NSObject {
     }
     
     class func makeTimeTableForTrainerApprovedCourse(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
-        
-        print("makeTimeTable")
         
         currentTimeTabel = TimeTable()
         currentTimeTabel!.numberOfStudent = _collectionRef.keys.count
@@ -100,7 +96,7 @@ class TimeTable: NSObject {
                             }
                         }
                         timetableDicWithName.updateValue(timetableDic, forKey: names)
-                        currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, handeler:handeler)
+                        currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, startoftheweek: startoftheweek, handeler:handeler)
                     }
                 }
             } else {
@@ -213,10 +209,13 @@ class TimeTable: NSObject {
             if (i%2 == 0) && (i != 0){
                 singleDayView.backgroundColor = HexColor.lightColor
             }
-            if (Date().findDateToday())%7 == i{
-                singleDayLabel.textColor = HexColor.Blue
-                singleDayView.backgroundColor = HexColor.Blue.withAlphaComponent(0.15)
+            if startoftheweek == Date().startOfWeek(){
+                if (Date().findDateToday()-1)%7+1 == i{
+                    singleDayLabel.textColor = HexColor.Blue
+                    singleDayView.backgroundColor = HexColor.Blue.withAlphaComponent(0.15)
+                }
             }
+            
             
             view.viewForEachDay.append(singleDayView)
             

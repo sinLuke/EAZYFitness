@@ -10,24 +10,31 @@ import UIKit
 import Firebase
 private let reuseIdentifier = "Cell"
 
-class MessageCollectionViewController: DefaultViewController,refreshableVC,UICollectionViewDataSource, UICollectionViewDelegate {
+class MessageCollectionViewController: DefaultViewController,refreshableVC,UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate {
+
+    @IBOutlet weak var messageBox: UITextField!
     
     @IBOutlet weak var collectionView: UICollectionView!
     var colRef:CollectionReference!
     var MessageList:[[String:Any]] = []
     @IBOutlet weak var bottomSpace : NSLayoutConstraint!
+    @IBOutlet weak var sendMessage: UIButton!
+    var gesture:UIGestureRecognizer!
+    var listener:ListenerRegistration!
     
     func refresh() {
-        self.MessageList = []
         colRef.order(by: "Time").getDocuments { (snaps, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取信息时发生错误", err: err.localizedDescription)
             } else {
+                self.MessageList = []
                 if let doctList = snaps?.documents{
                     print(self.colRef.path)
                     for docs in doctList{
-                        self.MessageList.append(docs.data())
-                        print(docs.data())
+                        if docs.documentID != "Last"{
+                            self.MessageList.append(docs.data())
+                            docs.reference.updateData(["Read" : true])
+                        }
                     }
                 } else {
                     print("无信息")
@@ -39,41 +46,74 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
     
     func reload() {
         self.collectionView?.reloadData()
+        self.collectionView.setContentOffset(CGPoint(x: 0, y: max(0, self.collectionView.contentSize.height - self.collectionView.frame.height)), animated: true)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = falseå
-
+        
         // Register cell classes
         collectionView?.register(UINib.init(nibName: "EventTextCell", bundle: nil), forCellWithReuseIdentifier: "TextCell")
         collectionView?.register(UINib.init(nibName: "SendTextCell", bundle: nil), forCellWithReuseIdentifier: "send")
+        
         if let flowlayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout{
             flowlayout.estimatedItemSize = CGSize(width: (collectionView?.frame.width)! - 2*12 , height: 200)
             flowlayout.sectionHeadersPinToVisibleBounds = true
         }
+        
+        gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        self.collectionView.addGestureRecognizer(gesture)
         self.refresh()
         // Do any additional setup after loading the view.
+        
+        self.listener = colRef.document("Last").addSnapshotListener { (snap, err) in
+            if let err = err {
+                AppDelegate.showError(title: "读取信息时发生错误", err: err.localizedDescription)
+            } else {
+                self.refresh()
+            }
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.listener.remove()
+    }
+    
+    @IBAction func sendMessageAction(_ sender: Any) {
+        colRef.addDocument(data: ["Read" : false, "Text" : self.messageBox.text, "Time":Date(), "byStudent":(AppDelegate.AP().usergroup == "student")])
+        colRef.document("Last").setData(["Text" : self.messageBox.text, "Time":Date()])
+        self.messageBox.text = ""
+    }
+    
+    @objc func dismissKeyboard(){
+        self.messageBox.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.messageBox.resignFirstResponder()
+        if self.messageBox.text == ""{
+            self.sendMessage.isEnabled = false
+        } else {
+            self.sendMessage.isEnabled = true
+        }
+        return true
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardViewEndFrame = view.convert(keyboardSize, from: view.window)
             if let tabbar = self.tabBarController?.tabBar{
-                print(tabbar.frame)
-
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.bottomSpace.constant += (keyboardViewEndFrame.height - tabbar.frame.height)
-                })
-                
-                
+                self.bottomSpace.constant = (keyboardViewEndFrame.height - tabbar.frame.height)
             } else {
                 self.bottomSpace.constant = keyboardSize.height
-
             }
-            
         }
     }
     
@@ -81,6 +121,14 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
         if ((notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             self.bottomSpace.constant = 0
         }
+    }
+    
+    @objc func keyboardDidShow(notification: NSNotification) {
+        self.reload()
+    }
+    
+    @objc func keyboardDidHide(notification: NSNotification) {
+        self.reload()
     }
 
     override func didReceiveMemoryWarning() {
@@ -118,7 +166,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
         timeFormatter.dateStyle = .none
         timeFormatter.timeStyle = .short
         
-        if (MessageDic["byStudent"] as! Bool) == true {
+        if ((MessageDic["byStudent"] as! Bool) == true && AppDelegate.AP().usergroup == "student") || ((MessageDic["byStudent"] as! Bool) == false && AppDelegate.AP().usergroup == "trainer"){
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "send", for: indexPath) as! SendTextCell
             if let date = MessageDic["Time"] as? Date{
                 if (MessageDic["Read"] as? Bool) == true {

@@ -12,6 +12,7 @@ class TrainerMyStudentCell: UICollectionViewCell, UICollectionViewDelegate, UICo
     
     var myStudentsName:[String:String] = [:]
     var nextCourse:[String:[String:Any]] = [:]
+    var vc:trainerMyStudentVC!
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return AppDelegate.AP().myStudentListGeneral.count ?? 0
@@ -36,12 +37,14 @@ class TrainerMyStudentCell: UICollectionViewCell, UICollectionViewDelegate, UICo
         dateFormatter2.dateStyle = .none
         dateFormatter2.timeStyle = .short
         
+        cell.vc = self.vc
+        cell.MemberID = studentID
+        
         if thisStudentNextCourseDic == nil || thisStudentNextCourseDic?.count == 0{
             cell.DateTimeLabel.text = "暂无课程"
         } else {
             cell.DateTimeLabel.text = "\((thisStudentNextCourseDic!["Date"] as! Date).getThisWeekDayLongName()) \(dateFormatter2.string(from: (thisStudentNextCourseDic!["Date"] as! Date)))"
         }
-        
         
         
         return cell

@@ -11,7 +11,6 @@ import Firebase
 
 class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UICollectionViewDelegateFlowLayout, QRCodeReaderViewControllerDelegate {
     
-    
     let _refreshControl = UIRefreshControl()
     let TimeTolerant = 30
     var db:Firestore!
@@ -36,6 +35,10 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     var myStudentsName:[String:String] = [:]
     
     
+    var studentTimeTableRef:CollectionReference!
+    var studentMemberID:String!
+    
+    
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
@@ -43,16 +46,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     
     func refresh() {
         if let cMemberID = AppDelegate.AP().currentMemberID{
-            
-            thisCourse = [:]
-            nextCourse = [:]
-            requestTextDic = [:]
-            requestTimeDic = [:]
-            requestTimeEndDic = [:]
-            requestDBREFDic = [:]
-            requestNameDic = [:]
-            myStudentsName = [:]
-            
             for eachStudentID in AppDelegate.AP().myStudentListGeneral{
                 self.getStudentsName(studentID: eachStudentID)
                 self.getNextCourse(studentID: eachStudentID)
@@ -263,6 +256,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
         
         db = Firestore.firestore()
         self.refresh()
+        
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
         _refreshControl.attributedTitle = NSAttributedString(string: title)
         _refreshControl.addTarget(self, action:
@@ -347,7 +341,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                         theNextCourse = self.nextCourse[upcomingCourses]
                         theName = self.myStudentsName[upcomingCourses]!
                     }
-                    print(latestTime)
                 }
             }
             
@@ -376,6 +369,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
             self.myStudentCollectionView = cell.myStudentCollectionView
             cell.myStudentsName = self.myStudentsName
             cell.nextCourse = self.nextCourse
+            cell.vc = self
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.layer.cornerRadius = 10
             return cell
@@ -454,12 +448,27 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? TimeTableViewController{
-            for allID in (AppDelegate.AP().myStudentListGeneral){
-                timeTableRef["\(myStudentsName[allID]!)"] = db.collection("student").document(allID).collection("CourseRecorded")
+            if segue.identifier == "trainerTimeTable"{
+                for allID in (AppDelegate.AP().myStudentListGeneral){
+                    timeTableRef["\(myStudentsName[allID]!)"] = db.collection("student").document(allID).collection("CourseRecorded")
+                }
+                dvc.collectionRef = timeTableRef
+                var refList:[String:CollectionReference] = [:]
+                for eachStudentID in AppDelegate.AP().myStudentListGeneral{
+                    refList[myStudentsName[eachStudentID]!] = (db.collection("student").document(eachStudentID).collection("CourseRecorded"))
+                }
+                dvc.cMemberID = nil
+                dvc.dref = refList
+            } else if segue.identifier == "studentTimetable"{
+                if let _timeTableRef = self.studentTimeTableRef{
+                    if let MemberID = self.studentMemberID{
+                        dvc.collectionRef = ["": _timeTableRef]
+                        dvc.cMemberID = self.studentMemberID
+                        dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
+                    }
+                }
             }
-            dvc.collectionRef = timeTableRef
         }
-        
     }
     
     /*

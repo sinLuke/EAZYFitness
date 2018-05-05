@@ -8,11 +8,31 @@
 
 import UIKit
 import Firebase
-class MessageListTableViewController: UITableViewController {
+
+class MessageListTableViewController: UITableViewController, refreshableVC {
+    
+    var myStudentsName:[String:String] = [:]
+    var prepareRef:CollectionReference?
+    var db:Firestore!
+    
+    func refresh() {
+        if let cMemberID = AppDelegate.AP().currentMemberID{
+            for eachStudentID in AppDelegate.AP().myStudentListGeneral{
+                self.getStudentsName(studentID: eachStudentID)
+            }
+        }
+    }
+    
+    func reload() {
+        self.tableView.reloadData()
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        db = Firestore.firestore()
+        self.refresh()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -37,6 +57,8 @@ class MessageListTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         if AppDelegate.AP().usergroup == "student"{
             return 2
+        } else if AppDelegate.AP().usergroup == "trainer"{
+            return myStudentsName.count
         } else {
             return AppDelegate.AP().myStudentListGeneral.count
         }
@@ -52,7 +74,12 @@ class MessageListTableViewController: UITableViewController {
             default:
                 cell.textLabel?.text = "小助手"
             }
-        } else {
+        } else if AppDelegate.AP().usergroup == "trainer"{
+            if AppDelegate.AP().myStudentListGeneral.count != 0{
+                cell.textLabel?.text = myStudentsName[AppDelegate.AP().myStudentListGeneral[indexPath.row]]
+            } else {
+                cell.textLabel?.text = "正在载入……"
+            }
             
         }
 
@@ -64,15 +91,42 @@ class MessageListTableViewController: UITableViewController {
         if AppDelegate.AP().usergroup == "student"{
             switch indexPath.row{
             case 0:
+                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("Message")
                 performSegue(withIdentifier: "message", sender: self)
             default:
+                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("AdminMessage")
                 performSegue(withIdentifier: "message", sender: self)
             }
+        } else if AppDelegate.AP().usergroup == "trainer"{
+            self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().myStudentListGeneral[indexPath.row]).collection("Message")
+            performSegue(withIdentifier: "message", sender: self)
         } else {
             
         }
     }
+    
+    func getStudentsName(studentID:String){
+        let dbref = db.collection("student").document(studentID)
+        
+        //获取某个学生的信息
+        dbref.getDocument { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "读取学生信息时发生错误", err: err.localizedDescription)
+            } else {
+                if let docSnap = snap{
+                    if let docData = docSnap.data(){
+                        self.myStudentsName[studentID] = "\(docData["First Name"] ?? "N2o") \(docData["Last Name"] ?? "Name")"
+                    }
+                } else {
+                    AppDelegate.showError(title: "读取学生信息时发生错误", err: "无法读取数据")
+                }
+                self.reload()
+            }
+        }
+    }
 
+    
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -111,10 +165,8 @@ class MessageListTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? MessageCollectionViewController{
             if let currentMemberID = AppDelegate.AP().currentMemberID{
-                dvc.colRef = Firestore.firestore().collection("student").document(currentMemberID).collection("Message")
-                print("Here")
+                dvc.colRef = self.prepareRef
             }
         }
     }
-
 }
