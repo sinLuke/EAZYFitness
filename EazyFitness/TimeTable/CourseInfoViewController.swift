@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class CourseInfoViewController: DefaultViewController {
+class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var noCourseLabel: UIView!
     var collectionRef: [String: CollectionReference]!
@@ -150,8 +150,12 @@ class CourseInfoViewController: DefaultViewController {
     
     
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
-        用来加课的refrence.addDocument(data: ["Note" : courseNoteField.text ?? "无备注", "Amount": 准备增加, "Date": self.courseDatePicker.date, "Approved":false, "Record":false])
-        self.refresh()
+        if let cMEmeberId = AppDelegate.AP().currentMemberID{
+            用来加课的refrence.addDocument(data: ["Note" : courseNoteField.text ?? "无备注", "Amount": 准备增加, "Date": self.courseDatePicker.date, "Approved":false, "Record":false, "trainer":cMEmeberId])
+            self.refresh()
+        } else {
+            AppDelegate.showError(title: "添加课程时遇到错误", err: "无法获取教练ID")
+        }
     }
     
     @IBAction func 减少(_ sender: Any) {

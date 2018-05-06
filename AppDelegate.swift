@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     var myStudentListGeneral:[String] = []
     var myStudentListMultiple:[String] = []
+    
     //教练
     
     var usergroup:String?

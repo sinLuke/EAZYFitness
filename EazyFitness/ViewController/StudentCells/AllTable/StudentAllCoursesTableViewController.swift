@@ -106,7 +106,10 @@ class StudentAllCoursesTableViewController: DefaultTableViewController, refresha
                 cell.typeLabel.textColor = UIColor.gray
                 cell.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
             }
-            
+            if (courseDic["notrainer"] as! Bool) == true{
+                cell.typeLabel.text = "状态：教练没来"
+                cell.typeLabel.textColor = HexColor.Red
+            }
         }
         return cell
     }

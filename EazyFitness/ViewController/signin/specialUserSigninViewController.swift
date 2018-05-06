@@ -37,7 +37,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
             AppDelegate.showError(title: "发生未知错误", err: "请与技术人员联系", handler: self.cancelfunc)
         }
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
 
@@ -68,24 +68,31 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     }
     
     func createUserComplete(user:User?, error:Error?)->(){
-        print("createUserComplete")
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
+            self.endLoading()
         } else {
-            print("Auth.auth().currentUser")
             if let cuser = Auth.auth().currentUser{
-                let cardID = "\(userInfo.value(forKey: "MemberID")!)"
-                print(cardID)
-                print(cuser.uid)
-                self.db.collection("users").document(cuser.uid).setData([
-                    "First Name": self.fnameField.text,
-                    "Last Name": self.lnameField.text,
-                    "MemberID": cardID,
-                    "Type": usergroup.text,
-                    "Email": self.emailField.text!
-                    ])
+                if let cardID = userInfo.value(forKey: "MemberID") as? String {
+                    self.db.collection("users").document(cuser.uid).setData([
+                        "First Name": self.fnameField.text,
+                        "Last Name": self.lnameField.text,
+                        "MemberID": cardID,
+                        "Type": usergroup.text,
+                        "Email": self.emailField.text!
+                        ])
+                } else {
+                    self.db.collection("users").document(cuser.uid).setData([
+                        "First Name": self.fnameField.text,
+                        "Last Name": self.lnameField.text,
+                        "Type": usergroup.text,
+                        "Email": self.emailField.text!
+                        ])
+                }
                 
-                theUserRefrence.updateData(["Registered": 2])
+                if let _theUserRefrence = theUserRefrence{
+                    _theUserRefrence.updateData(["Registered": 2])
+                }
                 
                 switch usergroup.text{
                 case "Super":
@@ -117,7 +124,6 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                 AppDelegate.showError(title: "邮箱错误", err: "请输入一个正确的邮箱(#0102#)")
             }
         }
-        
     }
 
     /*

@@ -17,6 +17,8 @@ class TrainerNextCell: UICollectionViewCell {
     @IBOutlet weak var studentNameLabel: UILabel!
     @IBOutlet weak var requirChangeBtn: UIButton!
     
+    var docuentref:
+    
     @IBAction func requirChangeTime(_ sender: Any) {
     }
     

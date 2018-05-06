@@ -22,6 +22,7 @@
 		A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */; };
 		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
 		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
+		A31E2FE3209E91E400677D86 /* AdminViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE2209E91E400677D86 /* AdminViewController.swift */; };
 		A3252A9A2094F14D00FD5EC3 /* blankVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */; };
 		A3252A9D2094F42B00FD5EC3 /* TimeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */; };
 		A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A325A372207C56AA00EF00B7 /* SpecialViewController.swift */; };
@@ -127,6 +128,7 @@
 		A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerDelegate.swift; sourceTree = "<group>"; };
 		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
 		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
+		A31E2FE2209E91E400677D86 /* AdminViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminViewController.swift; sourceTree = "<group>"; };
 		A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blankVCViewController.swift; sourceTree = "<group>"; };
 		A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTable.swift; sourceTree = "<group>"; };
 		A325A372207C56AA00EF00B7 /* SpecialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialViewController.swift; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 				A39C5D882092B2A600D46739 /* LoginViewController.swift */,
 				A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */,
 				A3CEFF5E2097FB4E00B05FC1 /* trainerMyStudentVC.swift */,
+				A31E2FE2209E91E400677D86 /* AdminViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -874,6 +877,7 @@
 				A32EEE30209CDF120018FBB5 /* FinishedTableViewCell.swift in Sources */,
 				A32EEE50209CF4DA0018FBB5 /* SendTextCell.swift in Sources */,
 				A39FE30F2099279000A16619 /* CourseInfoViewController.swift in Sources */,
+				A31E2FE3209E91E400677D86 /* AdminViewController.swift in Sources */,
 				A3492377209113E2004C5455 /* specialUserSigninViewController.swift in Sources */,
 				A3BD22B72064915300E192EB /* ListItem.swift in Sources */,
 				A302A83E2096E32D0055C15D /* TimeTableView.swift in Sources */,

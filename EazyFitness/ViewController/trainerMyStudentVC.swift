@@ -232,7 +232,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                     } else {
                         let amount = snap!.data()!["Amount"]
                         self.db.collection("trainer").document(memberID).collection("Finished").addDocument(data: ["CourseID" : docref.documentID, "StudentID": studentID, "FinishedType": "Scaned", "Note":"正常", "Amount":amount, "Date":Date()])
-                        docref.updateData(["Record":true, "RecordDate":Date(), "Traier":memberID, "Type":"General"])
+                        docref.updateData(["Record":true, "RecordDate":Date(), "trainer":memberID, "Type":"General", "notrainer":false])
                         self.refresh()
                     }
                 }

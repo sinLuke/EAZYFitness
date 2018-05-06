@@ -28,6 +28,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     
     var nextCourse:[String:Any] = [:]
     var thisCourse:[String:Any] = [:]
+    var thisCourseRef:DocumentReference?
     
     var timeTableRef:CollectionReference!
     
@@ -74,12 +75,14 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                                     let NewStartTime = calendar.date(byAdding: .minute, value: 0 - self.TimeTolerant, to: startTime){
                                     if Date() > startTime && Date() < endTime{
                                         self.thisCourse = allDocs.data()
+                                        self.thisCourseRef = allDocs.reference
                                     }
                                 }
                             }
                         }
                     } else {
                         self.thisCourse = [:]
+                        self.thisCourseRef = nil
                     }
                     self.reload()
                 }
@@ -215,8 +218,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
         switch indexPath.row{
             //课程表
         case requestTextDic.keys.count:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TimeTableBoard",
-                                                          for: indexPath) as! TimeTabelCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TimeTableBoard", for: indexPath) as! TimeTabelCell
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
@@ -226,6 +228,8 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
             timeFormatter.dateStyle = .none
             timeFormatter.timeStyle = .short
             
+            
+            
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.titleLabel.text = "下一节课"
             if self.thisCourse.keys.count != 0{
@@ -234,7 +238,13 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 cell.dateLabel.text = "\(dateFormatter.string(from: (self.thisCourse["Date"] as! Date))) \((self.thisCourse["Date"] as! Date).getThisWeekDayLongName())"
                 cell.TimeLabel.text = timeFormatter.string(from: (self.thisCourse["Date"] as! Date))
                 cell.noteLabel.text = self.thisCourse["Note"] as? String ?? ""
-                cell.report.isHidden = false
+                if let _thisCourseRef = self.thisCourseRef{
+                    cell.thisCourseRef = _thisCourseRef
+                    cell.report.isHidden = false
+                } else {
+                    cell.report.isHidden = true
+                }
+                
                 cell.requirChangeBtn.isHidden = true
             } else if self.nextCourse.keys.count != 0{
                 cell.dateLabel.text = "\(dateFormatter.string(from: (self.nextCourse["Date"] as! Date))) \((self.nextCourse["Date"] as! Date).getThisWeekDayLongName())"
@@ -316,9 +326,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                     dvc.cMemberID = self.cMemberID
                     dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
                 }
-                
             }
-            
         }
         if let dvc = segue.destination as? PurchaseTableViewController{
             if let MemberID = self.cMemberID{

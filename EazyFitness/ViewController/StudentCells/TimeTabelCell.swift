@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class TimeTabelCell: UICollectionViewCell {
     @IBOutlet weak var dateLabel: UILabel!
@@ -16,6 +17,8 @@ class TimeTabelCell: UICollectionViewCell {
     @IBOutlet weak var requirChangeBtn: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     
+    var thisCourseRef:DocumentReference!
+    
     @IBAction func requirChangeTime(_ sender: Any) {
     }
 
@@ -23,5 +26,21 @@ class TimeTabelCell: UICollectionViewCell {
     }
     
     @IBAction func report(_ sender: Any) {
+        //教练没来
+        thisCourseRef.getDocument { (snap, err) in
+            if let err = err {
+                AppDelegate.showError(title: "记录异常时发生错误", err: err.localizedDescription)
+            } else{
+                if let datadic = snap?.data(){
+                    if (datadic["record"] as? Bool) == false{
+                        self.thisCourseRef.updateData(["notrainer" : true])
+                        self.thisCourseRef.updateData(["nostudent" : false])
+                    } else {
+                        AppDelegate.showError(title: "无法记录", err: "该课程已经被记录")
+                    }
+                }
+            }
+        }
+        
     }
 }

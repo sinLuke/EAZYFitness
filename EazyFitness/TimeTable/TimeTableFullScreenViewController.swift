@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class TimeTableFullScreenViewController: DefaultViewController {
+class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDelegate {
 
     var collectionRef: [String: CollectionReference]!
     let _refreshControl = UIRefreshControl()
