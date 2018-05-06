@@ -21,6 +21,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     var CourseRegisteredNumber:Int = 0
     var TotalCourseFinished:Int = 0
     var MonthCourseFinished:Int = 0
+    
     var requestTextDic:[String:String] = [:]
     var requestTimeDic:[String:Date] = [:]
     var requestTimeEndDic:[String:Date] = [:]
@@ -66,6 +67,8 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 if let err = err{
                     AppDelegate.showError(title: "读取正在上课时发生错误", err: err.localizedDescription)
                 } else {
+                    self.thisCourse = [:]
+                    self.thisCourseRef = nil
                     print(snap!.documents)
                     if snap!.documents.count >= 1{
                         for allDocs in snap!.documents{
@@ -73,7 +76,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                                 let calendar = Calendar.current
                                 if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30 + self.TimeTolerant, to: startTime),
                                     let NewStartTime = calendar.date(byAdding: .minute, value: 0 - self.TimeTolerant, to: startTime){
-                                    if Date() > startTime && Date() < endTime{
+                                    if Date() > NewStartTime && Date() < endTime{
                                         self.thisCourse = allDocs.data()
                                         self.thisCourseRef = allDocs.reference
                                     }
@@ -142,7 +145,7 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                         
                         if let Notetext = allDocs.data()["Note"] as? String, let startTime = allDocs.data()["Date"] as? Date, let AmountOffset = allDocs.data()["Amount"] as? Int{
                             let calendar = Calendar.current
-                            if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30, to: startTime){
+                            if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30, to: startTime), startTime > Date(){
                                 self.requestTextDic.updateValue(Notetext, forKey: allDocs.documentID)
                                 self.requestTimeDic.updateValue(startTime, forKey: allDocs.documentID)
                                 self.requestTimeEndDic.updateValue(endTime, forKey: allDocs.documentID)
@@ -240,7 +243,15 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 cell.noteLabel.text = self.thisCourse["Note"] as? String ?? ""
                 if let _thisCourseRef = self.thisCourseRef{
                     cell.thisCourseRef = _thisCourseRef
-                    cell.report.isHidden = false
+                    if let startTime = thisCourse["Date"] as? Date{
+                        if (Date() > startTime){
+                            cell.report.isHidden = false
+                        } else {
+                            cell.report.isHidden = true
+                        }
+                    } else {
+                        AppDelegate.showError(title: "获取时间时发生错误", err: "无法获取上课时间")
+                    }
                 } else {
                     cell.report.isHidden = true
                 }

@@ -24,6 +24,9 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     var thisCourseDBREFDic:[String:DocumentReference] = [:]
     
     var monthTotal:Int = 0
+    
+    var 教练说学生没来前的等待时间:Int = 20
+    
     var allTotal:Int = 0
     
     var requestTextDic:[String:String] = [:]
@@ -111,6 +114,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
             if let err = err{
                 AppDelegate.showError(title: "读取正在上课时发生错误", err: err.localizedDescription)
             } else {
+                self.thisCourse[studentID] = nil
+                self.thisCourseDBREFDic[studentID] = nil
                 print(snap!.documents)
                 if snap!.documents.count >= 1{
                     for allDocs in snap!.documents{
@@ -194,9 +199,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
         reader.stopScanning()
         dismiss(animated: true, completion: nil)
         
-        print(thisCourseDBREFDic)
-        print(result.value)
-        
         let charset = CharacterSet(charactersIn: ".#$[]")
         if result.value.rangeOfCharacter(from: charset) != nil {
             self.endLoading()
@@ -230,10 +232,16 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                     if let err = err {
                         AppDelegate.showError(title: "记录课程时出现问题", err: err.localizedDescription)
                     } else {
-                        let amount = snap!.data()!["Amount"]
-                        self.db.collection("trainer").document(memberID).collection("Finished").addDocument(data: ["CourseID" : docref.documentID, "StudentID": studentID, "FinishedType": "Scaned", "Note":"正常", "Amount":amount, "Date":Date()])
-                        docref.updateData(["Record":true, "RecordDate":Date(), "trainer":memberID, "Type":"General", "notrainer":false])
-                        self.refresh()
+                        if let amount = snap?.data()!["Amount"] as? Int, let recorded = snap?.data()!["Record"] as? Bool{
+                            if recorded == false {
+                                self.db.collection("trainer").document(memberID).collection("Finished").addDocument(data: ["CourseID" : docref.documentID, "StudentID": studentID, "FinishedType": "Scaned", "Note":"正常", "Amount":amount, "Date":Date()])
+                                docref.updateData(["Record":true, "RecordDate":Date(), "trainer":memberID, "Type":"General", "notrainer":false])
+                            }
+                            self.refresh()
+                        } else {
+                            AppDelegate.showError(title: "记录课程时出现问题", err: "无法获取课时数")
+                        }
+                        
                     }
                 }
             } else {
@@ -344,6 +352,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                 }
             }
             
+            
+            
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.titleLabel.text = "下一节课"
             cell.studentNameLabel.text = theName
@@ -352,12 +362,10 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                 cell.dateLabel.text = "\(dateFormatter.string(from: (theNextCourse!["Date"] as! Date))) \((theNextCourse!["Date"] as! Date).getThisWeekDayLongName())"
                 cell.TimeLabel.text = timeFormatter.string(from: (theNextCourse!["Date"] as! Date))
                 cell.noteLabel.text = theNextCourse!["Note"] as? String ?? ""
-                cell.report.isHidden = true
             } else {
                 cell.dateLabel.text = ""
                 cell.TimeLabel.text = "暂无课程"
                 cell.noteLabel.text = ""
-                cell.report.isHidden = true
                 cell.requirChangeBtn.isHidden = true
             }
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
@@ -390,24 +398,40 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                 cell.layer.cornerRadius = 10
                 cell.rootViewComtroller = self
                 
+                cell.vc = self
                 
                 let studentIDs = Array(thisCourse.keys)
                 let studentID = studentIDs[indexPath.row]
                 cell.studentID = studentID
-                
+                cell.studentcoursedocuentref = thisCourseDBREFDic[studentID]
+                cell.trainerdocuentref = db.collection("trainer").document(AppDelegate.AP().currentMemberID!)
                 cell.NameLabel.text = myStudentsName[studentID]
-                
-                if (thisCourse[studentID]!["Record"] as! Bool == true){
-                    cell.TitleLabel.text = "课程已扫码"
-                    cell.backgroundColor = UIColor.green.withAlphaComponent(0.3)
-                    cell.scanButton.isHidden = true
-                } else {
-                    cell.TitleLabel.text = "课程尚未扫码"
-                    cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
-                    cell.scanButton.isHidden = false
+                print(thisCourse)
+                if let thiscourse = thisCourse[studentID]{
+                    if let startTime = thiscourse["Date"] as? Date{
+                        if (Date() > Calendar.current.date(byAdding: .minute, value: self.教练说学生没来前的等待时间, to: startTime)!){
+                            cell.report.isHidden = false
+                        } else {
+                            cell.report.isHidden = true
+                        }
+                    } else {
+                        AppDelegate.showError(title: "获取时间时发生错误", err: "无法获取上课时间")
+                    }
+                    
+                    if let recorded = thiscourse["Record"] as? Bool{
+                        if (recorded == true){
+                            cell.TitleLabel.text = "课程已扫码"
+                            cell.backgroundColor = UIColor.green.withAlphaComponent(0.3)
+                            cell.scanButton.isHidden = true
+                        } else {
+                            cell.TitleLabel.text = "课程尚未扫码"
+                            cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
+                            cell.scanButton.isHidden = false
+                        }
+                    }
+                    
+                    
                 }
-                
-                
                 return cell
             } else {
                 //申请视图

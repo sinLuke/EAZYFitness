@@ -23,6 +23,10 @@
 		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
 		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
 		A31E2FE3209E91E400677D86 /* AdminViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE2209E91E400677D86 /* AdminViewController.swift */; };
+		A31E2FE6209EC7AD00677D86 /* AdminStudentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */; };
+		A31E2FE8209EC7B900677D86 /* AdminTrainerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */; };
+		A31E2FEA209EC7CC00677D86 /* AdminSummaryViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE9209EC7CC00677D86 /* AdminSummaryViewCell.swift */; };
+		A31E2FEC209EC7DC00677D86 /* AdminRequestViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FEB209EC7DC00677D86 /* AdminRequestViewCell.swift */; };
 		A3252A9A2094F14D00FD5EC3 /* blankVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */; };
 		A3252A9D2094F42B00FD5EC3 /* TimeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */; };
 		A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A325A372207C56AA00EF00B7 /* SpecialViewController.swift */; };
@@ -93,6 +97,19 @@
 		A3CEFF69209809F100B05FC1 /* TrainerRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF68209809F100B05FC1 /* TrainerRequestCell.swift */; };
 		A3CEFF6B2098409100B05FC1 /* StudentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF6A2098409100B05FC1 /* StudentCell.swift */; };
 		A3F2A1A02079B4AE00ED8A4F /* posterViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */; };
+		A3F3E647209EE8130054AEF0 /* AllTrainerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E646209EE8130054AEF0 /* AllTrainerTableViewController.swift */; };
+		A3F3E649209EE8260054AEF0 /* AllTrainerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E648209EE8260054AEF0 /* AllTrainerTableViewCell.swift */; };
+		A3F3E64B209EE8310054AEF0 /* AllStudentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E64A209EE8310054AEF0 /* AllStudentTableViewCell.swift */; };
+		A3F3E64D209EE83F0054AEF0 /* AllStudentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E64C209EE83F0054AEF0 /* AllStudentTableViewController.swift */; };
+		A3F3E64F209EE8650054AEF0 /* AllStudentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E64E209EE8650054AEF0 /* AllStudentDetailViewController.swift */; };
+		A3F3E651209EE8710054AEF0 /* AllTrainerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E650209EE8710054AEF0 /* AllTrainerDetailViewController.swift */; };
+		A3F3E653209EE88B0054AEF0 /* AllTrainerStudentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E652209EE88B0054AEF0 /* AllTrainerStudentTableViewController.swift */; };
+		A3F3E655209EE8A60054AEF0 /* AllTrainerStudentSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E654209EE8A60054AEF0 /* AllTrainerStudentSelectionViewController.swift */; };
+		A3F3E657209EE8C30054AEF0 /* AllStudentCourseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E656209EE8C30054AEF0 /* AllStudentCourseTableViewController.swift */; };
+		A3F3E659209EE8DA0054AEF0 /* AllStudentCourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E658209EE8DA0054AEF0 /* AllStudentCourseDetailViewController.swift */; };
+		A3F3E65B209EE8F50054AEF0 /* AllStudentNewCourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E65A209EE8F50054AEF0 /* AllStudentNewCourseViewController.swift */; };
+		A3F3E65D209EE9140054AEF0 /* AllStudentNewPurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E65C209EE9140054AEF0 /* AllStudentNewPurchaseViewController.swift */; };
+		A3F3E65F209EE94B0054AEF0 /* AllStudentCourseTableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E65E209EE94A0054AEF0 /* AllStudentCourseTableTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +146,10 @@
 		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
 		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
 		A31E2FE2209E91E400677D86 /* AdminViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminViewController.swift; sourceTree = "<group>"; };
+		A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminStudentViewCell.swift; sourceTree = "<group>"; };
+		A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTrainerViewCell.swift; sourceTree = "<group>"; };
+		A31E2FE9209EC7CC00677D86 /* AdminSummaryViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminSummaryViewCell.swift; sourceTree = "<group>"; };
+		A31E2FEB209EC7DC00677D86 /* AdminRequestViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminRequestViewCell.swift; sourceTree = "<group>"; };
 		A3252A992094F14D00FD5EC3 /* blankVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blankVCViewController.swift; sourceTree = "<group>"; };
 		A3252A9C2094F42B00FD5EC3 /* TimeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTable.swift; sourceTree = "<group>"; };
 		A325A372207C56AA00EF00B7 /* SpecialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialViewController.swift; sourceTree = "<group>"; };
@@ -208,6 +229,19 @@
 		A3CEFF68209809F100B05FC1 /* TrainerRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerRequestCell.swift; sourceTree = "<group>"; };
 		A3CEFF6A2098409100B05FC1 /* StudentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentCell.swift; sourceTree = "<group>"; };
 		A3F2A19F2079B4AE00ED8A4F /* posterViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = posterViewViewController.swift; sourceTree = "<group>"; };
+		A3F3E646209EE8130054AEF0 /* AllTrainerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerTableViewController.swift; sourceTree = "<group>"; };
+		A3F3E648209EE8260054AEF0 /* AllTrainerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerTableViewCell.swift; sourceTree = "<group>"; };
+		A3F3E64A209EE8310054AEF0 /* AllStudentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentTableViewCell.swift; sourceTree = "<group>"; };
+		A3F3E64C209EE83F0054AEF0 /* AllStudentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentTableViewController.swift; sourceTree = "<group>"; };
+		A3F3E64E209EE8650054AEF0 /* AllStudentDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentDetailViewController.swift; sourceTree = "<group>"; };
+		A3F3E650209EE8710054AEF0 /* AllTrainerDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerDetailViewController.swift; sourceTree = "<group>"; };
+		A3F3E652209EE88B0054AEF0 /* AllTrainerStudentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerStudentTableViewController.swift; sourceTree = "<group>"; };
+		A3F3E654209EE8A60054AEF0 /* AllTrainerStudentSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerStudentSelectionViewController.swift; sourceTree = "<group>"; };
+		A3F3E656209EE8C30054AEF0 /* AllStudentCourseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentCourseTableViewController.swift; sourceTree = "<group>"; };
+		A3F3E658209EE8DA0054AEF0 /* AllStudentCourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentCourseDetailViewController.swift; sourceTree = "<group>"; };
+		A3F3E65A209EE8F50054AEF0 /* AllStudentNewCourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentNewCourseViewController.swift; sourceTree = "<group>"; };
+		A3F3E65C209EE9140054AEF0 /* AllStudentNewPurchaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentNewPurchaseViewController.swift; sourceTree = "<group>"; };
+		A3F3E65E209EE94A0054AEF0 /* AllStudentCourseTableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentCourseTableTableViewCell.swift; sourceTree = "<group>"; };
 		A6DBEDA49BDA1391B374CD7A /* Pods-EazyFitnessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessTests/Pods-EazyFitnessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B1C0FD4826D14F9F2B63618A /* Pods-EazyFitnessUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitnessUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitnessUITests/Pods-EazyFitnessUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C16923605B316E704F13E983 /* Pods-EazyFitness.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EazyFitness.release.xcconfig"; path = "Pods/Target Support Files/Pods-EazyFitness/Pods-EazyFitness.release.xcconfig"; sourceTree = "<group>"; };
@@ -282,6 +316,19 @@
 				A3077962205B750700512378 /* ToggleTorchButton.swift */,
 			);
 			path = QRCode;
+			sourceTree = "<group>";
+		};
+		A31E2FE4209EC79400677D86 /* AdminCell */ = {
+			isa = PBXGroup;
+			children = (
+				A3F3E645209EE7E40054AEF0 /* AllStudent */,
+				A3F3E644209EE7DD0054AEF0 /* AllTrainer */,
+				A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */,
+				A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */,
+				A31E2FE9209EC7CC00677D86 /* AdminSummaryViewCell.swift */,
+				A31E2FEB209EC7DC00677D86 /* AdminRequestViewCell.swift */,
+			);
+			path = AdminCell;
 			sourceTree = "<group>";
 		};
 		A3252A9B2094F40800FD5EC3 /* TimeTable */ = {
@@ -432,9 +479,9 @@
 		A34923692090EB8F004C5455 /* signin */ = {
 			isa = PBXGroup;
 			children = (
+				A349236C2090EBC7004C5455 /* SigninPasswordViewController.swift */,
 				A34923632090E4F8004C5455 /* SigninViewController.swift */,
 				A349236A2090EBAF004C5455 /* SigninScanViewController.swift */,
-				A349236C2090EBC7004C5455 /* SigninPasswordViewController.swift */,
 				A3492376209113E2004C5455 /* specialUserSigninViewController.swift */,
 			);
 			path = signin;
@@ -465,6 +512,7 @@
 		A35B183D2090313A0058EA7B /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A31E2FE4209EC79400677D86 /* AdminCell */,
 				A3CEFF5D2097FACC00B05FC1 /* TrainerCells */,
 				A357359120964FF500995346 /* StudentCells */,
 				A39C5D862092ACFE00D46739 /* Setting */,
@@ -515,6 +563,33 @@
 				A39FE3082099170900A16619 /* TrainerTimeTable.swift */,
 			);
 			path = TrainerCells;
+			sourceTree = "<group>";
+		};
+		A3F3E644209EE7DD0054AEF0 /* AllTrainer */ = {
+			isa = PBXGroup;
+			children = (
+				A3F3E646209EE8130054AEF0 /* AllTrainerTableViewController.swift */,
+				A3F3E648209EE8260054AEF0 /* AllTrainerTableViewCell.swift */,
+				A3F3E650209EE8710054AEF0 /* AllTrainerDetailViewController.swift */,
+				A3F3E652209EE88B0054AEF0 /* AllTrainerStudentTableViewController.swift */,
+				A3F3E654209EE8A60054AEF0 /* AllTrainerStudentSelectionViewController.swift */,
+			);
+			path = AllTrainer;
+			sourceTree = "<group>";
+		};
+		A3F3E645209EE7E40054AEF0 /* AllStudent */ = {
+			isa = PBXGroup;
+			children = (
+				A3F3E64A209EE8310054AEF0 /* AllStudentTableViewCell.swift */,
+				A3F3E64C209EE83F0054AEF0 /* AllStudentTableViewController.swift */,
+				A3F3E64E209EE8650054AEF0 /* AllStudentDetailViewController.swift */,
+				A3F3E656209EE8C30054AEF0 /* AllStudentCourseTableViewController.swift */,
+				A3F3E658209EE8DA0054AEF0 /* AllStudentCourseDetailViewController.swift */,
+				A3F3E65A209EE8F50054AEF0 /* AllStudentNewCourseViewController.swift */,
+				A3F3E65C209EE9140054AEF0 /* AllStudentNewPurchaseViewController.swift */,
+				A3F3E65E209EE94A0054AEF0 /* AllStudentCourseTableTableViewCell.swift */,
+			);
+			path = AllStudent;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -867,8 +942,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3F3E659209EE8DA0054AEF0 /* AllStudentCourseDetailViewController.swift in Sources */,
 				A3BD22A820642DB100E192EB /* StudentViewController.swift in Sources */,
 				A3CEFF612098097C00B05FC1 /* TrainerScanCell.swift in Sources */,
+				A3F3E653209EE88B0054AEF0 /* AllTrainerStudentTableViewController.swift in Sources */,
+				A31E2FEC209EC7DC00677D86 /* AdminRequestViewCell.swift in Sources */,
+				A31E2FE6209EC7AD00677D86 /* AdminStudentViewCell.swift in Sources */,
 				A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */,
 				A34923642090E4F8004C5455 /* SigninViewController.swift in Sources */,
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
@@ -896,8 +975,10 @@
 				A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */,
 				A3CEFF67209809AC00B05FC1 /* TrainerMonthCell.swift in Sources */,
 				A3BD22AA2064414900E192EB /* TrainerNav.swift in Sources */,
+				A3F3E657209EE8C30054AEF0 /* AllStudentCourseTableViewController.swift in Sources */,
 				A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */,
 				A3BD22B12064699700E192EB /* TrainerTableVC.swift in Sources */,
+				A31E2FEA209EC7CC00677D86 /* AdminSummaryViewCell.swift in Sources */,
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
 				A34923662090EAB7004C5455 /* HexColor.swift in Sources */,
 				A32EEE39209CED5B0018FBB5 /* EventTextCell.swift in Sources */,
@@ -907,23 +988,32 @@
 				A3252A9A2094F14D00FD5EC3 /* blankVCViewController.swift in Sources */,
 				A3281BD1205A315B001965F7 /* ViewController.swift in Sources */,
 				A357359E2096583D00995346 /* refreshableVC.swift in Sources */,
+				A3F3E651209EE8710054AEF0 /* AllTrainerDetailViewController.swift in Sources */,
 				A3BD22B520648EF700E192EB /* EditableTableCell.swift in Sources */,
 				A34923702090EF15004C5455 /* scan.swift in Sources */,
 				A325A373207C56AA00EF00B7 /* SpecialViewController.swift in Sources */,
+				A3F3E64B209EE8310054AEF0 /* AllStudentTableViewCell.swift in Sources */,
 				A32EEE5C209D78DC0018FBB5 /* PurchaseTableViewController.swift in Sources */,
 				A3CEFF6B2098409100B05FC1 /* StudentCell.swift in Sources */,
 				A32EEE5A209D78CE0018FBB5 /* PurchaseTableViewCell.swift in Sources */,
 				A39FE30B20991A5C00A16619 /* CourseBlock.swift in Sources */,
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
 				A32EEE54209D6D570018FBB5 /* AllCourseTableViewCell.swift in Sources */,
+				A3F3E65F209EE94B0054AEF0 /* AllStudentCourseTableTableViewCell.swift in Sources */,
+				A31E2FE8209EC7B900677D86 /* AdminTrainerViewCell.swift in Sources */,
+				A3F3E65B209EE8F50054AEF0 /* AllStudentNewCourseViewController.swift in Sources */,
 				A3573597209651A900995346 /* AllCourseCell.swift in Sources */,
+				A3F3E64D209EE83F0054AEF0 /* AllStudentTableViewController.swift in Sources */,
 				A3CEFF652098099700B05FC1 /* TrainerMyStudentCell.swift in Sources */,
 				A3BD22AD2064644800E192EB /* MyStudentTableVC.swift in Sources */,
 				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,
+				A3F3E649209EE8260054AEF0 /* AllTrainerTableViewCell.swift in Sources */,
 				A39C5D892092B2A600D46739 /* LoginViewController.swift in Sources */,
 				A39FE30D2099248000A16619 /* TimeTableFullScreenViewController.swift in Sources */,
 				A3573590209639D100995346 /* AppDelegate.swift in Sources */,
+				A3F3E655209EE8A60054AEF0 /* AllTrainerStudentSelectionViewController.swift in Sources */,
 				A34923682090EB34004C5455 /* DefaultViewController.swift in Sources */,
+				A3F3E65D209EE9140054AEF0 /* AllStudentNewPurchaseViewController.swift in Sources */,
 				A357359B2096521300995346 /* RequestCell.swift in Sources */,
 				A3CEFF69209809F100B05FC1 /* TrainerRequestCell.swift in Sources */,
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
@@ -931,9 +1021,11 @@
 				A3BD22B320648E8200E192EB /* EditableTableVC.swift in Sources */,
 				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
 				A3CEFF632098098900B05FC1 /* TrainerNextCell.swift in Sources */,
+				A3F3E64F209EE8650054AEF0 /* AllStudentDetailViewController.swift in Sources */,
 				A35735B02096890400995346 /* TimeTableViewController.swift in Sources */,
 				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
 				A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */,
+				A3F3E647209EE8130054AEF0 /* AllTrainerTableViewController.swift in Sources */,
 				A32EEE57209D6EFE0018FBB5 /* TimeTableViewTableCell.swift in Sources */,
 				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,
 				A349236B2090EBAF004C5455 /* SigninScanViewController.swift in Sources */,

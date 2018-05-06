@@ -96,8 +96,11 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
             if (courseDic["Type"] as! String) == "General"{
                 cell.typeLabel.text = "状态：正常"
                 cell.typeLabel.textColor = HexColor.Green
+            } else if (courseDic["Type"] as! String) == "General"{
+                cell.typeLabel.text = "状态：没来"
+                cell.typeLabel.textColor = HexColor.Red
             } else {
-                cell.typeLabel.text = "状态：异常"
+                cell.typeLabel.text = "状态：未知"
                 cell.typeLabel.textColor = HexColor.Red
             }
         }

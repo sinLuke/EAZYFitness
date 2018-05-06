@@ -139,13 +139,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                         if let Usergroup = document.value(forKey: "Type") as? String{
                             self.usergroup = Usergroup
                             
-                            if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
-                                self.currentMemberID = memberid
-                                switch Usergroup{
-                                case "student":
-                                    
-                                    
-                                    //获取我的所有学生
+                            switch Usergroup{
+                            case "student":
+                                //获取我的所有学生
+                                if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
+                                    self.currentMemberID = memberid
                                     self.db.collection("student").document(memberid).getDocument(completion: { (snap, err) in
                                         if let err = err{
                                             AppDelegate.showError(title: "读取用户时发生错误", err: err.localizedDescription)
@@ -156,21 +154,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                                             }
                                         }
                                     })
-                                case "super":
-                                    AppDelegate.resetMainVC(with: "super")
-                                case "mississauga":
-                                    AppDelegate.resetMainVC(with: "admin")
-                                case "waterloo":
-                                    AppDelegate.resetMainVC(with: "admin")
-                                case "scarborough":
-                                    AppDelegate.resetMainVC(with: "admin")
-                                case "trainer":
+                                }
+                            case "super":
+                                self.currentMemberID = "1000"
+                                AppDelegate.resetMainVC(with: "super")
+                            case "mississauga":
+                                self.currentMemberID = "0"
+                                AppDelegate.resetMainVC(with: "admin")
+                            case "waterloo":
+                                self.currentMemberID = "0"
+                                AppDelegate.resetMainVC(with: "admin")
+                            case "scarborough":
+                                self.currentMemberID = "0"
+                                AppDelegate.resetMainVC(with: "admin")
+                            case "trainer":
+                                if let userdoc = self.UserDoc, let memberid = userdoc["MemberID"] as? String{
+                                    self.currentMemberID = memberid
                                     self.getAllMystudent()
                                     AppDelegate.resetMainVC(with: "trainer")
-                                default:
-                                    AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
                                 }
+                            default:
+                                AppDelegate.showError(title: "登陆发生错误", err:"无法确定用户组", handler: self.signout)
                             }
+                            
+                            
                             
                         }
                     } else {
