@@ -12,13 +12,16 @@ import Firebase
 class PurchaseTableViewController: UITableViewController {
 
     let _refreshControl = UIRefreshControl()
+    var studentName:String!
     var CourseList:[[String:Any]] = []
     
-    var dref:CollectionReference!
+    @IBOutlet weak var addNew: UIBarButtonItem!
+    
+    var ref:CollectionReference!
     
     func refresh() {
         CourseList = []
-        dref.order(by: "RequiredDate").getDocuments { (snap, err) in
+        ref.order(by: "Date").getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取购买时发生错误", err: err.localizedDescription)
             } else {
@@ -43,9 +46,17 @@ class PurchaseTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "\(self.studentName!)的购买记录"
         
         self.refresh()
+        
+        if (AppDelegate.AP().usergroup == "student" || AppDelegate.AP().usergroup == "trainer"){
+            self.addNew.isEnabled = false
+        } else {
+            self.addNew.isEnabled = true
+        }
+        
+        
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
         _refreshControl.attributedTitle = NSAttributedString(string: title)
         _refreshControl.addTarget(self, action:
@@ -90,15 +101,13 @@ class PurchaseTableViewController: UITableViewController {
             let timeFormatter = DateFormatter()
             timeFormatter.dateStyle = .none
             timeFormatter.timeStyle = .short
-            if let date = courseDic["RequiredDate"] as? Date{
+            if let date = courseDic["Date"] as? Date{
                 cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
-                if let date = courseDic["ApprovedDate"] as? Date{
-                    cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
-                }
             }
             if (courseDic["Approved"] as! Bool) == true{
                 cell.typeLabel.text = "有效"
                 cell.typeLabel.textColor = HexColor.Green
+                cell.backgroundColor = UIColor.white
             } else {
                 cell.typeLabel.text = "尚未处理"
                 cell.typeLabel.textColor = UIColor.gray
@@ -117,50 +126,11 @@ class PurchaseTableViewController: UITableViewController {
             return String(float)
         }
     }
-    
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let dvc = segue.destination as? AllStudentNewPurchaseViewController{
+            dvc.ref = self.ref
+            dvc.studentName = self.studentName
+        }
+    }
 }

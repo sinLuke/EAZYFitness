@@ -7,8 +7,12 @@
 //
 
 import UIKit
-
-class AllStudentCourseTableViewController: UITableViewController {
+import Firebase
+class AllStudentCourseTableViewController: DefaultTableViewController, refreshableVC {
+    
+    
+    
+    var ref:CollectionReference!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +39,14 @@ class AllStudentCourseTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 0
+    }
+    
+    func refresh() {
+        
+    }
+    
+    func reload() {
+        self.tableView.reloadData()
     }
 
     /*

@@ -17,7 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var myStudentListGeneral:[String] = []
     var myStudentListMultiple:[String] = []
     
+    static var notificationValue = 0
     //教练
+    var messageListener:[ListenerRegistration] = []
     
     var usergroup:String?
     var myName:String?
@@ -76,11 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         */
     
     func getAllMystudent(){
-        print("=====")
         print(currentMemberID)
         if let _currentMemberID = self.currentMemberID{
-            print("=====")
-            print(_currentMemberID)
             let dbref = db.collection("trainer").document(_currentMemberID)
             //获取所有学生ID
             dbref.collection("trainee").getDocuments { (snap, err) in
@@ -107,6 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                         AppDelegate.showError(title: "获取所有学生时发生错误", err: "无法获取数据")
                     }
                 }
+                self.startListener()
             }
         }
     }
@@ -132,13 +132,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                 if let err = err{
                     AppDelegate.showError(title: "读取用户时发生错误", err: err.localizedDescription)
                 } else {
-                    print(snap)
                     if let document = snap?.data() as? NSDictionary{
                         self.UserDoc = document
-                        print(document)
                         if let Usergroup = document.value(forKey: "Type") as? String{
                             self.usergroup = Usergroup
-                            
                             switch Usergroup{
                             case "student":
                                 //获取我的所有学生
@@ -157,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
                                 }
                             case "super":
                                 self.currentMemberID = "1000"
-                                AppDelegate.resetMainVC(with: "super")
+                                AppDelegate.resetMainVC(with: "admin")
                             case "mississauga":
                                 self.currentMemberID = "0"
                                 AppDelegate.resetMainVC(with: "admin")
@@ -209,20 +206,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         self.login()
         return true
     }
-    /*
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
-        let sourceApplication = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String?
-        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
-            return true
-        }
-        // other URL handling goes here.
-        return false
-    }
-*/
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        for listener in self.messageListener{
+            listener.remove()
+        }
+        
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -231,15 +222,76 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        self.startListener()
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.\
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        self.startListener()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        for listener in self.messageListener{
+            listener.remove()
+        }
+    }
+    
+    func startListener(){
+        for listener in self.messageListener{
+            listener.remove()
+        }
+        if usergroup == "student"{
+            let messageListener0 = Firestore.firestore().collection("student").document(self.currentMemberID!).collection("Message").document("Last").addSnapshotListener({ (snap, err) in
+                AppDelegate.notificationValue = 0
+                AppDelegate.checkUserMessage(currentMemberID: self.currentMemberID!, Message: "Message", byStudent: false)
+                AppDelegate.checkUserMessage(currentMemberID: self.currentMemberID!, Message: "AdminMessage", byStudent: false)
+            })
+            let messageListener1 = Firestore.firestore().collection("student").document(self.currentMemberID!).collection("AdminMessage").document("Last").addSnapshotListener({ (snap, err) in
+                AppDelegate.notificationValue = 0
+                AppDelegate.checkUserMessage(currentMemberID: self.currentMemberID!, Message: "Message", byStudent: false)
+                AppDelegate.checkUserMessage(currentMemberID: self.currentMemberID!, Message: "AdminMessage", byStudent: false)
+            })
+            self.messageListener.append(messageListener0)
+            self.messageListener.append(messageListener1)
+        } else if usergroup == "trainer"{
+            for studentID in self.myStudentListGeneral{
+                let messageListener = Firestore.firestore().collection("student").document(studentID).collection("Message").document("Last").addSnapshotListener({ (snap, err) in
+                    AppDelegate.notificationValue = 0
+                    for studentID in self.myStudentListGeneral{
+                        AppDelegate.checkUserMessage(currentMemberID: studentID, Message: "Message", byStudent: true)
+                    }
+                })
+                self.messageListener.append(messageListener)
+            }
+        }
+    }
+    
+    class func checkUserMessage(currentMemberID:String, Message:String, byStudent:Bool){
+        Firestore.firestore().collection("student").document(currentMemberID).collection(Message).whereField("byStudent", isEqualTo: byStudent).whereField("Read", isEqualTo: false).getDocuments(completion: { (snap, err) in
+            if let err = err {
+                AppDelegate.showError(title: "获取消息时发生错误", err: err.localizedDescription)
+            } else {
+                AppDelegate.notificationValue += snap!.documents.count
+                AppDelegate.setBadges(notificationValue: AppDelegate.notificationValue, for: 1)
+            }
+        })
+    }
+    
+    
+    class func setBadges(notificationValue:Int, for item:Int){
+        if let cvc = AppDelegate.getCurrentVC(){
+            if let tbc = cvc.tabBarController{
+                if let theItems = tbc.tabBar.items{
+                    if notificationValue > 0{
+                        theItems[item].badgeValue = "\(notificationValue)"
+                    } else {
+                        theItems[item].badgeValue = nil
+                    }
+                }
+            }
+        }
     }
     
     class func getCurrentVC() -> UIViewController?{
@@ -269,31 +321,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         }
         
     }
-    func presentTrainerView(user: User, group:String){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let trainerViewController = storyboard.instantiateViewController(withIdentifier: "TrainerNav") as! TrainerNav
-        trainerViewController.user = user
-        trainerViewController.myStudentDic = self.myStudent
-        trainerViewController.allStudentDic = self.allStudent as! NSDictionary
-        trainerViewController.trainerDic = self.trainer
-        self.myStudentBOOL = false
-        self.trainerBOOL = false
-        self.allStudentBOOL = false
-        trainerViewController.group = group
-        AppDelegate.getCurrentVC()?.present(trainerViewController, animated: true)
-        return
-    }
-    /*
-    func signout(){
-        print ("signout")
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-        } catch let signOutError as NSError {
-            print ("Error signing out: %@", signOutError)
-        }
-    }
-    */
     
     func signout() -> Void{
         if let listener = self.listener{
@@ -359,100 +386,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         }
     }
     
-    /*
-    func loginFunc(user:User){
-        print("b")
-        if let vc = AppDelegate.getCurrentVC() as? ViewController{
-            vc.loading.isHidden = false
-            vc.loading.startAnimating()
-        }
-        let ref = Database.database().reference()
-        ref.child("trainer").observeSingleEvent(of: .value) { (snapshot) in
-            if let value = snapshot.value as? NSDictionary{
-                for uuid in (value.allKeys){
-                    if user.uid == uuid as? String{
-                        if let trainervalue = value.value(forKey: uuid as! String) as? NSDictionary{
-                            if let usergroup = trainervalue.value(forKey: "usergroup") as? String{
-                                switch usergroup{
-                                    case "super":
-                                        self.prepare(user: user, group: usergroup)
-                                    case "trainer":
-                                        self.prepare(user: user, group: usergroup)
-                            
-                                    default: AppDelegate.sentErrorMessage(message: "用户组无效")
-                                }
-                                return
-                            } else {
-                                print("1")
-                                AppDelegate.sentErrorMessage(message: "用户组无效")
-                                self.signout()
-                                return
-                            }
-                        } else {
-                            print("2")
-                            AppDelegate.sentErrorMessage(message: "用户数据无效")
-                            self.signout()
-                            return
-                        }
-                    }
-                }
-                print("3")
-                AppDelegate.sentErrorMessage(message: "loginFunc: 用户无效")
-                self.signout()
-                return
-            }
-            else {
-                print("4")
-                AppDelegate.sentErrorMessage(message: "数据库错误")
-                self.signout()
-                return
-            }
-        }
-    }
-    */
-    /*
-    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
-        if user != nil{
-            print("loginFunc")
-            loginFunc(user: user!)
-        } else {
-            AppDelegate.sentErrorMessage(message: "无用户")
-            self.signout()
-            return
-        }
-    }
- */
-    /*
-    func prepare(user: User, group: String){
-        let ref = Database.database().reference()
-        ref.child("trainer").child(user.uid).observeSingleEvent(of: .value) { (snapshot) in
-            self.myStudent = snapshot.value as? NSDictionary
-            self.myStudentBOOL = true
-            if ((self.myStudentBOOL && self.allStudentBOOL) && self.trainerBOOL){
-                self.presentTrainerView(user: user, group: group)
-            } else {
-                print("myStudent")
-            }
-        }
-        ref.child("trainer").observeSingleEvent(of: .value) { (snapshot) in
-            self.trainer = snapshot.value as? NSDictionary
-            self.trainerBOOL = true
-            if ((self.myStudentBOOL && self.allStudentBOOL) && self.trainerBOOL){
-                self.presentTrainerView(user: user, group: group)
-            } else {
-                print("trainer")
-            }
-        }
-        ref.child("student").observeSingleEvent(of: .value) { (snapshot) in
-            self.allStudent = snapshot.value as? NSDictionary
-            self.allStudentBOOL = true
-            if ((self.myStudentBOOL && self.allStudentBOOL) && self.trainerBOOL){
-                self.presentTrainerView(user: user, group: group)
-            } else {
-                print("allStudent")
-            }
-        }
-    }*/
     class func AP() -> AppDelegate{
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate

@@ -79,7 +79,19 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             } else {
                 cell.typeLabel.text = "状态：尚未完成"
                 cell.typeLabel.textColor = UIColor.gray
-               
+            }
+            if (courseDic["Approved"] as! Bool) == false{
+                cell.typeLabel.text = "学生尚未确定"
+                cell.typeLabel.textColor = UIColor.lightGray
+                cell.noteLabel.textColor = UIColor.lightGray
+                cell.timeLabel.textColor = UIColor.lightGray
+                cell.courseLabel.textColor = UIColor.lightGray
+                cell.backgroundColor = HexColor.lightColor
+            } else {
+                cell.noteLabel.textColor = UIColor.black
+                cell.timeLabel.textColor = UIColor.black
+                cell.courseLabel.textColor = UIColor.black
+                cell.backgroundColor = UIColor.white
             }
         }
         return cell
@@ -142,7 +154,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         
         
         if let _dref = dref as? CollectionReference{
-            _dref.whereField("Record", isEqualTo: false).whereField("Approved", isEqualTo: true).order(by: "Date").getDocuments { (snap, err) in
+            _dref.whereField("Record", isEqualTo: false).order(by: "Date").getDocuments { (snap, err) in
                 var CourseList:[[String : Any]] = []
                 if let err = err{
                     AppDelegate.showError(title: "读取购买时发生错误", err: err.localizedDescription)
@@ -161,7 +173,6 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                 }
             }
         } else if let _dref = dref as? [String: CollectionReference] {
-            print("} else if let _dref = dref as? [String: CollectionReference] {")
             for refs in Array(_dref.keys){
                 _dref[refs]!.whereField("Record", isEqualTo: false).order(by: "Date").getDocuments { (snap, err) in
                     var CourseList:[[String : Any]] = []

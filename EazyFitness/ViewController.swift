@@ -14,7 +14,7 @@ import GoogleSignIn
 import FirebaseAuthUI
 import FirebaseGoogleAuthUI
 
-class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate {
+class ViewController: DefaultViewController {
     var ref: DatabaseReference!
     @IBOutlet weak var contactUS: UIButton!
     @IBOutlet weak var LoginBtn: UIButton!
@@ -92,23 +92,24 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
         }
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     @IBAction func ScanMyCard(_ sender: Any) {
         
     }
-    
+    /*
     func fetchUserData(CardID:String, ref:DatabaseReference){
         ref.child("student").child(CardID).observeSingleEvent(of: .value) { (snapshot) in
             let value = snapshot.value as? NSDictionary
             self.gotUserData(userInfo: value!)
         }
     }
-    
+ */
+    /*
     func gotUserData(userInfo:NSDictionary){
         let registered = userInfo.value(forKey: "Registered") as! Int
         var messageString = ""
@@ -116,7 +117,7 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
             messageString = "用户未注册"
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let studentViewController = storyboard.instantiateViewController(withIdentifier: "Student") as! StudentViewController
+            let studentViewController = storyboard.instantiateViewController(withIdentifier: "Student") as! StudentVC
             studentViewController.studentInfo = userInfo
             studentViewController.group = "student"
             studentViewController.MemberID = userInfo.value(forKey: "MemberID") as! Int
@@ -133,6 +134,8 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
             self.present(alert, animated: true, completion: nil)
         }
     }
+ */
+    /*
     
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
@@ -167,7 +170,7 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
             }
             
         }
-        
+ 
         
         dismiss(animated: true) { [weak self] in
             
@@ -183,7 +186,8 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
             }
         }
     }
-    
+ 
+    */
     func reader(_ reader: QRCodeReaderViewController, didSwitchCamera newCaptureDevice: AVCaptureDeviceInput) {
         print("Switching capturing to: \(newCaptureDevice.device.localizedName)")
     }
@@ -194,6 +198,5 @@ class ViewController: DefaultViewController, QRCodeReaderViewControllerDelegate 
     }
     
 }
-
 
 

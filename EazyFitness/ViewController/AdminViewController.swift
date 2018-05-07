@@ -194,6 +194,11 @@ class AdminViewController: DefaultCollectionViewController, refreshableVC, UICol
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 11.0, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        } else {
+            
+        }
         数据库 = Firestore.firestore()
 
         self.refresh()

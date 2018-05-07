@@ -12,6 +12,7 @@ import Firebase
 class MessageListTableViewController: UITableViewController, refreshableVC {
     
     var myStudentsName:[String:String] = [:]
+    var lastMessageForStudent:[String] = ["a","b"]
     var prepareRef:CollectionReference?
     var db:Firestore!
     
@@ -20,6 +21,28 @@ class MessageListTableViewController: UITableViewController, refreshableVC {
             for eachStudentID in AppDelegate.AP().myStudentListGeneral{
                 self.getStudentsName(studentID: eachStudentID)
             }
+            if AppDelegate.AP().usergroup == "student"{
+                Firestore.firestore().collection("student").document(cMemberID).collection("Message").document("Last").getDocument { (snap, err) in
+                    if let err = err{
+                        AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
+                    } else {
+                        if let snapData = snap!.data(){
+                            self.lastMessageForStudent[0] = snapData["Text"] as! String
+                            self.reload()
+                        }
+                    }
+                }
+                Firestore.firestore().collection("student").document(cMemberID).collection("AdminMessage").document("Last").getDocument { (snap, err) in
+                    if let err = err{
+                        AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
+                    } else {
+                        if let snapData = snap!.data(){
+                            self.lastMessageForStudent[1] = snapData["Text"] as! String
+                            self.reload()
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -27,6 +50,9 @@ class MessageListTableViewController: UITableViewController, refreshableVC {
         self.tableView.reloadData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.refresh()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,9 +81,9 @@ class MessageListTableViewController: UITableViewController, refreshableVC {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if AppDelegate.AP().usergroup == "student"{
+        if AppDelegate.AP().usergroup! == "student"{
             return 2
-        } else if AppDelegate.AP().usergroup == "trainer"{
+        } else if AppDelegate.AP().usergroup! == "trainer"{
             return myStudentsName.count
         } else {
             return AppDelegate.AP().myStudentListGeneral.count
@@ -67,14 +93,16 @@ class MessageListTableViewController: UITableViewController, refreshableVC {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "message", for: indexPath)
-        if AppDelegate.AP().usergroup == "student"{
+        if AppDelegate.AP().usergroup! == "student"{
             switch indexPath.row{
             case 0:
                 cell.textLabel?.text = "我的教练"
+                cell.detailTextLabel?.text = lastMessageForStudent[0]
             default:
                 cell.textLabel?.text = "小助手"
+                cell.detailTextLabel?.text = lastMessageForStudent[1]
             }
-        } else if AppDelegate.AP().usergroup == "trainer"{
+        } else if AppDelegate.AP().usergroup! == "trainer"{
             if AppDelegate.AP().myStudentListGeneral.count != 0{
                 cell.textLabel?.text = myStudentsName[AppDelegate.AP().myStudentListGeneral[indexPath.row]]
             } else {
@@ -88,7 +116,7 @@ class MessageListTableViewController: UITableViewController, refreshableVC {
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if AppDelegate.AP().usergroup == "student"{
+        if AppDelegate.AP().usergroup! == "student"{
             switch indexPath.row{
             case 0:
                 self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("Message")
@@ -97,7 +125,7 @@ class MessageListTableViewController: UITableViewController, refreshableVC {
                 self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("AdminMessage")
                 performSegue(withIdentifier: "message", sender: self)
             }
-        } else if AppDelegate.AP().usergroup == "trainer"{
+        } else if AppDelegate.AP().usergroup! == "trainer"{
             self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().myStudentListGeneral[indexPath.row]).collection("Message")
             performSegue(withIdentifier: "message", sender: self)
         } else {

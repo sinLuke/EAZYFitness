@@ -11,7 +11,7 @@ import Firebase
 
 class specialUserSigninViewController: DefaultViewController, UITextFieldDelegate{
     
-    var userInfo:NSDictionary!
+    var userInfo:[String:Any]!
     var db: Firestore!
     
     @IBOutlet weak var emailField: UITextField!
@@ -22,6 +22,8 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     @IBOutlet weak var lnameField: UITextField!
     @IBOutlet weak var usergroup: UILabel!
     
+    var Userdata: [String:Any] = [:]
+    
     var theUserRefrence: DocumentReference!
     
     override func viewDidLoad() {
@@ -31,7 +33,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
-        if let ug = userInfo!.value(forKey: "usergroup") as? String{
+        if let ug = userInfo!["usergroup"] as? String{
             usergroup.text = ug
         } else {
             AppDelegate.showError(title: "发生未知错误", err: "请与技术人员联系", handler: self.cancelfunc)
@@ -73,31 +75,16 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
             self.endLoading()
         } else {
             if let cuser = Auth.auth().currentUser{
-                if let cardID = userInfo.value(forKey: "MemberID") as? String {
-                    self.db.collection("users").document(cuser.uid).setData([
-                        "First Name": self.fnameField.text,
-                        "Last Name": self.lnameField.text,
-                        "MemberID": cardID,
-                        "Type": usergroup.text,
-                        "Email": self.emailField.text!
-                        ])
-                } else {
-                    self.db.collection("users").document(cuser.uid).setData([
-                        "First Name": self.fnameField.text,
-                        "Last Name": self.lnameField.text,
-                        "Type": usergroup.text,
-                        "Email": self.emailField.text!
-                        ])
-                }
-                
+                self.db.collection("users").document(cuser.uid).setData(self.Userdata)
                 if let _theUserRefrence = theUserRefrence{
                     _theUserRefrence.updateData(["Registered": 2])
                 }
-                
                 switch usergroup.text{
                 case "Super":
+                    AppDelegate.AP().usergroup = "super"
                     AppDelegate.resetMainVC(with: "super")
                 case "trainer":
+                    AppDelegate.AP().usergroup = "trainer"
                     AppDelegate.AP().getAllMystudent()
                     AppDelegate.resetMainVC(with: "trainer")
                 default:
@@ -116,8 +103,29 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     self.password2Field.text = ""
                 } else {
                     if let password = passwordField.text{
-                        self.startLoading()
-                        Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
+                        if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = usergroup.text, let cardID = userInfo["MemberID"] as? String, let email = self.emailField.text{
+                            self.startLoading()
+                            self.Userdata = [
+                                "First Name": fname,
+                                "Last Name": lname,
+                                "MemberID": cardID,
+                                "Type": ug,
+                                "Email": email
+                            ]
+                            Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
+                        } else if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = usergroup.text, let email = self.emailField.text{
+                            self.startLoading()
+                            self.Userdata = [
+                                "First Name": fname,
+                                "Last Name": lname,
+                                "MemberID": "0",
+                                "Type": ug,
+                                "Email": email
+                            ]
+                            Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
+                        } else {
+                            AppDelegate.showError(title: "未知错误", err: "信息输入有误，请检查输入的信息。")
+                        }
                     }
                 }
             } else {

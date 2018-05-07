@@ -175,10 +175,7 @@ class TimeTable: NSObject {
                     
                     let eachTimeScopeLabel = UILabel(frame: CGRect(x: 375*0.01, y: _j*view.eachTimeScopeHeight, width: LEFTWIDTH - 375*0.02, height: view.eachTimeScopeHeight))
                     
-                    eachTimeScopeLabel.text = "\(j + view.startTime)"
-                    if j + view.startTime == 12{
-                        eachTimeScopeLabel.text = "上午\n下午"
-                    }
+                    eachTimeScopeLabel.text = "\(j + view.startTime):00"
                     eachTimeScopeLabel.textColor = UIColor.gray
                     eachTimeScopeLabel.lineBreakMode = .byWordWrapping
                     eachTimeScopeLabel.numberOfLines = 0

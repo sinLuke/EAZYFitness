@@ -8,6 +8,17 @@
 
 import UIKit
 
+extension UIView{
+    var isVisible:Bool {
+        set {
+            self.isHidden = (newValue == false)
+        }
+        get {
+            return (self.isHidden == false)
+        }
+    }
+}
+
 class DefaultViewController: UIViewController {
     
     var loadingView:UIVisualEffectView!
@@ -53,6 +64,9 @@ class DefaultViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = false
+        }
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = UIBarStyle.default //user global variable
@@ -66,7 +80,13 @@ class DefaultViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = true
+        }
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -124,6 +144,9 @@ class DefaultCollectionViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = false
+        }
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = UIBarStyle.default //user global variable
@@ -135,6 +158,12 @@ class DefaultCollectionViewController: UICollectionViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = true
+        }
     }
     
     
@@ -158,6 +187,7 @@ class DefaultTableViewController: UITableViewController {
     
     lazy var timer = Timer()
     override func viewDidLoad() {
+        
         loadingView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
         loadingView.frame = CGRect(x: self.view.frame.width/2-50, y: self.view.frame.height/2-50, width: 100, height: 100)
         loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
@@ -195,6 +225,9 @@ class DefaultTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = false
+        }
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = UIBarStyle.default //user global variable
@@ -206,6 +239,14 @@ class DefaultTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = true
+        }
     }
     
     

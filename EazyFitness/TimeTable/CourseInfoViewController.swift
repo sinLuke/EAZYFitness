@@ -104,7 +104,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
         
         self._gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         self.view.addGestureRecognizer(_gesture)
-        courseDatePicker.minimumDate = nextday
+        courseDatePicker.minimumDate = Date()
         
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
         _refreshControl.attributedTitle = NSAttributedString(string: title)
@@ -151,7 +151,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
         if let cMEmeberId = AppDelegate.AP().currentMemberID{
-            用来加课的refrence.addDocument(data: ["Note" : courseNoteField.text ?? "无备注", "Amount": 准备增加, "Date": self.courseDatePicker.date, "Approved":false, "Record":false, "trainer":cMEmeberId])
+            用来加课的refrence.addDocument(data: ["Note" : courseNoteField.text ?? "无备注", "Amount": 准备增加, "Date": self.courseDatePicker.date, "Approved":false, "Record":false, "trainer":cMEmeberId, "notrainer":false, "nostudent":false])
             self.refresh()
         } else {
             AppDelegate.showError(title: "添加课程时遇到错误", err: "无法获取教练ID")

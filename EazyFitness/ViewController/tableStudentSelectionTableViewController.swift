@@ -1,24 +1,20 @@
 //
-//  EditableTableVC.swift
+//  tableStudentSelectionTableViewController.swift
 //  EazyFitness
 //
-//  Created by Luke on 2018-03-22.
-//  Copyright © 2018 luke. All rights reserved.
+//  Created by Luke on 2018/5/7.
+//  Copyright © 2018年 luke. All rights reserved.
 //
 
 import UIKit
 import Firebase
-
-class EditableTableVC: UITableViewController {
-    var _path = ""
-    var dic = NSDictionary()
-    var listItems = [ListItem]()
+class tableStudentSelectionTableViewController: DefaultTableViewController, refreshableVC {
+    
+    
+    var handler:((String?) -> ())!
+    var listOfStudent:[String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        for i in 0...self.dic.count-1{
-            self.listItems += [ListItem(text: "\(self.dic.allValues[i])", path: self._path + "/\(self.dic.allKeys[i])")]
-        }
-        tableView.register(EditableTableCell.self, forCellReuseIdentifier: "tableCell")
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -26,27 +22,7 @@ class EditableTableVC: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        self.updateDatabase()
-    }
 
-    func updateDatabase(){
-        print("updateDatabase")
-        let ref = Database.database().reference()
-        ref.child("student").child("\(dic.value(forKey: "MemberID")!)").observeSingleEvent(of: .value) { (snapshot) in
-            
-            self.dic = (snapshot.value as? NSDictionary)!
-            print(self.dic)
-            print(self.dic.allValues)
-            self.listItems = [ListItem]()
-            for i in 0...self.dic.count-1{
-                self.listItems += [ListItem(text: "\(self.dic.allValues[i])", path: self._path + "/\(self.dic.allKeys[i])")]
-                
-            }
-            self.tableView.reloadData()
-        }
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -56,28 +32,31 @@ class EditableTableVC: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return dic.count
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        return listOfStudent.count
     }
+    
+    func refresh() {
+        <#code#>
+    }
+    
+    func reload() {
+        <#code#>
+    }
+
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tableCell", for: indexPath) as! EditableTableCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "selection", for: indexPath) as! selectionTableViewCell
 
         // Configure the cell...
-        let item = listItems[indexPath.section]
-        cell.listItems = item
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
-        cell.tableView = self
+
         return cell
     }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "\(dic.allKeys[section])"
-    }
+ 
 
     /*
     // Override to support conditional editing of the table view.

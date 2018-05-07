@@ -23,6 +23,9 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
     var listener:ListenerRegistration!
     
     func refresh() {
+        
+        AppDelegate.AP().startListener()
+        
         colRef.order(by: "Time").getDocuments { (snaps, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取信息时发生错误", err: err.localizedDescription)
@@ -33,7 +36,11 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
                     for docs in doctList{
                         if docs.documentID != "Last"{
                             self.MessageList.append(docs.data())
-                            docs.reference.updateData(["Read" : true])
+                            if (docs.data()["byStudent"] as! Bool == true) && AppDelegate.AP().usergroup != "student"{
+                                docs.reference.updateData(["Read" : true])
+                            } else if  (docs.data()["byStudent"] as! Bool == false) && AppDelegate.AP().usergroup == "student"{
+                                docs.reference.updateData(["Read" : true])
+                            }
                         }
                     }
                 } else {
@@ -46,7 +53,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
     
     func reload() {
         self.collectionView?.reloadData()
-        self.collectionView.setContentOffset(CGPoint(x: 0, y: max(0, self.collectionView.contentSize.height - self.collectionView.frame.height)), animated: true)
+        self.collectionView.setContentOffset(CGPoint(x: 0, y: max(0, self.collectionView.contentSize.height - self.collectionView.frame.height)), animated: false)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,7 +113,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        
+        print("keyboardWillShow")
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardViewEndFrame = view.convert(keyboardSize, from: view.window)
             if let tabbar = self.tabBarController?.tabBar{
@@ -115,20 +122,31 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
                 self.bottomSpace.constant = keyboardSize.height
             }
         }
+        let item = self.collectionView(self.collectionView!, numberOfItemsInSection: 0) - 1
+        let lastItemIndex = IndexPath(item: item, section: 0)
+        //self.collectionView?.scrollToItem(at: lastItemIndex, at: UICollectionViewScrollPosition.top, animated: false)
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        print("keyboardWillHide")
         if ((notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             self.bottomSpace.constant = 0
         }
+        let item = self.collectionView(self.collectionView!, numberOfItemsInSection: 0) - 1
+        let lastItemIndex = IndexPath(item: item, section: 0)
+        //self.collectionView?.scrollToItem(at: lastItemIndex, at: UICollectionViewScrollPosition.top, animated: false)
     }
     
     @objc func keyboardDidShow(notification: NSNotification) {
-        self.reload()
+        let item = self.collectionView(self.collectionView!, numberOfItemsInSection: 0) - 1
+        let lastItemIndex = IndexPath(item: item, section: 0)
+        //self.collectionView?.scrollToItem(at: lastItemIndex, at: UICollectionViewScrollPosition.top, animated: true)
     }
     
     @objc func keyboardDidHide(notification: NSNotification) {
-        self.reload()
+        let item = self.collectionView(self.collectionView!, numberOfItemsInSection: 0) - 1
+        let lastItemIndex = IndexPath(item: item, section: 0)
+        //self.collectionView?.scrollToItem(at: lastItemIndex, at: UICollectionViewScrollPosition.top, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

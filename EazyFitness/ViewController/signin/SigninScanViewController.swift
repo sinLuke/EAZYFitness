@@ -13,7 +13,7 @@ import Firebase
 
 class SigninScanViewController: DefaultViewController, QRCodeReaderViewControllerDelegate {
     
-    var userInfo:NSDictionary?
+    var userInfo:[String : Any]?
     var db: Firestore!
     
     var theUserRefrence: DocumentReference?
@@ -31,8 +31,8 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                     self.endLoading()
                     AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                 } else {
-                    if let document = snap?.data() as? NSDictionary{
-                        if let _numberValue = document.value(forKey: "MemberID"){
+                    if let document = snap!.data(){
+                        if let _numberValue = document["MemberID"]{
                             let numberValue = "\(_numberValue)"
                             switch numberValue {
                             case "SUPER":
@@ -73,7 +73,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                         self.endLoading()
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                     } else {
-                        if let value = snap?.data() as? NSDictionary{
+                        if let value = snap!.data(){
                             self.userInfo = value
                             self.theUserRefrence = (snap?.reference)
                             self.gotUserData()
@@ -88,12 +88,9 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                         self.endLoading()
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                     } else {
-                        if let value = snap?.data() as? NSDictionary{
+                        if let value = snap!.data(){
                             self.userInfo = value
                             
-                            print("@@@")
-                            print(snap?.reference)
-                            print("@@@")
                             self.theUserRefrence = (snap?.reference)
                             self.gotUserData()
                         } else {
@@ -110,7 +107,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     }
     
     func gotUserData(){
-        let registered = userInfo!.value(forKey: "Registered") as! Int
+        let registered = userInfo!["Registered"] as! Int
 
         if registered == 0{
             self.endLoading()
@@ -121,8 +118,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
             dismiss(animated: true, completion: nil)
         } else {
             self.endLoading()
-            print(userInfo)
-            if let usergroup = userInfo?.value(forKey: "usergroup") as? String{
+            if let usergroup = userInfo?["usergroup"] as? String{
                 if usergroup == "student"{
                     performSegue(withIdentifier: "password", sender: self)
                 } else {
@@ -163,15 +159,9 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
         self.endLoading()
         if let vc = segue.destination as? SigninPasswordViewController{
             vc.userInfo = self.userInfo
-            print("@@@")
-            print(self.theUserRefrence)
-            print("@@@")
             vc.theUserRefrence = self.theUserRefrence
         } else if let vc = segue.destination as? specialUserSigninViewController{
             vc.userInfo = self.userInfo
-            print("@@@")
-            print(self.theUserRefrence)
-            print("@@@")
             vc.theUserRefrence = self.theUserRefrence
         }
     }

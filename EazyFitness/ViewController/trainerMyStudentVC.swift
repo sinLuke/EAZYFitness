@@ -12,7 +12,7 @@ import Firebase
 class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UICollectionViewDelegateFlowLayout, QRCodeReaderViewControllerDelegate {
     
     let _refreshControl = UIRefreshControl()
-    let TimeTolerant = 30
+    let TimeTolerant = 0
     var db:Firestore!
     
     var timeTableRef:[String:CollectionReference] = [:]
@@ -51,9 +51,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
         if let cMemberID = AppDelegate.AP().currentMemberID{
             for eachStudentID in AppDelegate.AP().myStudentListGeneral{
                 self.getStudentsName(studentID: eachStudentID)
-                self.getNextCourse(studentID: eachStudentID)
-                self.checkIfDuringCourse(studentID: eachStudentID)
-                self.getRequest(studentID: eachStudentID)
             }
             
             self.getTrainerMonthTotal()
@@ -82,6 +79,9 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                 } else {
                     AppDelegate.showError(title: "读取学生信息时发生错误", err: "无法读取数据")
                 }
+                self.getNextCourse(studentID: studentID)
+                self.checkIfDuringCourse(studentID: studentID)
+                self.getRequest(studentID: studentID)
                 self.reload()
             }
         }
@@ -260,7 +260,12 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(AppDelegate.AP().myStudentListGeneral)
+        if #available(iOS 11.0, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+            self.navigationController?.navigationBar.isTranslucent = true
+        } else {
+            
+        }
         
         db = Firestore.firestore()
         self.refresh()
@@ -491,6 +496,13 @@ class trainerMyStudentVC: DefaultCollectionViewController, refreshableVC, UIColl
                         dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
                     }
                 }
+            }
+        } else if let dvc = segue.destination as? TrainerFinishedTableViewController{
+            if let cmid = AppDelegate.AP().currentMemberID{
+                dvc.ref = db.collection("trainer").document(cmid).collection("Finished")
+                dvc.name = "我"
+            } else {
+                AppDelegate.showError(title: "未知问题", err: "无法获取卡号", handler:AppDelegate.AP().signout)
             }
         }
     }

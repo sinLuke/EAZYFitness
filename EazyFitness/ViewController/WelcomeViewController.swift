@@ -17,7 +17,8 @@ class WelcomeViewController: DefaultViewController, UIWebViewDelegate {
     var ref:DatabaseReference!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        
         let url:URL = URL(string:"https://www.eazy.fitness/")!
         let request:URLRequest = URLRequest(url:url)
         homepage.loadRequest(request)

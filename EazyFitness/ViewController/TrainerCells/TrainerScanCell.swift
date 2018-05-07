@@ -57,7 +57,7 @@ class TrainerScanCell: UICollectionViewCell {
                                     self.trainerdocuentref.collection("Finished").addDocument(data: ["CourseID" : self.studentcoursedocuentref.documentID, "StudentID": self.studentID, "FinishedType": "Exception", "Note":"学生没来", "Amount":amount, "Date":Date()])
                                     self.studentcoursedocuentref.updateData(["Record" : true])
                                     self.studentcoursedocuentref.updateData(["Type" : "Exception"])
-                                    self.studentcoursedocuentref.updateData(["Note" : textField.text])
+                                    self.studentcoursedocuentref.updateData(["Note" : textField.text ?? "无备注"])
                                     self.studentcoursedocuentref.updateData(["notrainer" : false])
                                     self.studentcoursedocuentref.updateData(["nostudent" : true])
                                     self.vc.endLoading()

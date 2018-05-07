@@ -15,7 +15,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     
     var fname = "Name"
     var lname = "Undefine"
-    var userInfo:NSDictionary!
+    var userInfo:[String : Any]!
     var db: Firestore!
     
     var theUserRefrence: DocumentReference!
@@ -33,8 +33,8 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
-        self.fname = (userInfo!.value(forKey: "First Name") as? String) ?? "Name"
-        self.lname = (userInfo!.value(forKey: "Last Name") as? String) ?? "Undefine"
+        self.fname = (userInfo!["First Name"] as? String) ?? "Name"
+        self.lname = (userInfo!["Last Name"] as? String) ?? "Undefine"
         
         nameLabel.text = "\(self.fname) \(self.lname)"
         
@@ -71,19 +71,23 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
             self.endLoading()
         } else {
             if let cuser = Auth.auth().currentUser{
-                let cardID = "\(userInfo.value(forKey: "MemberID")!)"
-                
-                db.collection("users").document(cuser.uid).setData([
-                    "First Name": self.fname,
-                    "Last Name": self.lname,
-                    "MemberID": cardID,
-                    "Type": "student",
-                    "Email": self.emailField.text!
-                    ])
-                
-                theUserRefrence.updateData(["Registered":2])
-
-                AppDelegate.resetMainVC(with: "student")
+                if let memberID = userInfo["MemberID"]{
+                    let cardID = "\(memberID)"
+                    db.collection("users").document(cuser.uid).setData([
+                        "First Name": self.fname,
+                        "Last Name": self.lname,
+                        "MemberID": cardID,
+                        "Type": "student",
+                        "Email": self.emailField.text!
+                        ])
+                    
+                    theUserRefrence.updateData(["Registered":2])
+                    
+                    AppDelegate.resetMainVC(with: "student")
+                } else {
+                    AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: "无法确认卡号")
+                    self.endLoading()
+                }
             }
         }
     }

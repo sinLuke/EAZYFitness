@@ -167,6 +167,12 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 11.0, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+            self.navigationController?.navigationBar.isTranslucent = true
+        } else {
+            
+        }
         db = Firestore.firestore()
         self.refresh()
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -341,7 +347,8 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
         }
         if let dvc = segue.destination as? PurchaseTableViewController{
             if let MemberID = self.cMemberID{
-                dvc.dref = db.collection("student").document(MemberID).collection("CourseRegistered")
+                dvc.ref = db.collection("student").document(MemberID).collection("CourseRegistered")
+                dvc.studentName = "我"
             }
         }
         if let dvc = segue.destination as? StudentAllCoursesTableViewController{
