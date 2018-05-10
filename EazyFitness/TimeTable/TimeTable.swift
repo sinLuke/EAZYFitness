@@ -181,6 +181,7 @@ class TimeTable: NSObject {
                     eachTimeScopeLabel.numberOfLines = 0
                     eachTimeScopeLabel.adjustsFontSizeToFitWidth = true
                     eachTimeScopeLabel.textAlignment = .center
+                    eachTimeScopeLabel.font = UIFont.boldSystemFont(ofSize: 13)
                     view.timeScopeLabelList.append(eachTimeScopeLabel)
                     singleDayView.addSubview(eachTimeScopeLabel)
                     

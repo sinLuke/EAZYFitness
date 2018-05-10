@@ -44,11 +44,14 @@ class PurchaseTableViewController: UITableViewController {
         self.refresh()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        self.refresh()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "\(self.studentName!)的购买记录"
         
-        self.refresh()
         
         if (AppDelegate.AP().usergroup == "student" || AppDelegate.AP().usergroup == "trainer"){
             self.addNew.isEnabled = false

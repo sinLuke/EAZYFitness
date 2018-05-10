@@ -19,13 +19,14 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
     let _refreshControl = UIRefreshControl()
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
+        print("handleRefresh")
         refreshControl.endRefreshing()
         self.refresh()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print("viewDidLoad")
         self.title = "\(name!)完成的课程"
         
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -37,12 +38,17 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
         self.tableView.addSubview(self._refreshControl)
         self.tableView.refreshControl = self._refreshControl
         
-        self.refresh()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
+        self.refresh()
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,7 +82,7 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TrainerFinishedTableViewCell
-        
+        print("tableView(_ tableView: UITableView, cellFor")
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .none
@@ -107,6 +113,7 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
     }
     
     func prepareCourseNumber(_ int:Int) -> String{
+        print("prepareCourseNumber")
         let float = Float(int)/2.0
         if int%2 == 0{
             return String(format: "%.0f", float)
@@ -116,10 +123,12 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        print("tableView")
         return 50
     }
     
     func refresh() {
+        print("refresh")
         ref.getDocuments { (snap, err) in
             self.thismonth = []
             self.othermonth = []
@@ -172,6 +181,14 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
     
     func reload() {
         self.tableView.reloadData()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("viewDidDisappear")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
     }
 
     /*

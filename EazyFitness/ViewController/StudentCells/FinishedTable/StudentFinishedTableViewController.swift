@@ -17,6 +17,7 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
     var dref:CollectionReference!
     
     func refresh() {
+        print("refresh")
         CourseList = []
         dref.whereField("Record", isEqualTo: true).order(by: "Date").getDocuments { (snap, err) in
             if let err = err{
@@ -33,17 +34,22 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
     }
     
     func reload() {
+        print("reload")
         tableView.reloadData()
     }
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
+        print("handleRefresh")
         refreshControl.endRefreshing()
         self.refresh()
     }
-
+    override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print("viewDidLoad")
         
         self.refresh()
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -70,16 +76,19 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
+        print("numberOfSections")
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("tableView")
         // #warning Incomplete implementation, return the number of rows
         return CourseList.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {")
         let cell = tableView.dequeueReusableCell(withIdentifier: "finishedCell", for: indexPath) as! FinishedTableViewCell
         if let courseDic = CourseList[indexPath.row] as? [String:Any]{
             cell.courseLabel.text = "课时：\(prepareCourseNumber(courseDic["Amount"] as! Int))"
@@ -108,6 +117,7 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
     }
 
     func prepareCourseNumber(_ int:Int) -> String{
+        print("prepareCourseNumber")
         let float = Float(int)/2.0
         if int%2 == 0{
             return String(format: "%.0f", float)
@@ -116,6 +126,13 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("viewDidDisappear")
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

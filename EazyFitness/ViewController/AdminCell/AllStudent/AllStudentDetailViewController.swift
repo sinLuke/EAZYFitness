@@ -89,6 +89,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
                     AppDelegate.showError(title: "上传出现错误", err: err.localizedDescription)
                     self.endLoading()
                 } else {
+                    AppDelegate.showError(title: "创建成功", err: "已成功修改记录", of: self)
                     self.refresh()
                 }
             }
@@ -97,6 +98,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         }
         
     }
+    
     
     func refresh() {
         ref.getDocument { (snap, err) in
@@ -144,6 +146,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllStudentCourseTableViewController{
             dvc.ref = self.ref.collection("CourseRecorded")
+            dvc.title = "\(self.title!) 的课程"
         }
         if let dvc = segue.destination as? PurchaseTableViewController{
             dvc.ref = self.ref.collection("CourseRegistered")

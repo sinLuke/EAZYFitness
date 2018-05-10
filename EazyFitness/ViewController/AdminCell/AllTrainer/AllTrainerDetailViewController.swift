@@ -87,11 +87,12 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
                 return
             }
             self.startLoading()
-            ref.setData(["First Name" : self.fname.text!, "Last Name" : self.lname.text!, "Registered": self.registered.selectedSegmentIndex, "region": self.Region, "usergroup":"student", "MemberID":ref.documentID]) { (err) in
+            ref.setData(["First Name" : self.fname.text!, "Last Name" : self.lname.text!, "Registered": self.registered.selectedSegmentIndex, "region": self.Region, "usergroup":"trainer", "MemberID":ref.documentID]) { (err) in
                 if let err = err{
                     AppDelegate.showError(title: "上传出现错误", err: err.localizedDescription)
                     self.endLoading()
                 } else {
+                    AppDelegate.showError(title: "创建成功", err: "已成功修改记录", of: self)
                     self.refresh()
                 }
             }

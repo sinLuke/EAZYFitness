@@ -380,6 +380,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         
         cvc.present(alert, animated: true)
     }
+    
+    class func showSelection(title:String, text:String, of cvc:UIViewController, handlerAgree:(()->())? = nil, handlerDismiss:(()->())? = nil){
+        print(title)
+        print(text)
+        let alert: UIAlertController = UIAlertController(title: title, message: text, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .`default`, handler: {_ in
+            if let _handler = handlerAgree{
+                _handler()
+            }
+        }))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: "Default action"), style: .cancel, handler: {_ in
+            if let _handler = handlerDismiss{
+                _handler()
+            }
+        }))
+        cvc.present(alert, animated: true)
+    }
+    
     class func showError(title:String, err:String, handler:(()->())? = nil){
         if let cvc = AppDelegate.getCurrentVC(){
             AppDelegate.showError(title: title, err: err, of: cvc, handler: handler)

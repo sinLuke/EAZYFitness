@@ -33,7 +33,7 @@ class SettingVC: DefaultViewController, UITableViewDelegate, UITableViewDataSour
         case 0:
             switch indexPath.row{
                 case 0:
-                    AppDelegate.showError(title: "您正在退出您的账号", err: "是否继续", handler: AppDelegate.AP().signout)
+                    AppDelegate.showSelection(title: "您正在退出您的账号", text: "是否继续", of: self, handlerAgree: AppDelegate.AP().signout, handlerDismiss: nil)
                 
                 default: break
             }

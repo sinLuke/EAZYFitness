@@ -26,6 +26,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     
     var StudentCourseList:[String:[[String:Any]]] = [:]
     var dref:Any!
+    var sdref:CollectionReference?
     @IBOutlet weak var timeTableCourseTable: UITableView!
     
     
@@ -51,6 +52,22 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             return String(format: "%.0f", float)
         } else {
             return String(float)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let i = Array(StudentCourseList.keys)[indexPath.section]
+            if let courseDic = StudentCourseList[i]![indexPath.row] as? [String:Any]{
+                if let ref = courseDic["ref"] as? DocumentReference{
+                    ref.delete()
+                    StudentCourseList[i]!.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                } else {
+                    AppDelegate.showError(title: "无法删除", err: "找不到对应的文档", of: self)
+                }
+            }
+            
         }
     }
     
@@ -161,7 +178,9 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                 } else {
                     if let documentList = snap?.documents{
                         for docDic in documentList{
-                            CourseList.append(docDic.data())
+                            var dic = docDic.data()
+                            dic["ref"] = docDic.reference
+                            CourseList.append(dic)
                         }
                         if AppDelegate.AP().usergroup == "student"{
                             self.StudentCourseList["我的课程"] = CourseList
@@ -169,6 +188,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                             self.StudentCourseList["该学员的课程"] = CourseList
                         }
                     }
+                    self.endLoading()
                     self.reload()
                 }
             }
@@ -183,10 +203,12 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                             for docDic in documentList{
                                 var docdic = docDic.data()
                                 docdic["student"] = docDic.documentID
+                                docdic["ref"] = docDic.reference
                                 CourseList.append(docdic)
                             }
                             self.StudentCourseList[refs] = CourseList
                         }
+                        self.endLoading()
                         self.reload()
                     }
                 }
@@ -195,8 +217,35 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     @IBAction func addCourseAction(_ sender: Any) {
-        self.performSegue(withIdentifier: "courseDetail", sender: self)
+        
+        
+        if let _ = self.dref as? CollectionReference{
+            self.performSegue(withIdentifier: "courseDetail", sender: self)
+        } else if let _ = self.dref as? [String: CollectionReference]{
+            let story = UIStoryboard(name: "Main", bundle: nil)
+            let vc = story.instantiateViewController(withIdentifier: "selection") as! tableStudentSelectionTableViewController
+            if let _dref = dref as? [String:CollectionReference]{
+                vc.listOfStudent = Array(self.StudentCourseList.keys)
+                vc.listOnlyContainNames = true
+                vc.handler = self.handleStudentSelection
+                self.present(vc, animated: true)
+            }
+            
+        }
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        if AppDelegate.AP().usergroup == "student"{
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    
+    // Override to support editing the table view.
+    
     
     
     override func viewDidLoad() {
@@ -204,12 +253,11 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         super.viewDidLoad()
         addCourseButton.tintColor = HexColor.Pirmary
         
-        if cMemberID == nil || AppDelegate.AP().usergroup == "student" {
-            addCourseButton.isEnabled = false
-        } else{
-            addCourseButton.isEnabled = true
+        if AppDelegate.AP().usergroup == "student"{
+            self.addCourseButton.isEnabled = false
+        } else {
+            self.addCourseButton.isEnabled = true
         }
-        
         
         db = Firestore.firestore()
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -239,6 +287,11 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     override func viewDidAppear(_ animated: Bool) {
         self.refresh()
+        if AppDelegate.AP().usergroup == "student"{
+            self.addCourseButton.isEnabled = false
+        } else {
+            self.addCourseButton.isEnabled = true
+        }
     }
 
     
@@ -268,9 +321,27 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             } else {
                 dvc.collectionRef = self.collectionRef
             }
+            dvc.showDate = Date()
+            dvc.title = "本周"
         } else if let dvc = segue.destination as? CourseInfoViewController{
-            dvc.collectionRef = self.collectionRef
-            dvc.用来加课的refrence = dref as! CollectionReference
+            if segue.identifier == "courseDetail"{
+                dvc.collectionRef = self.collectionRef
+                if let _dref = dref as? CollectionReference{
+                    dvc.用来加课的refrence = _dref
+                }
+            } else if segue.identifier == "courseDetailList"{
+                dvc.collectionRef = self.collectionRef
+                if let _dref = dref as? [String: CollectionReference]{
+                    dvc.用来加课的refrence = self.sdref!
+                }
+            }
+        }
+    }
+    
+    func handleStudentSelection(StudentID:String?){
+        if let _dref = dref as? [String: CollectionReference], let _StudentID = StudentID{
+            self.sdref = _dref[_StudentID]
+            self.performSegue(withIdentifier: "courseDetailList", sender: self)
         }
     }
 }

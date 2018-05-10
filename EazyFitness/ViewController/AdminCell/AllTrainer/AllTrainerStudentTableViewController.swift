@@ -101,45 +101,67 @@ class AllTrainerStudentTableViewController: DefaultTableViewController, refresha
     }
     
     @IBAction func addStudent(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "selection") as! tableStudentSelectionTableViewController
-        self.present(vc, animated: true) {
-            <#code#>
+        var listOfStudent:[String] = []
+        Firestore.firestore().collection("student").getDocuments { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "读取学生列表时发生错误", err: err.localizedDescription)
+            } else {
+                for doc in snap!.documents{
+                    if AppDelegate.AP().usergroup == "super"{
+                        listOfStudent.append(doc.documentID)
+                    } else {
+                        if let studentRegion = doc.data()["region"] as? String{
+                            if studentRegion == AppDelegate.AP().usergroup{
+                                listOfStudent.append(doc.documentID)
+                            }
+                        }
+                    }
+                }
+                print(listOfStudent)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "selection") as! tableStudentSelectionTableViewController
+                vc.listOfStudent = listOfStudent
+                vc.handler = self.handleStudentSelection
+                self.present(vc, animated: true)
+            }
         }
     }
     
     func handleStudentSelection(StudentID:String?){
         if let studentID = StudentID{
             for items in self.studentlist{
-                if (items ["Name"] as! String) == studentID{
-                    AppDelegate.showError(title: "无法添加", err: "该学生已经被添加")
+                print(items ["id"] as! String)
+                print(studentID)
+                if (items ["id"] as! String) == studentID{
+                    AppDelegate.showError(title: "无法添加", err: "该学生已经被添加", of: self)
                     return
                 }
             }
+            print("here")
             self.ref.document(studentID).setData(["Type" : "General"])
             self.refresh()
         }
     }
  
-    /*
+    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
+ 
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
+            self.ref.document(studentlist[indexPath.row]["id"] as! String).delete()
+            self.studentlist.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            // self.refresh()
+        }
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.

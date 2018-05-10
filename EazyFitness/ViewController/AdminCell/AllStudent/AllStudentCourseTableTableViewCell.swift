@@ -10,6 +10,13 @@ import UIKit
 
 class AllStudentCourseTableTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var noteLabel: UILabel!
+    @IBOutlet weak var AmountLabel: UILabel!
+    @IBOutlet weak var RecordLabel: UILabel!
+    @IBOutlet weak var trainerLabel: UILabel!
+    @IBOutlet weak var exceptionLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

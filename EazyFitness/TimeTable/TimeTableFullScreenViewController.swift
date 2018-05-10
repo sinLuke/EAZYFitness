@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDelegate {
-
+    var showDate:Date!
     var collectionRef: [String: CollectionReference]!
     let _refreshControl = UIRefreshControl()
     @IBOutlet weak var noCourseLabel: UIView!
@@ -51,7 +51,7 @@ class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDele
             existTimetable.removeFromSuperview()
         }
         timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
-        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, startoftheweek: Date().startOfWeek(), handeler: self.resizeViews)
+        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, startoftheweek: showDate.startOfWeek(), handeler: self.resizeViews)
         timetableView.addSubview(timetable!)
     }
     
@@ -69,10 +69,7 @@ class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDele
         
         self.timetableView.refreshControl = self._refreshControl
         self.timetableView.addSubview(self._refreshControl)
-        
-        
-        
-        
+
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -98,15 +95,17 @@ class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDele
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if let dvc = segue.destination as? TimeTableFullScreenViewController{
+            dvc.showDate = Calendar.current.date(byAdding: .day, value: 7, to: self.showDate)
+            if self.title == "本周"{
+                dvc.title = "下周"
+            } else {
+                dvc.title = "下\(self.title ?? "周")"
+            }
+            dvc.collectionRef = self.collectionRef
+        }
     }
-    */
 
 }
 

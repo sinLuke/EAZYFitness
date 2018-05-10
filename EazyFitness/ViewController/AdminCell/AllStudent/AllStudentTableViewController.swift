@@ -39,7 +39,11 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                         if doc.data() == nil{
                             self.studentEmptyList["\(i)"] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
                             self.FstudentEmptyList["\(i)"] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
+                            self.studentList["\(i)"] = nil
+                            self.FstudentList["\(i)"] = nil
                         } else {
+                            self.studentEmptyList["\(i)"] = nil
+                            self.FstudentEmptyList["\(i)"] = nil
                             switch AppDelegate.AP().usergroup{
                             case "mississauga":
                                 if doc.data()!["region"] as? String == "mississauga"{
@@ -117,7 +121,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         }
         definesPresentationContext = true
         
-        self.refresh()
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -196,6 +200,11 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         }
     }
     
+    @IBAction func addMulti(_ sender: Any) {
+        self.performSegue(withIdentifier: "show", sender: self)
+    }
+    
+    
     func configureSearchController(){
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
@@ -258,6 +267,9 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
             dvc.navigationItem.title = self.selectedName
             dvc.ref = self.selectedRef
         }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        self.refresh()
     }
 
 }

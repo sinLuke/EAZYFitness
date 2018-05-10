@@ -50,6 +50,7 @@
 		A32EEE57209D6EFE0018FBB5 /* TimeTableViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */; };
 		A32EEE5A209D78CE0018FBB5 /* PurchaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */; };
 		A32EEE5C209D78DC0018FBB5 /* PurchaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */; };
+		A336FEAF20A13F1900976BA2 /* AddMultiUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336FEAE20A13F1900976BA2 /* AddMultiUserViewController.swift */; };
 		A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34923592090DD81004C5455 /* StudentTabBarController.swift */; };
 		A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235B2090DD90004C5455 /* TrainerTabBarController.swift */; };
 		A349235E2090DDA0004C5455 /* AdminTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235D2090DDA0004C5455 /* AdminTabBarController.swift */; };
@@ -172,6 +173,7 @@
 		A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableViewTableCell.swift; sourceTree = "<group>"; };
 		A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTableViewCell.swift; sourceTree = "<group>"; };
 		A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTableViewController.swift; sourceTree = "<group>"; };
+		A336FEAE20A13F1900976BA2 /* AddMultiUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMultiUserViewController.swift; sourceTree = "<group>"; };
 		A34923592090DD81004C5455 /* StudentTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentTabBarController.swift; sourceTree = "<group>"; };
 		A349235B2090DD90004C5455 /* TrainerTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerTabBarController.swift; sourceTree = "<group>"; };
 		A349235D2090DDA0004C5455 /* AdminTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTabBarController.swift; sourceTree = "<group>"; };
@@ -455,6 +457,14 @@
 			path = Purchase;
 			sourceTree = "<group>";
 		};
+		A336FEAD20A13EE500976BA2 /* MultiUser */ = {
+			isa = PBXGroup;
+			children = (
+				A336FEAE20A13F1900976BA2 /* AddMultiUserViewController.swift */,
+			);
+			path = MultiUser;
+			sourceTree = "<group>";
+		};
 		A34923582090DD48004C5455 /* TabBarVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -501,10 +511,10 @@
 		A35B183D2090313A0058EA7B /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A336FEAD20A13EE500976BA2 /* MultiUser */,
 				A31E2FE4209EC79400677D86 /* AdminCell */,
 				A3CEFF5D2097FACC00B05FC1 /* TrainerCells */,
 				A357359120964FF500995346 /* StudentCells */,
-				A39C5D862092ACFE00D46739 /* Setting */,
 				A34923692090EB8F004C5455 /* signin */,
 				A34923582090DD48004C5455 /* TabBarVC */,
 				A35B183E2090315E0058EA7B /* WelcomeViewController.swift */,
@@ -540,6 +550,7 @@
 				A3CEFF68209809F100B05FC1 /* TrainerRequestCell.swift */,
 				A3CEFF6A2098409100B05FC1 /* StudentCell.swift */,
 				A39FE3082099170900A16619 /* TrainerTimeTable.swift */,
+				A39C5D862092ACFE00D46739 /* Setting */,
 			);
 			path = TrainerCells;
 			sourceTree = "<group>";
@@ -929,6 +940,7 @@
 				A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */,
 				A34923642090E4F8004C5455 /* SigninViewController.swift in Sources */,
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,
+				A336FEAF20A13F1900976BA2 /* AddMultiUserViewController.swift in Sources */,
 				A302A83C2096A6840055C15D /* dateext.swift in Sources */,
 				A32EEE30209CDF120018FBB5 /* FinishedTableViewCell.swift in Sources */,
 				A32EEE50209CF4DA0018FBB5 /* SendTextCell.swift in Sources */,

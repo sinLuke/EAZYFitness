@@ -33,6 +33,52 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
         self.refresh()
     }
     
+    
+    @IBAction func copyCourse(_ sender: Any) {
+        AppDelegate.showSelection(title: "请注意", text: "将本周的课程复制至下周将会删除下周7天已有的所有课程", of: self, handlerAgree: askIfWantToCopyAllStudent, handlerDismiss: nil)
+    }
+    
+    func askIfWantToCopyAllStudent(){
+        AppDelegate.showSelection(title: "是否要复制所有人的课程", text: "请注意，所有的学生下周已有的课程将会被删除，如果只想复制该学生的课程，请按取消", of: self, handlerAgree: copyAllCourseFromThisWeel, handlerDismiss: copyThisCourseFromThisWeel)
+    }
+    
+    func copyThisCourseFromThisWeel(){
+        self.copyCourseFromThisWeel(ref:self.用来加课的refrence)
+    }
+    
+    func copyCourseFromThisWeel(ref:CollectionReference){
+        ref.whereField("Date", isLessThan: Date().endOfWeek()).whereField("Date", isGreaterThan: Date().startOfWeek()).getDocuments { (snap, err) in
+            if let err = err {
+                AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
+            } else {
+                if let docs = snap?.documents{
+                    for doc in docs{
+                        ref.addDocument(data: ["Note" : doc.data()["Note"], "Amount": doc.data()["Amount"], "Date": Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["Date"] as! Date)), "Approved":false, "Record":false, "trainer":doc.data()["trainer"], "notrainer":false, "nostudent":false])
+                    }
+                }
+            }
+        }
+        let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: Date())
+        ref.whereField("Date", isLessThan: nextWeek!.endOfWeek()).whereField("Date", isGreaterThan: nextWeek!.startOfWeek()).getDocuments { (snap, err) in
+            if let err = err {
+                AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
+            } else {
+                if let docs = snap?.documents{
+                    for doc in docs{
+                        doc.reference.delete()
+                    }
+                }
+            }
+        }
+    }
+    
+    func copyAllCourseFromThisWeel(){
+        for students in AppDelegate.AP().myStudentListGeneral{
+            self.copyCourseFromThisWeel(ref: Firestore.firestore().collection("student").document(students).collection("CourseRecorded"))
+        }
+    }
+    
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let theTop = timetable?.topView{
             timetable?.bringSubview(toFront: theTop)
@@ -152,7 +198,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
         if let cMEmeberId = AppDelegate.AP().currentMemberID{
             用来加课的refrence.addDocument(data: ["Note" : courseNoteField.text ?? "无备注", "Amount": 准备增加, "Date": self.courseDatePicker.date, "Approved":false, "Record":false, "trainer":cMEmeberId, "notrainer":false, "nostudent":false])
-            self.refresh()
+            _ = self.navigationController?.popViewController(animated: true)
         } else {
             AppDelegate.showError(title: "添加课程时遇到错误", err: "无法获取教练ID")
         }
