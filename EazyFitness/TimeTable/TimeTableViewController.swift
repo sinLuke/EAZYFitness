@@ -356,7 +356,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                                 if let StudentDic = snap!.data(){
                                     print("StudentDic")
                                     print(StudentDic)
-                                    classObj.studentName[studentRef.parent.parent!.documentID] = FirestoreService.studentNameInfo[studentRef.parent.parent!.documentID]
+                                    //classObj.studentName[studentRef.parent.parent!.documentID] = FirestoreService.studentNameInfo[studentRef.parent.parent!.documentID]
                                     classObj.status[studentRef.parent.parent!.documentID] = enumService.toCourseStatus(s: StudentDic["status"] as! String)
                                     print("studentName")
                                     print(classObj.studentName)
@@ -388,12 +388,14 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             let vc = story.instantiateViewController(withIdentifier: "selection") as! SelectionNavigationViewController
             if let dref = dref as? [String:CollectionReference]{
                 var listOfStudent:[String] = []
+                /*
                 for student in FirestoreService.trainerStudentInfo[AppDelegate.AP().currentMemberID!]!{
                     listOfStudent.append(student.documentID)
                 }
-                vc.listOfStudent = listOfStudent
-                vc.listOnlyContainNames = false
-                vc.handler = self.handleStudentSelection
+ */
+                //vc.listOfStudent = listOfStudent
+                //vc.listOnlyContainNames = false
+                //vc.handler = self.handleStudentSelection
                 self.present(vc, animated: true)
             }
             
@@ -510,9 +512,11 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         if let _dref = dref as? [String: CollectionReference], StudentID.count > 0{
             self.sdref = []
             for student in StudentID{
+                /*
                 if let studentName = FirestoreService.studentNameInfo[student]{
                     self.sdref.append(_dref[studentName]!)
                 }
+ */
             }
             self.performSegue(withIdentifier: "courseDetailList", sender: self)
         }

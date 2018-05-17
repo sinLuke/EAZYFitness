@@ -81,9 +81,9 @@ class MessageListTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if AppDelegate.AP().group! == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             return 2
-        } else if AppDelegate.AP().group! == userGroup.trainer{
+        } else if AppDelegate.AP().ds?.usergroup == userGroup.trainer{
             return myStudentsName.count
         } else {
             return AppDelegate.AP().studentList.count

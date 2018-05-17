@@ -17,11 +17,12 @@ class PurchaseTableViewController: UITableViewController {
     
     @IBOutlet weak var addNew: UIBarButtonItem!
     
-    var ref:CollectionReference!
+    var thisStudent:EFStudent!
     
     func refresh() {
         CourseList = []
-        ref.order(by: "Date").getDocuments { (snap, err) in
+        
+        thisStudent.ref.collection("registered").order(by: "Date").getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取购买时发生错误", err: err.localizedDescription)
             } else {
@@ -132,7 +133,7 @@ class PurchaseTableViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllStudentNewPurchaseViewController{
-            dvc.ref = self.ref
+            dvc.thisStudent = self.thisStudent
             dvc.studentName = self.studentName
         }
     }

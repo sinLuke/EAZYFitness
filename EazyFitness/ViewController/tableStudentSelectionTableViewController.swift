@@ -8,21 +8,24 @@
 
 import UIKit
 import Firebase
-class tableStudentSelectionTableViewController: DefaultTableViewController {
+class tableStudentSelectionTableViewController: DefaultTableViewController, UISearchResultsUpdating {
     
-    var handler:(([String]) -> ())!
-    var listOfStudent:[String] = []
-    var listOnlyContainNames = false
+    var handler:(([EFStudent]) -> ())!
+    var listOfStudent:[EFStudent] = []
+    var FlistOfStudent:[EFStudent] = []
 
-    var NameOfStudent:[String:String] = [:]
     let _refreshControl = UIRefreshControl()
+    @IBOutlet weak var doneBtnRef: UIBarButtonItem!
+    
     
     override func viewDidLoad() {
+        
+        
         super.viewDidLoad()
         let navc = self.navigationController as! SelectionNavigationViewController
+        
         self.handler = navc.handler
         self.listOfStudent = navc.listOfStudent
-        self.listOnlyContainNames = navc.listOnlyContainNames
         
         self.tableView.allowsMultipleSelection = true
         
@@ -35,7 +38,6 @@ class tableStudentSelectionTableViewController: DefaultTableViewController {
         self.tableView.addSubview(self._refreshControl)
         self.tableView.refreshControl = self._refreshControl
         
-        self.refresh()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -66,33 +68,16 @@ class tableStudentSelectionTableViewController: DefaultTableViewController {
     }
     
     override func refresh() {
-        if listOfStudent.count == 0{
-            self.dismiss(animated: true)
-        } else {
-            if listOnlyContainNames == false {
-                for ids in listOfStudent{
-                    Firestore.firestore().collection("student").document(ids).getDocument { (snap, err) in
-                        if let err = err {
-                            AppDelegate.showError(title: "未知错误", err: "获取学生列表时发生错误")
-                        } else {
-                            if let snapData = snap!.data(){
-                                if let fname = snapData["First Name"], let lname = snapData["Last Name"]{
-                                    self.NameOfStudent[ids] = "\(fname) \(lname)"
-                                    print(self.NameOfStudent)
-                                    self.reload()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        self.reload()
     }
     
     override func reload() {
         self.tableView.reloadData()
         if listOfStudent.count == 0{
             self.dismiss(animated: true)
+        }
+        if tableView.numberOfSections == 0{
+            doneBtnRef.isEnabled = false
         }
     }
 
@@ -111,25 +96,30 @@ class tableStudentSelectionTableViewController: DefaultTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "selection", for: indexPath) as! selectionTableViewCell
 
-        if listOnlyContainNames{
-            cell.nameLabel.text = listOfStudent[indexPath.row]
-            cell.idLabel.text = ""
-        } else {
-            cell.nameLabel.text = NameOfStudent[listOfStudent[indexPath.row]] ?? "未知"
-            cell.idLabel.text = listOfStudent[indexPath.row]
-        }
+        cell.nameLabel.text = listOfStudent[indexPath.row].name
+        cell.idLabel.text = listOfStudent[indexPath.row].memberID
         cell.selectionStyle = .default
         return cell
     }
  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
+        if tableView.numberOfSections == 0{
+            doneBtnRef.isEnabled = false
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
+        if tableView.numberOfSections == 0{
+            doneBtnRef.isEnabled = false
+        }
     }
 
     @IBAction func doneBtn(_ sender: Any) {
         self.dismiss(animated: true)
         if let f = self.handler{
-            var returnList:[String] = []
+            var returnList:[EFStudent] = []
             if let selelctedList = self.tableView.indexPathsForSelectedRows{
                 for indexpath in selelctedList{
                     returnList.append(listOfStudent[indexpath.row])
@@ -138,6 +128,24 @@ class tableStudentSelectionTableViewController: DefaultTableViewController {
             f(returnList)
         }
     }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        filterSearchController(searchBar: searchController.searchBar)
+    }
+    
+    func filterSearchController(searchBar: UISearchBar){
+        let searchText = searchBar.text?.lowercased() ?? ""
+        
+        self.FlistOfStudent = self.listOfStudent.filter({(theStudent) -> Bool in
+            return (theStudent.name.lowercased().contains(searchText) || theStudent.memberID.lowercased().contains(searchText))
+        })
+        
+        if searchText == ""{
+            self.FlistOfStudent = self.listOfStudent
+        }
+        self.reload()
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

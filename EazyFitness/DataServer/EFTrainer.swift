@@ -25,6 +25,7 @@ class EFTrainer: EFData {
     var weightUnit:String = "kg" //kg/jin/pound
     var goal = 30
     var finish:[DocumentReference] = []
+    var trainee:[DocumentReference] = []
     
     override func download(){
         ref.getDocument { (snap, err) in
@@ -40,7 +41,10 @@ class EFTrainer: EFData {
                     self.heightUnit = data["heightUnit"] as! String
                     self.weightUnit = data["weightUnit"] as! String
                     self.goal = data["goal"] as! Int
+                    self.trainee = data["trainee"] as! [DocumentReference]
                     self.ready = true
+                    print("download")
+                    AppDelegate.reload()
                 }
             }
         }
@@ -56,22 +60,37 @@ class EFTrainer: EFData {
                         let _course = EFCourse(with: _ref)
                         _course.download()
                         DataServer.courseDic[_ref.documentID] = _course
-                    } else {
-                        DataServer.courseDic[_ref.documentID]!.download()
                     }
                 }
+                print("finish")
+                AppDelegate.reload()
             }
         }
     }
     
     class func addTrainer(at memberID:String, in region:userRegion) -> EFTrainer{
-        let newref = Firestore.firestore().collection("trainer").addDocument(data: ["firstName" : "", "lastName" : "", "memberID" : memberID, "registered" : enumService.toString(e: userStatus.unsigned), "region" : enumService.toString(e: region), "heightUnit":"cm", "weightUnit":"kg", "goal":30]){ (err) in
+        if DataServer.trainerDic[memberID] != nil {
+            return DataServer.trainerDic[memberID]!
+        }
+        let newref = Firestore.firestore().collection("trainer").document(memberID)
+        newref.setData([
+            "firstName" : "",
+            "lastName" : "",
+            "memberID" : memberID,
+            "registered" : enumService.toString(e: userStatus.unsigned),
+            "region" : enumService.toString(e: region),
+            "heightUnit":"cm",
+            "weightUnit":"kg",
+            "trainee":[],
+            "goal":30]){ (err) in
             if let err = err{
                 AppDelegate.showError(title: "添加教练失败", err: err.localizedDescription)
             }
             if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
                 vc.endLoading()
             }
+            print("addTrainer")
+            AppDelegate.reload()
         }
         let newTrainer = EFTrainer(with: newref)
         newTrainer.download()
@@ -80,7 +99,20 @@ class EFTrainer: EFData {
     
     override func upload(){
         if ready{
-            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":30])
+            ref.updateData([
+                "firstName" : self.firstName,
+                "lastName" : self.lastName,
+                "memberID" : self.memberID,
+                "registered" : enumService.toString(e: self.registered),
+                "region" : enumService.toString(e: self.region),
+                "heightUnit":self.heightUnit,
+                "weightUnit":self.weightUnit,
+                "trainee":self.trainee,
+                "goal":self.goal]) { (_) in
+                    AppDelegate.endLoading()
+                    AppDelegate.showError(title: "上传成功", err: "对\(self.name)的修改上传成功")
+                    AppDelegate.reload()
+            }
         }
     }
 }

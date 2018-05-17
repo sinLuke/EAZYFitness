@@ -7,55 +7,36 @@
 //
 
 import UIKit
-import Firebase
 
 class AllTrainerTableViewController: DefaultTableViewController, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filterSearchController(searchBar: searchController.searchBar)
     }
     
-    var db:Firestore!
-    var trainerList:[String:[String:Any]] = [:]
-    var trainerEmptyList:[String:[String:Any]] = [:]
-    var trainerRefList:[String:DocumentReference] = [:]
-    
-    var selectedRef:DocumentReference!
-    var selectedName:String!
-    
-    var FtrainerList:[String:[String:Any]] = [:]
-    var FtrainerEmptyList:[String:[String:Any]] = [:]
+    var trainerList:[String:String] = [:]
+    var trainerEmptyList:[String] = []
+
+    weak var selected:EFTrainer!
+    var selectedName:String = ""
+    var FtrainerList:[String:String] = [:]
+    var FtrainerEmptyList:[String] = []
     let _refreshControl = UIRefreshControl()
     
     private let searchController = UISearchController(searchResultsController: nil)
     
     override func refresh() {
+        AppDelegate.AP().ds?.download()
+        FtrainerEmptyList = []
+        trainerEmptyList = []
+        print(DataServer.trainerDic)
         for i in 1...999{
-            db.collection("trainer").document("\(i)").getDocument { (snap, err) in
-                if let err = err {
-                    AppDelegate.showError(title: "获取教练列表时发生问题", err: err.localizedDescription)
-                } else {
-                    let string :String = String(format: "%04d", i)
-                    if let doc = snap{
-                        if doc.data() == nil{
-                            self.trainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                            self.FtrainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                        } else {
-                            
-                            if let _region = doc.data()!["region"] as? String, enumService.toRegion(s: _region) == AppDelegate.AP().region || AppDelegate.AP().region == userRegion.All{
-                                self.trainerList["\(i)"] = doc.data()
-                                self.FtrainerList["\(i)"] = doc.data()
-                                self.trainerRefList["\(i)"] = doc.reference
-                            } else {
-                                AppDelegate.showError(title: "无法确定用户所在地区", err: "请重新登录", handler:AppDelegate.AP().signout)
-                            }
-                            
-                        }
-                    } else {
-                        self.trainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                        self.FtrainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                    }
-                }
-                self.reload()
+            let stringIndex: String = "\(i)"
+            if let thisTrainer = DataServer.trainerDic[stringIndex]{
+                trainerList[stringIndex] = stringIndex
+                FtrainerList[stringIndex] = stringIndex
+            } else {
+                trainerEmptyList.append(stringIndex)
+                FtrainerEmptyList.append(stringIndex)
             }
         }
     }
@@ -76,7 +57,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         } else {
             // Fallback on earlier versions
         }
-        db = Firestore.firestore()
+        
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
         _refreshControl.attributedTitle = NSAttributedString(string: title)
         _refreshControl.addTarget(self, action:
@@ -96,8 +77,6 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
             
         }
         definesPresentationContext = true
-        
-        self.refresh()
         
 
         // Uncomment the following line to preserve selection between presentations
@@ -123,9 +102,9 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            return self.trainerList.count
+            return self.FtrainerList.count
         default:
-            return self.trainerEmptyList.count
+            return self.FtrainerEmptyList.count
         }
     }
     
@@ -144,34 +123,39 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "trainerCell", for: indexPath) as! AllTrainerTableViewCell
         if indexPath.section == 0{
-            if let dic = self.trainerList[Array(self.trainerList.keys).sorted()[indexPath.row]]{
-                cell.nameLabel.text = "\(dic["First Name"] ?? "未注册") \(dic["Last Name"] ?? " ")"
-                cell.idLabel.text = dic["MemberID"] as? String ?? "未知"
-                cell.regionLabel.text = dic["region"] as? String ?? "未设定"
-                switch dic["Registered"] as! Int{
-                case 0:
-                    cell.statusLabel.text = "不可用"
-                    cell.statusLabel.textColor = HexColor.Red
-                case 1:
-                    cell.statusLabel.text = "待注册"
-                    cell.statusLabel.textColor = HexColor.Blue
-                case 2:
-                    cell.statusLabel.text = "已注册"
-                    cell.statusLabel.textColor = HexColor.Green
-                default:
-                    cell.statusLabel.text = "状态：\(dic["Registered"] ?? "未知")"
-                    cell.statusLabel.textColor = HexColor.Red
+            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys)[indexPath.row]]{
+                if let trainer = DataServer.trainerDic[memberID]{
+                    cell.nameLabel.text = trainer.name
+                    cell.idLabel.text = trainer.ref.documentID
+                    cell.regionLabel.text = enumService.toDescription(e: trainer.region)
+                    switch trainer.registered{
+                    case .avaliable:
+                        cell.statusLabel.text = "不可用"
+                        cell.statusLabel.textColor = HexColor.Red
+                    case .unsigned:
+                        cell.statusLabel.text = "待注册"
+                        cell.statusLabel.textColor = HexColor.Blue
+                    case .signed:
+                        cell.statusLabel.text = "已注册"
+                        cell.statusLabel.textColor = HexColor.Green
+                    case .canceled:
+                        cell.statusLabel.text = "已注销"
+                        cell.statusLabel.textColor = HexColor.gray
+                    }
+                } else {
+                    AppDelegate.showError(title: "未知错误", err: "发生未知错误")
                 }
+            } else {
+                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
             }
+            
             return cell
         } else {
-            if let dic = self.trainerEmptyList[Array(self.trainerEmptyList.keys).sorted()[indexPath.row]]{
-                cell.nameLabel.text = "\(dic["First Name"] ?? "未注册") \(dic["Last Name"] ?? " ")"
-                cell.idLabel.text = dic["MemberID"] as? String ?? "未知"
-                cell.regionLabel.text = dic["region"] as? String ?? "未设定"
-                cell.statusLabel.text = "不可用"
-                cell.statusLabel.textColor = HexColor.Red
-            }
+            cell.nameLabel.text = "未注册"
+            cell.idLabel.text = self.FtrainerEmptyList[indexPath.row]
+            cell.regionLabel.text = "未设定"
+            cell.statusLabel.text = "不可用"
+            cell.statusLabel.textColor = HexColor.gray
             return cell
         }
     }
@@ -179,15 +163,34 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.section == 0{
-            self.selectedRef = self.trainerRefList[Array(self.FtrainerList.keys).sorted()[indexPath.row]]!
-            if let dic = self.trainerList[Array(self.trainerList.keys).sorted()[indexPath.row]]{
-                self.selectedName = "\(dic["First Name"] ?? "未注册") \(dic["Last Name"] ?? " ")"
-            }
-        }else{
-            self.selectedRef = db.collection("trainer").document("\(Int(Array(self.FtrainerEmptyList.keys).sorted()[indexPath.row])!)")
-            self.selectedName = "创建新的记录"
+            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys)[indexPath.row]]{
+                if let trainer = DataServer.trainerDic[memberID]{
+                    self.selected = trainer
+                    self.selectedName = trainer.name
+                    self.performSegue(withIdentifier: "detail", sender: self)
+                } else {
+                    AppDelegate.showError(title: "未知错误", err: "发生未知错误")
+                }
+            } else {
+            AppDelegate.showError(title: "未知错误", err: "发生未知错误")
         }
-        self.performSegue(withIdentifier: "detail", sender: self)
+            
+        } else {
+            let memberID = self.FtrainerEmptyList[indexPath.row]
+            if let region = AppDelegate.AP().ds?.region{
+                
+                if region == userRegion.All{
+                    self.selected = EFTrainer.addTrainer(at: memberID, in: userRegion.Mississauga)
+                } else {
+                    self.selected = EFTrainer.addTrainer(at: memberID, in: region)
+                }
+            } else {
+                self.selected = EFTrainer.addTrainer(at: memberID, in: userRegion.Mississauga)
+            }
+            self.selectedName = "创建新的记录"
+            self.performSegue(withIdentifier: "detail", sender: self)
+        }
+        
     }
     
     func configureSearchController(){
@@ -200,31 +203,27 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         let searchText = searchBar.text?.lowercased() ?? ""
         print(searchText)
         self.FtrainerList = [:]
-        self.FtrainerEmptyList = [:]
+        self.FtrainerEmptyList = []
         
         self.FtrainerList = self.trainerList.filter({(theKey, theValue) -> Bool in
             if theKey.lowercased().contains(searchText){
                 return true
             } else {
-                var returnValue = false
-                for items in theValue.values{
-                    returnValue = returnValue || "\(items)".lowercased().contains(searchText)
+                if let _trainer = DataServer.trainerDic[theValue]{
+                    return (_trainer.name.lowercased().contains(searchText) ||
+                    enumService.toString(e: _trainer.region).lowercased().contains(searchText) ||
+                    _trainer.memberID.lowercased().contains(searchText) ||
+                    enumService.toDescription(e: _trainer.registered).contains(searchText))
+                } else {
+                    return false
                 }
-                return returnValue
             }
         })
         
-        self.FtrainerEmptyList = self.trainerEmptyList.filter({(theKey, theValue) -> Bool in
-            if theKey.lowercased().contains(searchText){
-                return true
-            } else {
-                var returnValue = false
-                for items in theValue.values{
-                    returnValue = returnValue || "\(items)".lowercased().contains(searchText)
-                }
-                return returnValue
-            }
+        self.FtrainerEmptyList = self.trainerEmptyList.filter({ (memberID) -> Bool in
+            return memberID.lowercased().contains(searchText)
         })
+        
         if searchText == ""{
             self.FtrainerList = self.trainerList
             self.FtrainerEmptyList = self.trainerEmptyList
@@ -234,9 +233,13 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllTrainerDetailViewController{
-            dvc.navigationItem.title = self.selectedName
-            dvc.ref = self.selectedRef
+            dvc.thisTrainer = self.selected
+            dvc.titleName = self.selectedName
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.refresh()
     }
     
 }

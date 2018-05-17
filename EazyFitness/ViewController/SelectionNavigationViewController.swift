@@ -10,9 +10,8 @@ import UIKit
 
 class SelectionNavigationViewController: UINavigationController {
 
-    var handler:(([String]) -> ())!
-    var listOfStudent:[String] = []
-    var listOnlyContainNames = false
+    var handler:(([EFStudent]) -> ())!
+    var listOfStudent:[EFStudent] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()

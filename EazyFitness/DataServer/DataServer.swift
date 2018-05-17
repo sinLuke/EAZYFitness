@@ -63,6 +63,7 @@ class DataServer: NSObject {
     }
     
     static func createDataServer(data:[String:Any], uid:String){
+        print(data)
         if let memberID = data["memberID"] as? String,
             let usergroup = data["usergroup"] as? String,
             let region = data["region"] as? String,
@@ -96,9 +97,6 @@ class DataServer: NSObject {
     }
     
     func download(){
-        DataServer.studentDic = [:]
-        DataServer.trainerDic = [:]
-        DataServer.courseDic = [:]
         switch usergroup {
         case .student:
             let _student = EFStudent(with: studentCollection.document(self.memberID))
@@ -118,6 +116,9 @@ class DataServer: NSObject {
                         _student.download()
                         DataServer.studentDic[_ref.documentID] = _student
                     }
+                    let _trainer = EFTrainer(with: self.trainerCollection.document(self.memberID))
+                    _trainer.download()
+                    DataServer.trainerDic[self.memberID] = _trainer
                 }
             }
         case .admin:
@@ -127,12 +128,10 @@ class DataServer: NSObject {
                 } else {
                     self.studentRef = []
                     for doc in snap!.documents{
-                        if doc.data()["region"] as! String == enumService.toString(e: self.region) || self.region == userRegion.All{
-                            let _student = EFStudent(with: doc.reference)
-                            self.studentRef.append(doc.reference)
-                            _student.download()
-                            DataServer.studentDic[doc.documentID] = _student
-                        }
+                        let _student = EFStudent(with: doc.reference)
+                        self.studentRef.append(doc.reference)
+                        _student.download()
+                        DataServer.studentDic[doc.documentID] = _student
                     }
                 }
             }
@@ -142,11 +141,9 @@ class DataServer: NSObject {
                 } else {
                     self.studentRef = []
                     for doc in snap!.documents{
-                        if doc.data()["region"] as! String == enumService.toString(e: self.region) || self.region == userRegion.All{
                             let _trainer = EFTrainer(with: doc.reference)
                             _trainer.download()
                             DataServer.trainerDic[doc.documentID] = _trainer
-                        }
                     }
                 }
             }

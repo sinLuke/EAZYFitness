@@ -156,13 +156,13 @@ class enumService: NSObject {
     class func toDescription(e:userStatus) -> String{
         switch e {
         case .avaliable:
-            return "未占用"
+            return "不可用"
         case .canceled:
             return "已注销"
         case .signed:
             return "已注册"
         case .unsigned:
-            return "未注册"
+            return "待注册"
         }
     }
     
@@ -199,9 +199,9 @@ class enumService: NSObject {
         case .Mississauga:
             return 0
         case .Scarborough:
-            return 2
-        case .Waterloo:
             return 1
+        case .Waterloo:
+            return 2
         case .London:
             return 3
         case .All:
@@ -274,6 +274,8 @@ class enumService: NSObject {
         case "London":
             return userRegion.London
         case "All":
+            return userRegion.All
+        case "all":
             return userRegion.All
         case "mississauga":
             return userRegion.Mississauga

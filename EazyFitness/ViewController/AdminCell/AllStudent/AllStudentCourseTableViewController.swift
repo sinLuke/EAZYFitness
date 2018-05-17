@@ -13,7 +13,7 @@ class AllStudentCourseTableViewController: DefaultTableViewController {
     let _refreshControl = UIRefreshControl()
     var courseList:[String:[String:Any]] = [:]
     var FinishedcourseList:[String:[String:Any]] = [:]
-    var ref:CollectionReference!
+    var thisStudent:EFStudent!
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
@@ -69,7 +69,8 @@ class AllStudentCourseTableViewController: DefaultTableViewController {
     }
     
     override func refresh() {
-        ref.order(by: "Date").getDocuments { (snap, err) in
+        
+        thisStudent.ref.collection("course").order(by: "Date").getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription, of: self)
             } else {
@@ -83,6 +84,7 @@ class AllStudentCourseTableViewController: DefaultTableViewController {
             }
             self.reload()
         }
+ 
     }
     
     func getTrainerInfo(coursID:String){

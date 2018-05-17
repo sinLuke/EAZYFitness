@@ -88,7 +88,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     class func reload() {
+        print("reload")
         if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
+            print("refreshableVC")
             cvc.reload()
         }
     }
@@ -106,6 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     func dataServerDidFinishInit(){
+        self.startListener()
         if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
             cvc.endLoading()
         }
@@ -231,8 +234,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        FirestoreService.updateStudentName()
-        FirestoreService.updateTrainer()
         if Auth.auth().currentUser == nil{
             self.applicationDidStart()
         } else {
@@ -268,7 +269,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                     
                 }
             }
-            Firestore.firestore().collection("Message").whereField("uid", isEqualTo: currentUser.uid).addSnapshotListener{ (snap, err) in
+            Firestore.firestore().collection("Message").whereField("memberID", isEqualTo: ds?.memberID).addSnapshotListener{ (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
                 } else {

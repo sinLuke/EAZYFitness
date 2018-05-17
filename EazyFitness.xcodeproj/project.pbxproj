@@ -104,7 +104,6 @@
 		A3CEFF67209809AC00B05FC1 /* TrainerMonthCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF66209809AC00B05FC1 /* TrainerMonthCell.swift */; };
 		A3CEFF69209809F100B05FC1 /* TrainerRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF68209809F100B05FC1 /* TrainerRequestCell.swift */; };
 		A3CEFF6B2098409100B05FC1 /* StudentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF6A2098409100B05FC1 /* StudentCell.swift */; };
-		A3E2D47F20AA05D0002B0FFE /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E2D47E20AA05D0002B0FFE /* FirestoreService.swift */; };
 		A3F3E647209EE8130054AEF0 /* AllTrainerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E646209EE8130054AEF0 /* AllTrainerTableViewController.swift */; };
 		A3F3E649209EE8260054AEF0 /* AllTrainerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E648209EE8260054AEF0 /* AllTrainerTableViewCell.swift */; };
 		A3F3E64B209EE8310054AEF0 /* AllStudentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3E64A209EE8310054AEF0 /* AllStudentTableViewCell.swift */; };
@@ -243,7 +242,6 @@
 		A3CEFF66209809AC00B05FC1 /* TrainerMonthCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerMonthCell.swift; sourceTree = "<group>"; };
 		A3CEFF68209809F100B05FC1 /* TrainerRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerRequestCell.swift; sourceTree = "<group>"; };
 		A3CEFF6A2098409100B05FC1 /* StudentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentCell.swift; sourceTree = "<group>"; };
-		A3E2D47E20AA05D0002B0FFE /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		A3F3E646209EE8130054AEF0 /* AllTrainerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerTableViewController.swift; sourceTree = "<group>"; };
 		A3F3E648209EE8260054AEF0 /* AllTrainerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTrainerTableViewCell.swift; sourceTree = "<group>"; };
 		A3F3E64A209EE8310054AEF0 /* AllStudentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStudentTableViewCell.swift; sourceTree = "<group>"; };
@@ -416,7 +414,6 @@
 				A35016FF20A02ED2000BD6AC /* ViewController.swift */,
 				A36D4AEC20A53B790059F54F /* Enum.swift */,
 				A38DEB6620A67A06002350FB /* ClassObj.swift */,
-				A3E2D47E20AA05D0002B0FFE /* FirestoreService.swift */,
 			);
 			path = EazyFitness;
 			sourceTree = "<group>";
@@ -983,7 +980,6 @@
 				A35F26AE20A0DF7A00697BB3 /* tableStudentSelectionTableViewController.swift in Sources */,
 				A39FF65920ACEA9B00B54353 /* EFStudentPersonal.swift in Sources */,
 				A357359B2096521300995346 /* RequestCell.swift in Sources */,
-				A3E2D47F20AA05D0002B0FFE /* FirestoreService.swift in Sources */,
 				A3CEFF69209809F100B05FC1 /* TrainerRequestCell.swift in Sources */,
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
 				A35B1843209031990058EA7B /* StudentVC.swift in Sources */,

@@ -22,17 +22,6 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     var 申请标题列表:[String:String] = [:]
     var 申请ref列表:[String:DocumentReference] = [:]
     
-    var 总上课数:Int = 0
-    var 总学生没来数:Int = 0
-    var 总教练没来数:Int = 0
-    var 总剩课时数:Int = 0
-    var 总购买课时数:Int = 0
-    
-    var 本月上课数:Int = 0
-    var 本月学生没来数:Int = 0
-    var 本月教练没来数:Int = 0
-    var 本月购买课时数:Int = 0
-    
     override func refresh() {
 
     }
@@ -46,59 +35,8 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         self.refresh()
     }
     
-    func 获取总学生没来数(){
-        
-    }
-    
-    func 获取总教练没来数(){
-        
-    }
-    
-    func 获取总剩课时数(){
-        
-    }
-    
-    func 获取总购买课时数(){
-        
-    }
-    
-    func 获取当月学生没来数(){
-        
-    }
-    
-    func 获取当月剩课时数(){
-        
-    }
-    
-    func 获取当月购买课时数(){
-        
-    }
     
     func 获取买课申请(){
-        if AppDelegate.AP().region == userRegion.All{
-            Firestore.firestore().collection("student").getDocuments { (snap, err) in
-                if let err = err {
-                    AppDelegate.showError(title: "获取申请时发生错误", err: err.localizedDescription)
-                } else {
-                    if let dicList = snap?.documents{
-                        for studentdoc in dicList{
-                            studentdoc.reference.collection("CourseRegistered").whereField("Approved", isEqualTo: false).getDocuments(completion: { (snap, err) in
-                                if let err = err {
-                                    AppDelegate.showError(title: "获取申请时发生错误", err: err.localizedDescription)
-                                } else {
-                                    if let dicList = snap?.documents{
-                                        for doc in dicList{
-                                            self.申请ref列表[doc.documentID] = doc.reference
-                                            self.申请标题列表[doc.documentID] = "为 \(studentdoc.data()["First Name"]) \(studentdoc.data()["First Name"]) 加 \(self.prepareCourseNumber(doc.data()["Amount"] as! Int)) 节课"
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                    }
-                }
-            }
-        }
     }
 
     func prepareCourseNumber(_ int:Int) -> String{

@@ -411,7 +411,7 @@ class StudentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         }
         if let dvc = segue.destination as? PurchaseTableViewController{
             if let MemberID = self.cMemberID{
-                dvc.ref = db.collection("student").document(MemberID).collection("CourseRegistered")
+                //dvc.thisStudent = db.collection("student").document(MemberID).collection("CourseRegistered")
                 dvc.studentName = "我"
             }
         }

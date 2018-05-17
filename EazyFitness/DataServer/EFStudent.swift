@@ -65,8 +65,6 @@ class EFStudent: EFData {
                         let _course = EFCourse(with: efStudentCourse.courseRef)
                         _course.download()
                         DataServer.courseDic[efStudentCourse.courseRef.documentID] = _course
-                    } else {
-                        DataServer.courseDic[efStudentCourse.courseRef.documentID]!.download()
                     }
                     self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
                 }
@@ -127,7 +125,16 @@ class EFStudent: EFData {
     }
     
     class func addStudent(at memberID:String, in region:userRegion) -> EFStudent{
-        let newref = Firestore.firestore().collection("student").addDocument(data: ["firstName" : "", "lastName" : "", "memberID" : memberID, "registered" : enumService.toString(e: userStatus.unsigned), "region" : enumService.toString(e: region), "heightUnit":"cm", "weightUnit":"kg", "goal":30]){ (err) in
+        let newref = Firestore.firestore().collection("student").document(memberID)
+        newref.setData([
+            "firstName" : "",
+            "lastName" : "",
+            "memberID" : memberID,
+            "registered" : enumService.toString(e: userStatus.unsigned),
+            "region" : enumService.toString(e: region),
+            "heightUnit":"cm",
+            "weightUnit":"kg",
+            "goal":30]){ (err) in
             if let err = err{
                 AppDelegate.showError(title: "添加学生失败", err: err.localizedDescription)
             }

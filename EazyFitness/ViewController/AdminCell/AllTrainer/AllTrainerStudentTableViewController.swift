@@ -9,9 +9,9 @@
 import UIKit
 import Firebase
 class AllTrainerStudentTableViewController: DefaultTableViewController {
-    var ref:CollectionReference!
-    var studentlist:[[String:Any]] = []
+    var thisTrainer:EFTrainer!
     let _refreshControl = UIRefreshControl()
+    var studentList:[EFStudent] = []
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
@@ -54,37 +54,15 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        print(studentlist.count)
-        return studentlist.count
+        return (self.studentList).count
     }
     
     override func refresh() {
-        ref.getDocuments { (snap, err) in
-            if let err = err {
-                AppDelegate.showError(title: "获取学生时发生问题", err: err.localizedDescription)
-            } else {
-                self.studentlist = []
-                for doc in snap!.documents{
-                    AppDelegate.refHandler(dic: doc.data()).getDocument(completion: { (snap, err) in
-                        if let err = err {
-                            AppDelegate.showError(title: "获取学生时发生问题", err: err.localizedDescription)
-                        } else {
-                            var dicPrepare = doc.data()
-                            dicPrepare["Name"] = "\(snap!.data()!["First Name"] ?? "未命名") \(snap!.data()!["Last Name"] ?? "")"
-                            dicPrepare["id"] = doc.documentID
-                            self.studentlist.append(dicPrepare)
-                            self.studentlist.sort(by: { (a, b) -> Bool in
-                                if let m = Int(a["id"] as! String), let n = Int(b["id"] as! String){
-                                    return m < n
-                                } else {
-                                    return true
-                                }
-                            })
-                            print(self.studentlist.count)
-                            self.reload()
-                        }
-                    })
-                }
+        print(thisTrainer.trainee)
+        self.studentList = []
+        for studentRef in thisTrainer.trainee{
+            if let thisStudent = DataServer.studentDic[studentRef.documentID]{
+                self.studentList.append(thisStudent)
             }
         }
     }
@@ -94,59 +72,37 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print(studentlist.count)
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AllTrainerStudentTableViewCell
-        
-        if studentlist.count >= indexPath.row + 1 {
-            cell.nameLabel.text = "\(self.studentlist[indexPath.row]["Name"] as? String ?? "未命名") - \(self.studentlist[indexPath.row]["id"] as? String ?? "")"
-            let thetype = self.studentlist[indexPath.row]["Type"] as? String ?? "未知"
-            switch thetype{
-            case "General":
-                cell.typeLabel.text = "一般"
-            default:
-                cell.typeLabel.text = "未知"
-            }
+        if studentList.count >= indexPath.row + 1 {
+            cell.nameLabel.text = studentList[indexPath.row].name
+            cell.typeLabel.text = studentList[indexPath.row].memberID
         }
         return cell
     }
     
     @IBAction func addStudent(_ sender: Any) {
-        var listOfStudent:[String] = []
-        Firestore.firestore().collection("student").getDocuments { (snap, err) in
-            if let err = err{
-                AppDelegate.showError(title: "读取学生列表时发生错误", err: err.localizedDescription)
-            } else {
-                for doc in snap!.documents{
-                    if AppDelegate.AP().region == userRegion.All{
-                        listOfStudent.append(doc.documentID)
-                    } else {
-                        let studentRegion = enumService.toRegion(s: doc.data()["region"] as! String)
-                        if studentRegion == AppDelegate.AP().region{
-                            listOfStudent.append(doc.documentID)
-                        }
-                    }
-                }
-                print(listOfStudent)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "selection") as! tableStudentSelectionTableViewController
-                vc.listOfStudent = listOfStudent
-                vc.handler = self.handleStudentSelection
-                self.present(vc, animated: true)
-            }
-        }
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "selection") as! SelectionNavigationViewController
+        vc.listOfStudent = Array(DataServer.studentDic.filter({ (key, value) -> Bool in
+            return value.region == thisTrainer.region
+        }).values)
+        vc.handler = self.handleStudentSelection
+        self.present(vc, animated: true)
     }
     
-    func handleStudentSelection(StudentID:[String]){
-        for studentID in StudentID{
+    func handleStudentSelection(_Student:[EFStudent]){
+        for _student in _Student{
             var abletoadd = true
-            for items in self.studentlist{
-                if (items ["id"] as! String) == studentID{
+            for items in self.thisTrainer.trainee{
+                if items.documentID == _student.ref.documentID{
                     AppDelegate.showError(title: "无法添加", err: "该学生已经被添加", of: self)
                     abletoadd = false
                 }
             }
             if abletoadd {
-                self.ref.document(studentID).setData(["ref" : Firestore.firestore().collection("student").document(studentID)])
+                thisTrainer.trainee.append(_student.ref)
+                thisTrainer.upload()
             }
         }
         self.refresh()
@@ -164,8 +120,12 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            self.ref.document(studentlist[indexPath.row]["id"] as! String).delete()
-            self.studentlist.remove(at: indexPath.row)
+            for i in 0...thisTrainer.trainee.count{
+                if thisTrainer.trainee[i] == self.studentList[indexPath.row].ref{
+                    thisTrainer.trainee.remove(at: i)
+                }
+            }
+            self.studentList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             // self.refresh()
         }

@@ -17,7 +17,7 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
     @IBOutlet weak var plusOrMinus: UISegmentedControl!
     @IBOutlet weak var Note: UITextField!
     
-    var ref:CollectionReference!
+    var thisStudent:EFStudent!
     override func viewDidLoad() {
         super.viewDidLoad()
         self._gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
@@ -47,7 +47,7 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
                         note = self.Note.text!
                     }
                     let approve = (AppDelegate.AP().region == userRegion.All)
-                    ref.addDocument(data: ["Amount" : amount * updateAmount, "Approved":approve, "Date":Date(), "Note":note]) { (err) in
+                    thisStudent.ref.collection("registered").addDocument(data: ["Amount" : amount * updateAmount, "Approved":approve, "Date":Date(), "Note":note]) { (err) in
                         if let err = err{
                             AppDelegate.showError(title: "添加课程时发生错误", err: err.localizedDescription)
                         } else {

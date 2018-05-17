@@ -16,50 +16,31 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     
     
     var db:Firestore!
-    var studentList:[String:[String:Any]] = [:]
-    var studentEmptyList:[String:[String:Any]] = [:]
-    var studentRefList:[String:DocumentReference] = [:]
+    var studentList:[String:String] = [:]
+    var studentEmptyList:[String] = []
+    weak var selected:EFStudent!
     let _refreshControl = UIRefreshControl()
     
-    var selectedRef:DocumentReference!
+    var FstudentList:[String:String] = [:]
+    var FstudentEmptyList:[String] = []
+
     var selectedName:String!
-    
-    var FstudentList:[String:[String:Any]] = [:]
-    var FstudentEmptyList:[String:[String:Any]] = [:]
     
     private let searchController = UISearchController(searchResultsController: nil)
     
     override func refresh() {
+        AppDelegate.AP().ds?.download()
+        FstudentEmptyList = []
+        studentEmptyList = []
+
         for i in 1001...2000{
-            db.collection("student").document("\(i)").getDocument { (snap, err) in
-                if let err = err {
-                    AppDelegate.showError(title: "获取学生列表时发生问题", err: err.localizedDescription)
-                } else {
-                    if let doc = snap{
-                        if doc.data() == nil{
-                            self.studentEmptyList["\(i)"] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                            self.FstudentEmptyList["\(i)"] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                            self.studentList["\(i)"] = nil
-                            self.FstudentList["\(i)"] = nil
-                        } else {
-                            self.studentEmptyList["\(i)"] = nil
-                            self.FstudentEmptyList["\(i)"] = nil
-                            
-                            if let _region = doc.data()!["region"] as? String, enumService.toRegion(s: _region) == AppDelegate.AP().region || AppDelegate.AP().region == userRegion.All{
-                                self.studentList["\(i)"] = doc.data()
-                                self.FstudentList["\(i)"] = doc.data()
-                                self.studentRefList["\(i)"] = doc.reference
-                            } else {
-                                AppDelegate.showError(title: "无法确定用户组", err: "请重新登录", handler:AppDelegate.AP().signout)
-                            }
-                        }
-                        
-                    } else {
-                        self.studentEmptyList["\(i)"] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                        self.FstudentEmptyList["\(i)"] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
-                    }
-                }
-                self.reload()
+            let stringIndex: String = "\(i)"
+            if let thisStudent = DataServer.studentDic[stringIndex]{
+                studentList[stringIndex] = stringIndex
+                FstudentList[stringIndex] = stringIndex
+            } else {
+                studentEmptyList.append(stringIndex)
+                FstudentEmptyList.append(stringIndex)
             }
         }
     }
@@ -100,8 +81,6 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
             
         }
         definesPresentationContext = true
-        
-        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -148,42 +127,41 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "studentCell", for: indexPath) as! AllStudentTableViewCell
         if indexPath.section == 0{
-            if let dic = self.FstudentList[Array(self.FstudentList.keys).sorted()[indexPath.row]]{
-                cell.nameLabel.text = "\(dic["First Name"] ?? "未注册") \(dic["Last Name"] ?? " ")"
-                cell.IDLabel.text = dic["MemberID"] as? String ?? "未知"
-                cell.regionLabel.text = dic["region"] as? String ?? "未设定"
-                switch dic["Registered"] as! Int{
-                case 0:
-                    cell.statusLabel.text = "不可用"
-                    cell.statusLabel.textColor = HexColor.Red
-                case 1:
-                    cell.statusLabel.text = "待注册"
-                    cell.statusLabel.textColor = HexColor.Blue
-                case 2:
-                    cell.statusLabel.text = "已注册"
-                    cell.statusLabel.textColor = HexColor.Green
-                default:
-                    cell.statusLabel.text = "状态：\(dic["Registered"] ?? "未知")"
-                    cell.statusLabel.textColor = HexColor.Red
+            if let memberID = self.FstudentList[Array(self.FstudentList.keys)[indexPath.row]]{
+                if let student = DataServer.studentDic[memberID]{
+                    cell.nameLabel.text = student.name
+                    cell.IDLabel.text = student.memberID
+                    cell.regionLabel.text = enumService.toDescription(e: student.region)
+                    switch student.registered{
+                    case .avaliable:
+                        cell.statusLabel.text = "不可用"
+                        cell.statusLabel.textColor = HexColor.Red
+                    case .unsigned:
+                        cell.statusLabel.text = "待注册"
+                        cell.statusLabel.textColor = HexColor.Blue
+                    case .signed:
+                        cell.statusLabel.text = "已注册"
+                        cell.statusLabel.textColor = HexColor.Green
+                    case .canceled:
+                        cell.statusLabel.text = "已注销"
+                        cell.statusLabel.textColor = HexColor.gray
+                    }
+                } else {
+                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
                 }
+            } else {
+                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
             }
             return cell
         } else {
-            if let dic = self.FstudentEmptyList[Array(self.FstudentEmptyList.keys).sorted()[indexPath.row]]{
-                cell.nameLabel.text = "\(dic["First Name"] ?? "未注册") \(dic["Last Name"] ?? " ")"
-                cell.IDLabel.text = dic["MemberID"] as? String ?? "未知"
-                cell.regionLabel.text = dic["region"] as? String ?? "未设定"
-                cell.statusLabel.text = "不可用"
-                cell.statusLabel.textColor = HexColor.Red
-            }
+            cell.nameLabel.text = "未注册"
+            cell.IDLabel.text = self.FstudentEmptyList[indexPath.row]
+            cell.regionLabel.text = "未设定"
+            cell.statusLabel.text = "不可用"
+            cell.statusLabel.textColor = HexColor.gray
             return cell
         }
     }
-    
-    @IBAction func addMulti(_ sender: Any) {
-        self.performSegue(withIdentifier: "show", sender: self)
-    }
-    
     
     func configureSearchController(){
         searchController.dimsBackgroundDuringPresentation = false
@@ -195,59 +173,73 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         let searchText = searchBar.text?.lowercased() ?? ""
         print(searchText)
         self.FstudentList = [:]
-        self.FstudentEmptyList = [:]
+        self.FstudentEmptyList = []
         
         self.FstudentList = self.studentList.filter({(theKey, theValue) -> Bool in
             if theKey.lowercased().contains(searchText){
                 return true
             } else {
-                var returnValue = false
-                for items in theValue.values{
-                    returnValue = returnValue || "\(items)".lowercased().contains(searchText)
+                if let _student = DataServer.studentDic[theValue]{
+                    return (_student.name.lowercased().contains(searchText) ||
+                        enumService.toString(e: _student.region).lowercased().contains(searchText) ||
+                        _student.memberID.lowercased().contains(searchText) ||
+                        enumService.toDescription(e: _student.registered).contains(searchText))
+                } else {
+                    return false
                 }
-                return returnValue
             }
         })
         
-        self.FstudentEmptyList = self.studentEmptyList.filter({(theKey, theValue) -> Bool in
-            if theKey.lowercased().contains(searchText){
-                return true
-            } else {
-                var returnValue = false
-                for items in theValue.values{
-                    returnValue = returnValue || "\(items)".lowercased().contains(searchText)
-                }
-                return returnValue
-            }
+        self.FstudentEmptyList = self.studentEmptyList.filter({ (memberID) -> Bool in
+            return memberID.lowercased().contains(searchText)
         })
+        
         if searchText == ""{
             self.FstudentList = self.studentList
             self.FstudentEmptyList = self.studentEmptyList
         }
-
         self.reload()
     }
     
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0{
-            self.selectedRef = self.studentRefList[Array(self.FstudentList.keys).sorted()[indexPath.row]]!
-            if let dic = self.studentList[Array(studentList.keys).sorted()[indexPath.row]]{
-                self.selectedName = "\(dic["First Name"] ?? "未注册") \(dic["Last Name"] ?? " ")"
+            if let memberID = self.FstudentList[Array(self.FstudentList.keys)[indexPath.row]]{
+                if let student = DataServer.studentDic[memberID]{
+                    self.selected = student
+                    self.selectedName = student.name
+                    self.performSegue(withIdentifier: "detail", sender: self)
+                } else {
+                    AppDelegate.showError(title: "未知错误", err: "发生未知错误")
+                }
+            } else {
+                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
             }
-        }else{
-            self.selectedRef = db.collection("student").document(Array(self.FstudentEmptyList.keys).sorted()[indexPath.row])
+            
+        } else {
+            let memberID = self.FstudentEmptyList[indexPath.row]
+            if let region = AppDelegate.AP().ds?.region{
+                
+                if region == userRegion.All{
+                    self.selected = EFStudent.addStudent(at: memberID, in: userRegion.Mississauga)
+                } else {
+                    self.selected = EFStudent.addStudent(at: memberID, in: region)
+                }
+            } else {
+                self.selected = EFStudent.addStudent(at: memberID, in: userRegion.Mississauga)
+            }
             self.selectedName = "创建新的记录"
+            self.performSegue(withIdentifier: "detail", sender: self)
         }
-        self.performSegue(withIdentifier: "detail", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllStudentDetailViewController{
             dvc.navigationItem.title = self.selectedName
-            dvc.ref = self.selectedRef
+            dvc.thisStudent = self.selected
         }
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         self.refresh()
     }

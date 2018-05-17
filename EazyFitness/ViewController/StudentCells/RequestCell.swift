@@ -25,18 +25,6 @@ class RequestCell: UICollectionViewCell {
             self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
         }) { (_) in
             print(self.docRef.path)
-            FirestoreService.deleteCourseByStudentCourseRef(studentCourseRef: self.docRef, finished: {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.alpha = 0
-                }, completion: { (_) in
-                    self.waitView.isHidden = true
-                    self.waitView.stopAnimating()
-                    if AppDelegate.AP().group == userGroup.student{
-                        Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("Message").addDocument(data: ["Read" : false, "Text":"删除了:\(self.requestDiscriptionLabel.text)", "Time":Date(), "byStudent":true])
-                    }
-                    AppDelegate.refresh()
-                })
-            })
         }
     }
     
