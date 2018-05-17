@@ -13,11 +13,15 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var noCourseLabel: UIView!
     var collectionRef: [String: CollectionReference]!
-    var 用来加课的refrence: CollectionReference!
+    var 用来加课的refrence: [CollectionReference] = []
     let _refreshControl = UIRefreshControl()
     var _gesture:UIGestureRecognizer!
     @IBOutlet weak var timetableView: UIScrollView!
     var timetable:TimeTableView?
+    var StudentCourseList:[String:[ClassObj]]!
+    
+    
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var courseNoteField: UITextField!
     @IBOutlet weak var courseAmount: UILabel!
     @IBOutlet weak var courseDatePicker: UIDatePicker!
@@ -39,42 +43,112 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     }
     
     func askIfWantToCopyAllStudent(){
-        AppDelegate.showSelection(title: "是否要复制所有人的课程", text: "请注意，所有的学生下周已有的课程将会被删除，如果只想复制该学生的课程，请按取消", of: self, handlerAgree: copyAllCourseFromThisWeel, handlerDismiss: copyThisCourseFromThisWeel)
+        AppDelegate.showSelection(title: "是否要复制所有人的课程", text: "请注意，所有的学生下周已有的课程将会被删除，如果只想复制该学生的课程，请按取消。复制所有的课程并不会复制多人课，如果需要复制多人课请返回上一页并选取上课的学生。", of: self, handlerAgree: copyAllCourseFromThisWeel, handlerDismiss: copyThisCourseFromThisWeel)
     }
     
     func copyThisCourseFromThisWeel(){
-        self.copyCourseFromThisWeel(ref:self.用来加课的refrence)
+        var ref:[DocumentReference] = []
+        for refs in self.用来加课的refrence{
+            ref.append(refs.parent!)
+        }
+        self.copyCourseFromThisWeel(ref:ref)
     }
     
-    func copyCourseFromThisWeel(ref:CollectionReference){
-        ref.whereField("Date", isLessThan: Date().endOfWeek()).whereField("Date", isGreaterThan: Date().startOfWeek()).getDocuments { (snap, err) in
+    func copyCourseFromThisWeel(ref:[DocumentReference]){
+        
+        Firestore.firestore().collection("course").whereField("date", isGreaterThan: Date().startOfWeek()).getDocuments { (snap, err) in
             if let err = err {
                 AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
             } else {
-                if let docs = snap?.documents{
-                    for doc in docs{
-                        ref.addDocument(data: ["Note" : doc.data()["Note"], "Amount": doc.data()["Amount"], "Date": Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["Date"] as! Date)), "Approved":false, "Record":false, "trainer":doc.data()["trainer"], "notrainer":false, "nostudent":false])
-                    }
+                for doc in snap!.documents{
+                    doc.reference.collection("trainee").getDocuments(completion: { (snap2, err2) in
+                        if let err = err2 {
+                            AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
+                        } else {
+                            if snap2!.count == ref.count{
+                                var allSame = true
+                                for doc2 in snap2!.documents{
+                                    if let studentRef = doc2.data()["ref"] as? DocumentReference{
+                                        if let sid = studentRef.parent.parent?.documentID{
+                                            var contain = false
+                                            for _ref in ref{
+                                                if sid == _ref.documentID{
+                                                    contain = true
+                                                }
+                                            }
+                                            if contain == false {
+                                                allSame = false
+                                            }
+                                        }
+                                    }
+                                }
+                                if allSame {
+                                    if let cMEmeberId = AppDelegate.AP().currentMemberID{
+                                        let courseRef:DocumentReference!
+                                        print(doc.data())
+                                        if ref.count == 1 {
+                                            courseRef = Firestore.firestore().collection("course").addDocument(data: ["type": enumService.toString(e: courseType.general), "note" : doc.data()["note"], "amount": doc.data()["amount"], "date": (Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["date"] as! Date)))])
+                                        } else {
+                                            courseRef = Firestore.firestore().collection("course").addDocument(data: ["type": enumService.toString(e: courseType.multiple), "note" : doc.data()["note"], "amount": doc.data()["amount"], "date": (Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["date"] as! Date)))])
+                                        }
+                                        for _ref in ref{
+                                            let studentRecordRef = _ref.collection("CourseRecorded").addDocument(data: ["ref": courseRef, "status":enumService.toString(e: courseStatus.waitForStudent), "trainer":Firestore.firestore().collection("trainer").document(cMEmeberId)])
+                                            courseRef.collection("trainee").addDocument(data: ["ref" : studentRecordRef])
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
                 }
             }
         }
+
         let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: Date())
-        ref.whereField("Date", isLessThan: nextWeek!.endOfWeek()).whereField("Date", isGreaterThan: nextWeek!.startOfWeek()).getDocuments { (snap, err) in
+        Firestore.firestore().collection("course").whereField("Date", isLessThan: nextWeek!.endOfWeek()).whereField("Date", isGreaterThan: nextWeek!.startOfWeek()).getDocuments { (snap, err) in
             if let err = err {
                 AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
             } else {
-                if let docs = snap?.documents{
-                    for doc in docs{
-                        doc.reference.delete()
-                    }
+                for doc in snap!.documents{
+                    doc.reference.collection("trainee").getDocuments(completion: { (snap2, err2) in
+                        if let err = err2 {
+                            AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
+                        } else {
+                            if snap2!.count == ref.count{
+                                var allSame = true
+                                for doc2 in snap2!.documents{
+                                    if let studentRef = doc2.data()["ref"] as? DocumentReference{
+                                        if let sid = studentRef.parent.parent?.documentID{
+                                            var contain = false
+                                            for _ref in ref{
+                                                if sid == _ref.documentID{
+                                                    contain = true
+                                                }
+                                            }
+                                            if contain == false {
+                                                allSame = false
+                                            }
+                                        }
+                                    }
+                                }
+                                if allSame {
+                                    for doc in snap!.documents{
+                                        (doc.data()["Student"] as! DocumentReference).delete()
+                                        doc.reference.delete()
+                                    }
+                                }
+                            }
+                        }
+                    })
                 }
             }
         }
+        
     }
     
     func copyAllCourseFromThisWeel(){
-        for students in AppDelegate.AP().myStudentListGeneral{
-            self.copyCourseFromThisWeel(ref: Firestore.firestore().collection("student").document(students).collection("CourseRecorded"))
+        for studentsRef in AppDelegate.AP().studentList{
+            self.copyCourseFromThisWeel(ref: [studentsRef])
         }
     }
     
@@ -101,7 +175,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
         }
     }
     
-    func refresh() {
+    override func refresh() {
         self.startLoading()
         if let existTimetable = timetable{
             existTimetable.removeFromSuperview()
@@ -109,7 +183,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
         timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
         let calendar = Calendar.current
         let nextweek = calendar.date(byAdding: .day, value: 7, to: Date())
-        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, startoftheweek: (nextweek?.startOfWeek())!, handeler: self.resizeViews)
+        TimeTable.makeTimeTabel(on: timetable!, with: StudentCourseList, startoftheweek: (nextweek?.startOfWeek())!, handeler: self.resizeViews)
         timetableView.addSubview(timetable!)
     }
     
@@ -144,7 +218,11 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if 用来加课的refrence.count == 1{
+            titleLabel.text = "添加单人课"
+        } else {
+            titleLabel.text = "添加多人课"
+        }
         let calendar = Calendar.current
         let nextday = calendar.date(byAdding: .day, value: 1, to: Date())
         
@@ -197,8 +275,20 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
         if let cMEmeberId = AppDelegate.AP().currentMemberID{
-            用来加课的refrence.addDocument(data: ["Note" : courseNoteField.text ?? "无备注", "Amount": 准备增加, "Date": self.courseDatePicker.date, "Approved":false, "Record":false, "trainer":cMEmeberId, "notrainer":false, "nostudent":false])
-            _ = self.navigationController?.popViewController(animated: true)
+            if 用来加课的refrence.count == 1 {
+                let courseRef = Firestore.firestore().collection("course").addDocument(data: ["note" : courseNoteField.text ?? "无备注", "amount": 准备增加, "date": self.courseDatePicker.date, "type": enumService.toString(e: courseType.general)])
+                let studentRecordRef = 用来加课的refrence[0].addDocument(data: ["ref": courseRef, "status":enumService.toString(e: courseStatus.waitForStudent), "trainer":Firestore.firestore().collection("trainer").document(cMEmeberId)])
+                courseRef.collection("trainee").addDocument(data: ["ref" : studentRecordRef])
+                _ = self.navigationController?.popViewController(animated: true)
+            } else {
+                let courseRef = Firestore.firestore().collection("course").addDocument(data: ["note" : courseNoteField.text ?? "无备注", "amount": 准备增加, "date": self.courseDatePicker.date, "type": enumService.toString(e: courseType.multiple)])
+                for ref in 用来加课的refrence{
+                    let studentRecordRef = ref.addDocument(data: ["ref": courseRef, "status":enumService.toString(e: courseStatus.waitForStudent), "trainer":Firestore.firestore().collection("trainer").document(cMEmeberId)])
+                    courseRef.collection("trainee").addDocument(data: ["ref" : studentRecordRef])
+                }
+                _ = self.navigationController?.popViewController(animated: true)
+            }
+            
         } else {
             AppDelegate.showError(title: "添加课程时遇到错误", err: "无法获取教练ID")
         }

@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-class AllStudentCourseTableViewController: DefaultTableViewController, refreshableVC {
+class AllStudentCourseTableViewController: DefaultTableViewController {
     
     let _refreshControl = UIRefreshControl()
     var courseList:[String:[String:Any]] = [:]
@@ -68,7 +68,7 @@ class AllStudentCourseTableViewController: DefaultTableViewController, refreshab
         }
     }
     
-    func refresh() {
+    override func refresh() {
         ref.order(by: "Date").getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription, of: self)
@@ -111,7 +111,7 @@ class AllStudentCourseTableViewController: DefaultTableViewController, refreshab
         })
     }
     
-    func reload() {
+    override func reload() {
         self.tableView.reloadData()
     }
     

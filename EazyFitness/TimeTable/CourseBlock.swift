@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import Firebase
 
 class CourseBlock: UIView {
     
     var startOfTheWeek:Date!
     var superView:TimeTableView!
     
-    var courseID:String!
+    var courseRef:DocumentReference!
     var startTime:Date!
     var duration:Int!
     

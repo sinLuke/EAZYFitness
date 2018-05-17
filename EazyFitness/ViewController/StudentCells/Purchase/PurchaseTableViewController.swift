@@ -53,7 +53,7 @@ class PurchaseTableViewController: UITableViewController {
         self.title = "\(self.studentName!)的购买记录"
         
         
-        if (AppDelegate.AP().usergroup == "student" || AppDelegate.AP().usergroup == "trainer"){
+        if (AppDelegate.AP().group == userGroup.student || AppDelegate.AP().group == userGroup.trainer){
             self.addNew.isEnabled = false
         } else {
             self.addNew.isEnabled = true

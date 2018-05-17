@@ -12,11 +12,14 @@ import Firebase
 //#02
 
 class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
-    
-    var fname = "Name"
-    var lname = "Undefine"
-    var userInfo:[String : Any]!
+
     var db: Firestore!
+    
+    var usergroup:userGroup!
+    var region:userRegion!
+    var fname:String!
+    var lname:String!
+    var memberID:String!
     
     var theUserRefrence: DocumentReference!
     
@@ -32,9 +35,6 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
-        
-        self.fname = (userInfo!["First Name"] as? String) ?? "Name"
-        self.lname = (userInfo!["Last Name"] as? String) ?? "Undefine"
         
         nameLabel.text = "\(self.fname) \(self.lname)"
         
@@ -71,14 +71,17 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
             self.endLoading()
         } else {
             if let cuser = Auth.auth().currentUser{
-                if let memberID = userInfo["MemberID"]{
+                if let memberID = self.memberID{
                     let cardID = "\(memberID)"
+                    let uuid = UIDevice.current.identifierForVendor!.uuidString
                     db.collection("users").document(cuser.uid).setData([
-                        "First Name": self.fname,
-                        "Last Name": self.lname,
-                        "MemberID": cardID,
-                        "Type": "student",
-                        "Email": self.emailField.text!
+                        "firstName": self.fname,
+                        "lastName": self.lname,
+                        "memberID": cardID,
+                        "usergroup": enumService.toString(e: userGroup.student),
+                        "region": enumService.toString(e: self.region),
+                        "email": self.emailField.text!,
+                        "loginDevice": uuid
                         ])
                     
                     theUserRefrence.updateData(["Registered":2])

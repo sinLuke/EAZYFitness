@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class AllTrainerTableViewController: DefaultTableViewController, UISearchResultsUpdating, refreshableVC {
+class AllTrainerTableViewController: DefaultTableViewController, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filterSearchController(searchBar: searchController.searchBar)
     }
@@ -28,7 +28,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     private let searchController = UISearchController(searchResultsController: nil)
     
-    func refresh() {
+    override func refresh() {
         for i in 1...999{
             db.collection("trainer").document("\(i)").getDocument { (snap, err) in
                 if let err = err {
@@ -37,36 +37,18 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
                     let string :String = String(format: "%04d", i)
                     if let doc = snap{
                         if doc.data() == nil{
-                            
                             self.trainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
                             self.FtrainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
                         } else {
-                            switch AppDelegate.AP().usergroup{
-                            case "mississauga":
-                                if doc.data()!["region"] as? String == "mississauga"{
-                                    self.trainerList[string] = doc.data()
-                                    self.FtrainerList[string] = doc.data()
-                                    self.trainerRefList[string] = doc.reference
-                                }
-                            case "waterloo":
-                                if doc.data()!["region"] as? String == "waterloo"{
-                                    self.trainerList[string] = doc.data()
-                                    self.FtrainerList[string] = doc.data()
-                                    self.trainerRefList[string] = doc.reference
-                                }
-                            case "scarborough":
-                                if doc.data()!["region"] as? String == "scarborough"{
-                                    self.trainerList[string] = doc.data()
-                                    self.FtrainerList[string] = doc.data()
-                                    self.trainerRefList[string] = doc.reference
-                                }
-                            case "super":
-                                self.trainerList[string] = doc.data()
-                                self.FtrainerList[string] = doc.data()
-                                self.trainerRefList[string] = doc.reference
-                            default:
-                                AppDelegate.showError(title: "无法确定用户组", err: "请重新登录", handler:AppDelegate.AP().signout)
+                            
+                            if let _region = doc.data()!["region"] as? String, enumService.toRegion(s: _region) == AppDelegate.AP().region || AppDelegate.AP().region == userRegion.All{
+                                self.trainerList["\(i)"] = doc.data()
+                                self.FtrainerList["\(i)"] = doc.data()
+                                self.trainerRefList["\(i)"] = doc.reference
+                            } else {
+                                AppDelegate.showError(title: "无法确定用户所在地区", err: "请重新登录", handler:AppDelegate.AP().signout)
                             }
+                            
                         }
                     } else {
                         self.trainerEmptyList[string] = ["First Name": "未注册", "Last Name": " ", "region": "未设定地区", "Registered": 0, "MemberID": "\(i)", "usergroup":"student"]
@@ -78,7 +60,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         }
     }
     
-    func reload() {
+    override func reload() {
         self.tableView.reloadData()
     }
     

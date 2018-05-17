@@ -46,7 +46,7 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
                     if self.Note.text != "" {
                         note = self.Note.text!
                     }
-                    let approve = (AppDelegate.AP().usergroup == "super")
+                    let approve = (AppDelegate.AP().region == userRegion.All)
                     ref.addDocument(data: ["Amount" : amount * updateAmount, "Approved":approve, "Date":Date(), "Note":note]) { (err) in
                         if let err = err{
                             AppDelegate.showError(title: "添加课程时发生错误", err: err.localizedDescription)

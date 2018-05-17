@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 private let reuseIdentifier = "Cell"
 
-class MessageCollectionViewController: DefaultViewController,refreshableVC,UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate {
+class MessageCollectionViewController: DefaultViewController,UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var messageBox: UITextField!
     
@@ -22,7 +22,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
     var gesture:UIGestureRecognizer!
     var listener:ListenerRegistration!
     
-    func refresh() {
+    override func refresh() {
         
         AppDelegate.AP().startListener()
         
@@ -36,9 +36,9 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
                     for docs in doctList{
                         if docs.documentID != "Last"{
                             self.MessageList.append(docs.data())
-                            if (docs.data()["byStudent"] as! Bool == true) && AppDelegate.AP().usergroup != "student"{
+                            if (docs.data()["byStudent"] as! Bool == true) && AppDelegate.AP().group != userGroup.student{
                                 docs.reference.updateData(["Read" : true])
-                            } else if  (docs.data()["byStudent"] as! Bool == false) && AppDelegate.AP().usergroup == "student"{
+                            } else if  (docs.data()["byStudent"] as! Bool == false) && AppDelegate.AP().group == userGroup.student{
                                 docs.reference.updateData(["Read" : true])
                             }
                         }
@@ -51,7 +51,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
         }
     }
     
-    func reload() {
+    override func reload() {
         self.collectionView?.reloadData()
         self.collectionView.setContentOffset(CGPoint(x: 0, y: max(0, self.collectionView.contentSize.height - self.collectionView.frame.height)), animated: false)
     }
@@ -93,7 +93,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
     }
     
     @IBAction func sendMessageAction(_ sender: Any) {
-        colRef.addDocument(data: ["Read" : false, "Text" : self.messageBox.text, "Time":Date(), "byStudent":(AppDelegate.AP().usergroup == "student")])
+        colRef.addDocument(data: ["Read" : false, "Text" : self.messageBox.text, "Time":Date(), "byStudent":(AppDelegate.AP().group == userGroup.student)])
         colRef.document("Last").setData(["Text" : self.messageBox.text, "Time":Date()])
         self.messageBox.text = ""
     }
@@ -184,7 +184,7 @@ class MessageCollectionViewController: DefaultViewController,refreshableVC,UICol
         timeFormatter.dateStyle = .none
         timeFormatter.timeStyle = .short
         
-        if ((MessageDic["byStudent"] as! Bool) == true && AppDelegate.AP().usergroup == "student") || ((MessageDic["byStudent"] as! Bool) == false && AppDelegate.AP().usergroup == "trainer"){
+        if ((MessageDic["byStudent"] as! Bool) == true && AppDelegate.AP().group == userGroup.student) || ((MessageDic["byStudent"] as! Bool) == false && AppDelegate.AP().group != userGroup.trainer){
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "send", for: indexPath) as! SendTextCell
             if let date = MessageDic["Time"] as? Date{
                 if (MessageDic["Read"] as? Bool) == true {

@@ -38,6 +38,57 @@ class TimeTable: NSObject {
         }
     }
     
+    class func makeTimeTabel(on view:TimeTableView, with classObjs:[String:[ClassObj]], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
+        print(classObjs)
+        
+        currentTimeTabel = TimeTable()
+        view.backgroundColor = UIColor.white
+        var timetableDicWithName: [String: [String:[[Any]]]] = [:]
+        for name in classObjs.keys{
+            for courseObj in classObjs[name]!{
+                if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek(){
+                    let numberHour:Int = Calendar.current.component(.hour, from: courseObj.date)*100 + Calendar.current.component(.minute, from: courseObj.date)
+                    let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: courseObj.date)]
+                    
+                    if timetableDicWithName[name] != nil{
+                        if timetableDicWithName[name]![weekDayName] != nil{
+                            timetableDicWithName[name]![weekDayName]?.append([numberHour, courseObj.amount, courseObj.courseRef])
+                        } else {
+                            timetableDicWithName[name]![weekDayName] = [[numberHour, courseObj.amount, courseObj.courseRef]]
+                        }
+                    } else {
+                        timetableDicWithName[name] = [:]
+                        timetableDicWithName[name]![weekDayName] = [[numberHour, courseObj.amount, courseObj.courseRef]]
+                    }
+                }
+                
+            }
+        }
+        print(timetableDicWithName)
+        handeler(TimeTable.makeTimeTable(on: view, with: timetableDicWithName, startoftheweek: startoftheweek))
+    }
+    
+    class func makeTimeTabel(on view:TimeTableView, with classObjs:[ClassObj], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
+        currentTimeTabel = TimeTable()
+        view.backgroundColor = UIColor.white
+        var timetableDicWithName: [String: [String:[[Any]]]] = [:]
+        for courseObj in classObjs{
+            if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek(){
+                let displayName = courseObj.allStudentName
+                let numberHour:Int = Calendar.current.component(.hour, from: courseObj.date)*100 + Calendar.current.component(.minute, from: courseObj.date)
+                let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: courseObj.date)]
+                if timetableDicWithName[displayName] != nil && timetableDicWithName[displayName]![weekDayName] != nil{
+                    timetableDicWithName[displayName]![weekDayName]?.append([numberHour, courseObj.amount, courseObj.courseRef])
+                } else {
+                    timetableDicWithName[displayName] = [:]
+                    timetableDicWithName[displayName]![weekDayName]? = [[numberHour, courseObj.amount, courseObj.courseRef]]
+                }
+            }
+            
+        }
+        handeler(TimeTable.makeTimeTable(on: view, with: timetableDicWithName, startoftheweek: startoftheweek))
+    }
+    
     class func makeTimeTable(on view:TimeTableView, withRef _collectionRef:[String:CollectionReference], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
         
         currentTimeTabel = TimeTable()
@@ -144,7 +195,7 @@ class TimeTable: NSObject {
                                         
                                         courseView.startOfTheWeek = startoftheweek
                                         courseView.superView = view
-                                        courseView.courseID = courseTimeList[2] as! String
+                                        courseView.courseRef = courseTimeList[2] as! DocumentReference
                                         courseView.backgroundColor = colorList![count%HexColor.colorList.count]
                                         
                                         let courseLabel = UILabel(frame: CGRect(x: 0, y: 0, width: courseView.frame.width, height: courseView.frame.height))
@@ -154,6 +205,8 @@ class TimeTable: NSObject {
                                         courseLabel.font = UIFont.boldSystemFont(ofSize: 10)
                                         courseLabel.textAlignment = .center
                                         courseLabel.textColor = UIColor.white
+                                        
+                                        view.CourseViewList.append(courseView)
                                         courseView.addSubview(courseLabel)
                                         singleDayView.addSubview(courseView)
                                     }

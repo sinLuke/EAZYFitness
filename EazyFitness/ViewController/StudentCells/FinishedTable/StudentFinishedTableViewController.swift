@@ -9,23 +9,28 @@
 import UIKit
 import Firebase
 
-class StudentFinishedTableViewController: DefaultTableViewController, refreshableVC {
+class StudentFinishedTableViewController: DefaultTableViewController {
     
     let _refreshControl = UIRefreshControl()
-    var CourseList:[[String:Any]] = []
+    var CourseList:[ClassObj] = []
     
-    var dref:CollectionReference!
+    var studentCourseRef:CollectionReference!
     
-    func refresh() {
-        print("refresh")
+    override func refresh() {
         CourseList = []
-        dref.whereField("Record", isEqualTo: true).order(by: "Date").getDocuments { (snap, err) in
+        studentCourseRef.getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
             } else {
                 if let documentList = snap?.documents{
                     for docDic in documentList{
-                        self.CourseList.append(docDic.data())
+                        let classObj = ClassObj()
+                        let courseRef = docDic["ref"] as! DocumentReference
+                        classObj.courseRef = courseRef
+                        
+                        classObj.trainer = docDic["trainer"] as! DocumentReference
+                        self.getCourseInfo(ref: courseRef, classObj: classObj)
+                        self.CourseList.append(classObj)
                     }
                 }
                 self.reload()
@@ -33,7 +38,57 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
         }
     }
     
-    func reload() {
+    func getCourseInfo(ref:DocumentReference, classObj:ClassObj){
+        ref.getDocument { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
+            } else {
+                if let dic = snap!.data(){
+                    classObj.note = dic["note"] as! String
+                    classObj.amount = dic["amount"] as! Int
+                    classObj.date = dic["date"] as! Date
+                    self.getListOfStudentInCourse(ref: ref.collection("trainee"), classObj: classObj)
+                    self.reload()
+                } else {
+                    AppDelegate.showError(title: "未知错误", err: "读取课程信息时发生错误")
+                }
+            }
+        }
+    }
+    
+    func getListOfStudentInCourse(ref:CollectionReference, classObj:ClassObj){
+        ref.getDocuments { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "获得上课学员时发生错误", err: err.localizedDescription)
+            } else {
+                for doc in snap!.documents{
+                    if snap!.documents.count == 1{
+                        classObj.type = courseType.general
+                    } else {
+                        classObj.type = courseType.multiple
+                    }
+                    if let studentRef = doc["ref"] as? DocumentReference{
+                        classObj.student.append(studentRef)
+                        studentRef.getDocument(completion: { (snap, err) in
+                            if let err = err{
+                                AppDelegate.showError(title: "读取学员信息时发生错误", err: err.localizedDescription)
+                            } else {
+                                if let StudentDic = snap!.data(){
+                                    classObj.studentName[studentRef.documentID] = ("\(StudentDic["First Name"]) \(StudentDic["Last Name"])")
+                                    classObj.status[studentRef.documentID] = enumService.toCourseStatus(s: StudentDic["status"] as! String)
+                                    self.reload()
+                                }
+                            }
+                        })
+                    } else {
+                        AppDelegate.showError(title: "未知错误", err: "读取学员信息时发生错误")
+                    }
+                }
+            }
+        }
+    }
+    
+    override func reload() {
         print("reload")
         tableView.reloadData()
     }
@@ -88,29 +143,78 @@ class StudentFinishedTableViewController: DefaultTableViewController, refreshabl
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {")
         let cell = tableView.dequeueReusableCell(withIdentifier: "finishedCell", for: indexPath) as! FinishedTableViewCell
-        if let courseDic = CourseList[indexPath.row] as? [String:Any]{
-            cell.courseLabel.text = "课时：\(prepareCourseNumber(courseDic["Amount"] as! Int))"
-            cell.noteLabel.text = courseDic["Note"] as! String
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .long
-            dateFormatter.timeStyle = .none
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateStyle = .none
-            timeFormatter.timeStyle = .short
-            if let date = courseDic["Date"] as? Date{
-                cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
+        let courseObj = CourseList[indexPath.row]
+        
+        cell.courseLabel.text = "课时：\(prepareCourseNumber(courseObj.amount))"
+        cell.noteLabel.text = courseObj.note
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateStyle = .none
+        timeFormatter.timeStyle = .short
+        if let date = courseObj.date{
+            cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
+        }
+        
+        var allapproved = true
+        var allScaned = true
+        var exception = false
+        var notrainer = false
+        for statu in courseObj.status.values{
+            if statu == courseStatus.waitForStudent{
+                allapproved = false
             }
-            if (courseDic["Type"] as! String) == "General"{
-                cell.typeLabel.text = "状态：正常"
-                cell.typeLabel.textColor = HexColor.Green
-            } else if (courseDic["Type"] as! String) == "General"{
-                cell.typeLabel.text = "状态：没来"
+            if statu == courseStatus.ill || statu == courseStatus.noStudent || statu == courseStatus.noTrainer || statu == courseStatus.noCard{
+                exception = true
+            }
+            if statu != courseStatus.scaned{
+                allScaned = false
+            }
+            if statu == courseStatus.noTrainer{
+                notrainer = true
+            }
+        }
+        cell.typeLabel.text = "复杂情况"
+        if !allapproved{
+            cell.typeLabel.text = "等待所有学生同意"
+            cell.typeLabel.textColor = HexColor.gray
+            cell.noteLabel.textColor = HexColor.gray
+            cell.timeLabel.textColor = HexColor.gray
+            cell.courseLabel.textColor = HexColor.gray
+            cell.backgroundColor = HexColor.lightColor
+        }
+        if exception{
+            cell.typeLabel.text = "有异常情况"
+            cell.typeLabel.textColor = HexColor.Red
+        }
+        if notrainer{
+            cell.typeLabel.text = "教练没来"
+            cell.typeLabel.textColor = HexColor.Red
+        }
+        if allScaned{
+            cell.typeLabel.text = "全部扫码通过"
+            cell.backgroundColor = HexColor.Green.withAlphaComponent(0.2)
+        }
+        print("courseObj.status.count")
+        print(courseObj.status.count)
+        if courseObj.status.count == 1 {
+            let status = Array(courseObj.status.values)[0]
+            cell.typeLabel.text = enumService.toDescription(e: status)
+            switch status {
+            case .waitForStudent:
+                cell.typeLabel.textColor = HexColor.gray
+                cell.noteLabel.textColor = HexColor.gray
+                cell.timeLabel.textColor = HexColor.gray
+                cell.courseLabel.textColor = HexColor.gray
+                cell.backgroundColor = HexColor.lightColor
+            case .ill, .noStudent, .noCard, .noTrainer:
                 cell.typeLabel.textColor = HexColor.Red
-            } else {
-                cell.typeLabel.text = "状态：未知"
-                cell.typeLabel.textColor = HexColor.Red
+            case .scaned:
+                cell.backgroundColor = HexColor.Green.withAlphaComponent(0.2)
+            default:
+                cell.typeLabel.textColor = UIColor.black
             }
         }
         return cell

@@ -11,7 +11,7 @@ import Firebase
 
 private let reuseIdentifier = "Cell"
 
-class AdminViewController: DefaultCollectionViewController, refreshableVC, UICollectionViewDelegateFlowLayout {
+class AdminViewController: DefaultCollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let 刷新菊花 = UIRefreshControl()
     var 数据库:Firestore!
@@ -33,99 +33,17 @@ class AdminViewController: DefaultCollectionViewController, refreshableVC, UICol
     var 本月教练没来数:Int = 0
     var 本月购买课时数:Int = 0
     
-    func refresh() {
-        获取学生总数()
-        获取教练总数()
+    override func refresh() {
+
     }
     
-    func reload() {
+    override func reload() {
         self.collectionView?.reloadData()
     }
     
     @objc func 用户刷新(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
-    }
-    
-    func 获取学生总数(){
-        if let ug = AppDelegate.AP().usergroup{
-            数据库.collection("student").whereField("Registered", isEqualTo: 2).getDocuments { (snap, err) in
-                self.学生ref列表 = []
-                if let err = err{
-                    AppDelegate.showError(title: "获取数据发生错误", err: err.localizedDescription, handler: AppDelegate.AP().signout)
-                } else {
-                    if let 文档列表 = snap?.documents{
-                        for 文档 in 文档列表{
-                            if let dug = 文档.data()["region"] as? String{
-                                if dug == ug || ug == "super"{
-                                    self.学生ref列表.append([文档.documentID: 文档.reference])
-                                    print("Here")
-                                }
-                            } else {
-                                AppDelegate.showError(title: "获取学生时出错", err: "学生的地区无法确定")
-                                return
-                            }
-                        }
-                        self.reload()
-                    }
-                }
-            }
-        } else {
-            AppDelegate.showError(title: "获取数据发生错误", err: "无法确定用户组", handler: AppDelegate.AP().signout)
-        }
-    }
-    
-    func 获取教练总数(){
-        if let ug = AppDelegate.AP().usergroup{
-            数据库.collection("trainer").getDocuments { (snap, err) in
-                self.教练ref列表 = []
-                if let err = err{
-                    AppDelegate.showError(title: "获取数据发生错误", err: err.localizedDescription, handler: AppDelegate.AP().signout)
-                } else {
-                    if let 文档列表 = snap?.documents{
-                        for 文档 in 文档列表{
-                            if let dug = 文档.data()["region"] as? String{
-                                if dug == ug || ug == "super"{
-                                    self.教练ref列表.append([文档.documentID: 文档.reference])
-                                    self.获取总上课时数(教练的数据库ref: 文档.reference)
-                                }
-                            } else {
-                                AppDelegate.showError(title: "获取教练时出错", err: "教练的地区无法确定")
-                                return
-                            }
-                        }
-                        self.reload()
-                    }
-                }
-            }
-        } else {
-            AppDelegate.showError(title: "获取数据发生错误", err: "无法确定用户组", handler: AppDelegate.AP().signout)
-        }
-    }
-    
-    func 获取总上课时数(教练的数据库ref:DocumentReference){
-        教练的数据库ref.collection("Finished").whereField("FinishedType", isEqualTo: "Scaned").getDocuments { (snap, err) in
-            if let err = err {
-                AppDelegate.showError(title: "获取总上课时数时出现问题", err: err.localizedDescription)
-            } else {
-                if let 文件列表 = snap?.documents{
-                    for 文档 in 文件列表{
-                        if let date = 文档.data()["Date"] as? Date{
-                            if date > Date().startOfMonth(){
-                                self.本月上课数 += 1
-                                self.总上课数 += 1
-                            } else {
-                                self.总上课数 += 1
-                            }
-                        } else {
-                            AppDelegate.showError(title: "获取总上课时数时出现问题", err: "无法确定日期")
-                        }
-                    }
-                } else {
-                    AppDelegate.showError(title: "获取总上课时数时出现问题", err: "未知错误")
-                }
-            }
-        }
     }
     
     func 获取总学生没来数(){
@@ -157,7 +75,7 @@ class AdminViewController: DefaultCollectionViewController, refreshableVC, UICol
     }
     
     func 获取买课申请(){
-        if AppDelegate.AP().usergroup == "super"{
+        if AppDelegate.AP().region == userRegion.All{
             Firestore.firestore().collection("student").getDocuments { (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "获取申请时发生错误", err: err.localizedDescription)
@@ -241,78 +159,31 @@ class AdminViewController: DefaultCollectionViewController, refreshableVC, UICol
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 11 + 申请ref列表.count
+        if AppDelegate.AP().ds?.region == userRegion.All{
+            return 2 //总学生，总教练
+            + 1//总课程统计
+            + enumService.Region.count//分区数
+            + 0//request数
+        } else {
+            return 2 //总学生，总教练
+                + 1//总课程统计
+                + 0//request数
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.row {
         case 申请ref列表.count:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "allStudent", for: indexPath) as! AdminStudentViewCell
-            cell.numberOfStudentsLabel.text = "\(self.学生ref列表.count)"
+            cell.numberOfStudentsLabel.text = "\(DataServer.studentDic.count)"
             cell.layer.cornerRadius = 10
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             return cell
         case 申请ref列表.count + 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "allTrainer", for: indexPath) as! AdminTrainerViewCell
-            cell.numberOfTrainerLabel.text = "\(self.教练ref列表.count)"
+            cell.numberOfTrainerLabel.text = "\(DataServer.trainerDic.count)"
             cell.layer.cornerRadius = 10
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-            return cell
-        case 申请ref列表.count + 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "本月上课数"
-            cell.summaryNumberLabel.text = "\(self.本月上课数)"
-            cell.layer.cornerRadius = 10
-            cell.backgroundColor = UIColor.orange.withAlphaComponent(0.3)
-            return cell
-        case 申请ref列表.count + 3:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "总上课数"
-            cell.summaryNumberLabel.text = "\(self.总上课数)"
-            cell.layer.cornerRadius = 10
-            cell.backgroundColor = UIColor.orange.withAlphaComponent(0.3)
-            return cell
-        case 申请ref列表.count + 4:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "本月教练没来数"
-            cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
-        case 申请ref列表.count + 5:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "总教练没来数"
-            cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
-        case 申请ref列表.count + 6:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "本月学生没来数"
-            cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
-        case 申请ref列表.count + 7:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "总学生没来数"
-            cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
-        case 申请ref列表.count + 8:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "总剩余课时数"
-            cell.backgroundColor = UIColor.blue.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
-        case 申请ref列表.count + 9:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "总课时购买数"
-            cell.backgroundColor = UIColor.green.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
-        case 申请ref列表.count + 10:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-            cell.summaryNameLabel.text = "本月课时购买数"
-            cell.backgroundColor = UIColor.green.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
             return cell
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RequestBoard", for: indexPath) as! AdminRequestViewCell

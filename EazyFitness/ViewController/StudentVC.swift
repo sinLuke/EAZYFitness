@@ -9,11 +9,11 @@
 import UIKit
 import Firebase
 
-class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDelegateFlowLayout {
+class StudentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let _refreshControl = UIRefreshControl()
     
-    let TimeTolerant = 30
+    let TimeTolerant = 0
     
     var cMemberID:String?
     
@@ -27,9 +27,10 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
     var requestTimeEndDic:[String:Date] = [:]
     var requestDBREFDic:[String:DocumentReference] = [:]
     
-    var nextCourse:[String:Any] = [:]
-    var thisCourse:[String:Any] = [:]
-    var thisCourseRef:DocumentReference?
+    var CourseList:[ClassObj] = []
+    
+    var nextCourse:ClassObj!
+    var thisCourse:ClassObj!
     
     var timeTableRef:CollectionReference!
     
@@ -47,117 +48,176 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
             let dbref = db.collection("student").document(_MemberID)
             timeTableRef = dbref.collection("CourseRecorded")
             
+            CourseRegisteredNumber = 0
+            TotalCourseFinished = 0
+            MonthCourseFinished = 0
+            
             //获取下一节课
-            dbref.collection("CourseRecorded").whereField("Approved", isEqualTo: true).whereField("Date", isGreaterThan: Date()).order(by: "Date").getDocuments { (snap, err) in
+            
+            dbref.collection("CourseRecorded").getDocuments { (snap, err) in
                 if let err = err{
                     AppDelegate.showError(title: "读取下一节课时发生错误", err: err.localizedDescription)
                 } else {
-                    
-                    if snap!.documents.count >= 1{
-                        self.nextCourse = snap!.documents[0].data()
-                    } else {
-                        self.nextCourse = [:]
-                    }
-                    self.reload()
-                }
-            }
-            
-            //是否正在上课
-            dbref.collection("CourseRecorded").whereField("Approved", isEqualTo: true).whereField("Date", isGreaterThan: Date().startOfTheDay()).order(by: "Date").getDocuments { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "读取正在上课时发生错误", err: err.localizedDescription)
-                } else {
-                    self.thisCourse = [:]
-                    self.thisCourseRef = nil
-                    print(snap!.documents)
-                    if snap!.documents.count >= 1{
-                        for allDocs in snap!.documents{
-                            if let startTime = allDocs.data()["Date"] as? Date, let AmountOffset = allDocs.data()["Amount"] as? Int{
-                                let calendar = Calendar.current
-                                if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30 + self.TimeTolerant, to: startTime),
-                                    let NewStartTime = calendar.date(byAdding: .minute, value: 0 - self.TimeTolerant, to: startTime){
-                                    if Date() > NewStartTime && Date() < endTime{
-                                        self.thisCourse = allDocs.data()
-                                        self.thisCourseRef = allDocs.reference
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        self.thisCourse = [:]
-                        self.thisCourseRef = nil
-                    }
-                    self.reload()
-                }
-            }
-            
-            //读取总课时
-            dbref.collection("CourseRegistered").whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "读取总课时时发生错误", err: err.localizedDescription)
-                } else {
-                    self.CourseRegisteredNumber = 0
-                    for allDocs in snap!.documents{
-                        self.CourseRegisteredNumber += allDocs.data()["Amount"] as! Int
-                    }
-                    self.reload()
-                }
-            }
-            
-            //读取完成课时
-            dbref.collection("CourseRecorded").whereField("Record", isEqualTo: true).getDocuments { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "读取已完成课时时发生错误", err: err.localizedDescription)
-                } else {
-                    self.TotalCourseFinished = 0
-                    for allDocs in snap!.documents{
-                        self.TotalCourseFinished += allDocs.data()["Amount"] as! Int
-                    }
-                    self.reload()
-                }
-            }
-            
-            //读取当月完成
-            dbref.collection("CourseRecorded").whereField("Record", isEqualTo: true).whereField("Date", isGreaterThan: Date().startOfMonth()).getDocuments { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "读取当月已完成课时时发生错误", err: err.localizedDescription)
-                } else {
-                    self.MonthCourseFinished = 0
-                    for allDocs in snap!.documents{
-                        self.MonthCourseFinished += allDocs.data()["Amount"] as! Int
-                    }
-                    self.reload()
-                }
-            }
-            
-            //获取申请
-            dbref.collection("CourseRecorded").whereField("Approved", isEqualTo: false).getDocuments { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "读取申请信息时发生错误", err: err.localizedDescription)
-                } else {
-                    print(snap!.documents)
-                    print(_MemberID)
+                    self.CourseList = []
                     self.requestTextDic = [:]
                     self.requestTimeDic = [:]
                     self.requestTimeEndDic = [:]
-                    
-                    for allDocs in snap!.documents{
+                    if let documentList = snap?.documents{
                         
-                        if let Notetext = allDocs.data()["Note"] as? String, let startTime = allDocs.data()["Date"] as? Date, let AmountOffset = allDocs.data()["Amount"] as? Int{
-                            let calendar = Calendar.current
-                            if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30, to: startTime), startTime > Date(){
-                                self.requestTextDic.updateValue(Notetext, forKey: allDocs.documentID)
-                                self.requestTimeDic.updateValue(startTime, forKey: allDocs.documentID)
-                                self.requestTimeEndDic.updateValue(endTime, forKey: allDocs.documentID)
-                                self.requestDBREFDic.updateValue(allDocs.reference, forKey: allDocs.documentID)
-                            }
+                        for docDic in documentList{
+                            let classObj = ClassObj()
+                            let courseRef = docDic["ref"] as! DocumentReference
+                            classObj.courseRef = courseRef
+                            classObj.trainer = docDic["trainer"] as! DocumentReference
+                            classObj.status[AppDelegate.AP().currentMemberID!] = enumService.toCourseStatus(s: docDic["status"] as! String)
+                            self.getCourseInfo(studentRef: docDic.reference, ref: courseRef, classObj: classObj)
+                            self.CourseList.append(classObj)
                         }
                     }
-                    self.reload()
+                }
+            }
+            
+            //总注册课时
+            dbref.collection("CourseRegistered").whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
+                if let err = err{
+                    AppDelegate.showError(title: "读取总课时发生错误", err: err.localizedDescription)
+                } else {
+                    
+                    if let documentList = snap?.documents{
+                        for docDic in documentList{
+                            self.CourseRegisteredNumber += (docDic.data()["Amount"] as! Int)
+                            self.reload()
+                        }
+                    }
                 }
             }
         }
         
+    }
+    
+    func getCourseInfo(studentRef: DocumentReference, ref:DocumentReference, classObj:ClassObj){
+        ref.getDocument { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
+            } else {
+                if let dic = snap!.data(){
+                    classObj.note = dic["note"] as! String
+                    classObj.amount = dic["amount"] as! Int
+                    classObj.date = dic["date"] as! Date
+                    
+                    //获取本节课
+                    if let startTime = classObj.date{
+                        let AmountOffset = classObj.amount
+                        let calendar = Calendar.current
+                        if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30 + self.TimeTolerant, to: startTime),
+                            let NewStartTime = calendar.date(byAdding: .minute, value: 0 - self.TimeTolerant, to: startTime){
+                            if Date() > NewStartTime && Date() < endTime && classObj.status[self.cMemberID!] != courseStatus.waitForStudent{
+                                self.thisCourse = classObj
+                            }
+                        }
+                    }
+                    
+                    //获取下一节课
+                    if classObj.date > Date() && classObj.status[self.cMemberID!] != courseStatus.waitForStudent {
+                        if self.nextCourse != nil{
+                            if classObj.date < self.nextCourse.date{
+                                self.nextCourse = classObj
+                            }
+                        } else {
+                            self.nextCourse = classObj
+                        }
+                    }
+                    
+                    if classObj.status[AppDelegate.AP().currentMemberID!] != courseStatus.waitForStudent{
+                        if classObj.status[AppDelegate.AP().currentMemberID!] != courseStatus.approved && classObj.status[AppDelegate.AP().currentMemberID!] != courseStatus.noTrainer{
+                            
+                            self.TotalCourseFinished += classObj.amount
+                            if classObj.date > Date().startOfMonth() && classObj.date < Date().endOfMonth(){
+                                if classObj.status[AppDelegate.AP().currentMemberID!] != courseStatus.waitForStudent || classObj.status[AppDelegate.AP().currentMemberID!] != courseStatus.noTrainer{
+                                    self.MonthCourseFinished += classObj.amount
+                                }
+                            }
+                        }
+                    } else {
+                        
+                        //request
+                        if let startTime = classObj.date {
+                            let Notetext = classObj.note
+                            let AmountOffset = classObj.amount
+                            let calendar = Calendar.current
+                            if let endTime = calendar.date(byAdding: .minute, value: AmountOffset*30, to: startTime), startTime > Date(){
+                                self.requestTextDic.updateValue(Notetext, forKey: classObj.courseRef.documentID)
+                                self.requestTimeDic.updateValue(startTime, forKey: classObj.courseRef.documentID)
+                                self.requestTimeEndDic.updateValue(endTime, forKey: classObj.courseRef.documentID)
+                                self.requestDBREFDic.updateValue(studentRef, forKey: classObj.courseRef.documentID)
+                            }
+                        }
+                    }
+
+                    self.getListOfStudentInCourse(ref: ref.collection("trainee"), classObj: classObj)
+
+                } else {
+                    AppDelegate.showError(title: "未知错误", err: "读取课程信息时发生错误")
+                    
+                }
+            }
+        }
+    }
+    
+    func getListOfStudentInCourse(ref:CollectionReference, classObj:ClassObj){
+        ref.getDocuments { (snap, err) in
+            if let err = err{
+                AppDelegate.showError(title: "获得上课学员时发生错误", err: err.localizedDescription)
+            } else {
+                for doc in snap!.documents{
+                    if snap!.documents.count == 1{
+                        classObj.type = courseType.general
+                    } else {
+                        classObj.type = courseType.multiple
+                    }
+                    if let studentRef = doc["ref"] as? DocumentReference{
+                        
+                        if let studentNameRef = studentRef.parent.parent{
+                            studentNameRef.getDocument(completion: { (snap, err) in
+                                if let err = err{
+                                    AppDelegate.showError(title: "读取学员信息时发生错误", err: err.localizedDescription)
+                                } else {
+                                    if let StudentNameDic = snap!.data(){
+                                        classObj.studentName[studentRef.documentID] = ("\(StudentNameDic["First Name"]) \(StudentNameDic["Last Name"])")
+                                        self.reload()
+                                        print("getListOfStudentInCourse")
+                                    } else {
+                                        AppDelegate.showError(title: "未知错误", err: "读取学员姓名时出现问题")
+                                    }
+                                }
+                            })
+                        }
+                        
+                        classObj.student.append(studentRef)
+                        studentRef.getDocument(completion: { (snap, err) in
+                            if let err = err{
+                                AppDelegate.showError(title: "读取学员信息时发生错误", err: err.localizedDescription)
+                            } else {
+                                if let StudentDic = snap!.data(){
+                                    if let studentID = studentRef.parent.parent?.documentID{
+                                        classObj.status[studentID] = enumService.toCourseStatus(s: StudentDic["status"] as! String)
+                                    }
+                                    //获取总课时数
+                                    
+                                    
+                                    self.reload()
+                                    print("getListOfStudentInCourse")
+                                } else {
+                                    AppDelegate.showError(title: "未知错误", err: "读取学员姓名时出现问题")
+                                }
+                            }
+                        })
+                    } else {
+                        AppDelegate.showError(title: "未知错误", err: "读取学员信息时发生错误")
+                    }
+                }
+            }
+        }
     }
     
     func reload() {
@@ -241,15 +301,15 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
             
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.titleLabel.text = "下一节课"
-            if self.thisCourse.keys.count != 0{
+            if self.thisCourse != nil{
                 cell.titleLabel.text = "正在上课"
                 cell.backgroundColor = HexColor.Blue.withAlphaComponent(0.3)
-                cell.dateLabel.text = "\(dateFormatter.string(from: (self.thisCourse["Date"] as! Date))) \((self.thisCourse["Date"] as! Date).getThisWeekDayLongName())"
-                cell.TimeLabel.text = timeFormatter.string(from: (self.thisCourse["Date"] as! Date))
-                cell.noteLabel.text = self.thisCourse["Note"] as? String ?? ""
-                if let _thisCourseRef = self.thisCourseRef{
+                cell.dateLabel.text = "\(dateFormatter.string(from: (self.thisCourse.date!))) \((self.thisCourse.date!).getThisWeekDayLongName())"
+                cell.TimeLabel.text = timeFormatter.string(from: (self.thisCourse.date!))
+                cell.noteLabel.text = self.thisCourse.note
+                if let _thisCourseRef = self.thisCourse.courseRef{
                     cell.thisCourseRef = _thisCourseRef
-                    if let startTime = thisCourse["Date"] as? Date{
+                    if let startTime = thisCourse.date{
                         if (Date() > startTime){
                             cell.report.isHidden = false
                         } else {
@@ -263,10 +323,10 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
                 }
                 
                 cell.requirChangeBtn.isHidden = true
-            } else if self.nextCourse.keys.count != 0{
-                cell.dateLabel.text = "\(dateFormatter.string(from: (self.nextCourse["Date"] as! Date))) \((self.nextCourse["Date"] as! Date).getThisWeekDayLongName())"
-                cell.TimeLabel.text = timeFormatter.string(from: (self.nextCourse["Date"] as! Date))
-                cell.noteLabel.text = self.nextCourse["Note"] as? String ?? ""
+            } else if self.nextCourse != nil{
+                cell.dateLabel.text = "\(dateFormatter.string(from: (self.nextCourse.date!))) \((self.nextCourse.date!).getThisWeekDayLongName())"
+                cell.TimeLabel.text = timeFormatter.string(from: (self.nextCourse.date!))
+                cell.noteLabel.text = self.nextCourse.note
                 cell.report.isHidden = true
             } else {
                 cell.dateLabel.text = ""
@@ -309,22 +369,26 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
             cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
             cell.approveBtn.isHidden = false
             let keyArray = Array(self.requestTextDic.keys)
-            cell.requestTitleLabel.text = self.requestTextDic[keyArray[indexPath.row]]
-            let startTime = self.requestTimeDic[keyArray[indexPath.row]]
-            let endTime = self.requestTimeEndDic[keyArray[indexPath.row]]
-            
-            let dateFormatter1 = DateFormatter()
-            dateFormatter1.dateStyle = .medium
-            dateFormatter1.timeStyle = .none
-            
-            let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateStyle = .none
-            dateFormatter2.timeStyle = .short
-            
-            cell.requestDiscriptionLabel.text = "添加自\(dateFormatter1.string(from: startTime!)) \(startTime!.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime!))至\(dateFormatter2.string(from: endTime!))的课程"
-            cell.layer.cornerRadius = 10
-            cell.docRef = self.requestDBREFDic[keyArray[indexPath.row]]
-            return cell
+            if self.requestTextDic.count <= indexPath.row{
+                return cell
+            } else {
+                cell.requestTitleLabel.text = self.requestTextDic[keyArray[indexPath.row]]
+                let startTime = self.requestTimeDic[keyArray[indexPath.row]]
+                let endTime = self.requestTimeEndDic[keyArray[indexPath.row]]
+                
+                let dateFormatter1 = DateFormatter()
+                dateFormatter1.dateStyle = .medium
+                dateFormatter1.timeStyle = .none
+                
+                let dateFormatter2 = DateFormatter()
+                dateFormatter2.dateStyle = .none
+                dateFormatter2.timeStyle = .short
+                
+                cell.requestDiscriptionLabel.text = "添加自\(dateFormatter1.string(from: startTime!)) \(startTime!.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime!))至\(dateFormatter2.string(from: endTime!))的课程"
+                cell.layer.cornerRadius = 10
+                cell.docRef = self.requestDBREFDic[keyArray[indexPath.row]]
+                return cell
+            }
         }
     }
     
@@ -353,12 +417,12 @@ class StudentVC: UICollectionViewController, refreshableVC, UICollectionViewDele
         }
         if let dvc = segue.destination as? StudentAllCoursesTableViewController{
             if let MemberID = self.cMemberID{
-                dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
+                dvc.studentCourseRef = db.collection("student").document(MemberID).collection("CourseRecorded")
             }
         }
         if let dvc = segue.destination as? StudentFinishedTableViewController{
             if let MemberID = self.cMemberID{
-                dvc.dref = db.collection("student").document(MemberID).collection("CourseRecorded")
+                dvc.studentCourseRef = db.collection("student").document(MemberID).collection("CourseRecorded")
             }
         }
         

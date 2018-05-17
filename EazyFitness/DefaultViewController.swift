@@ -19,7 +19,13 @@ extension UIView{
     }
 }
 
-class DefaultViewController: UIViewController {
+class DefaultViewController: UIViewController, refreshableVC {
+    func refresh() {
+    }
+    
+    func reload() {
+    }
+    
     
     var loadingView:UIVisualEffectView!
     var loadingIndicator:UIActivityIndicatorView!
@@ -99,7 +105,14 @@ class DefaultViewController: UIViewController {
 
 }
 
-class DefaultCollectionViewController: UICollectionViewController {
+class DefaultCollectionViewController: UICollectionViewController, refreshableVC {
+    func refresh() {
+    }
+    
+    func reload() {
+        self.collectionView?.reloadData()
+    }
+    
     
     var loadingView:UIVisualEffectView!
     var loadingIndicator:UIActivityIndicatorView!
@@ -179,7 +192,14 @@ class DefaultCollectionViewController: UICollectionViewController {
     
 }
 
-class DefaultTableViewController: UITableViewController {
+class DefaultTableViewController: UITableViewController, refreshableVC {
+    func refresh() {
+    }
+    
+    func reload() {
+        self.tableView.reloadData()
+    }
+    
     
     var loadingView:UIVisualEffectView!
     var loadingIndicator:UIActivityIndicatorView!

@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
+class TrainerFinishedTableViewController: DefaultTableViewController {
 
     var ref:CollectionReference!
     var name:String!
@@ -127,7 +127,7 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
         return 50
     }
     
-    func refresh() {
+    override func refresh() {
         print("refresh")
         ref.getDocuments { (snap, err) in
             self.thismonth = []
@@ -179,7 +179,7 @@ class TrainerFinishedTableViewController: UITableViewController, refreshableVC {
         
     }
     
-    func reload() {
+    override func reload() {
         self.tableView.reloadData()
     }
     

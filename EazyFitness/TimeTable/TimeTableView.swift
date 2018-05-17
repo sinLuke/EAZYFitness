@@ -23,7 +23,7 @@ class TimeTableView: UIView {
     var background:UIView!
     var DayLabele:[UILabel] = []
     var timeScopeLabelList:[UILabel] = []
-    var CourseViewList:[UIView] = []
+    var CourseViewList:[CourseBlock] = []
 
     /*
     // Only override draw() if you perform custom drawing.

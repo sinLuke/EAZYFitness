@@ -9,6 +9,7 @@ target 'EazyFitness' do
 pod 'Firebase/Core'
 pod 'Firebase/Database'
 pod 'Firebase/Firestore'
+pod 'Firebase/Messaging'
 
 pod 'FirebaseUI'
 pod 'FirebaseUI/Auth'

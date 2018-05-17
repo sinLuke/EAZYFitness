@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate, refreshableVC {
+class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate {
 
     var ref:DocumentReference!
     @IBOutlet weak var fname: UITextField!
@@ -25,27 +25,15 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     
     var Fname: String = ""
     var Lname: String = ""
-    var Region: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.startLoading()
-        print(ref.documentID)
         idLabel.text = String(format:"%04d", Int(ref.documentID)!)
-        switch AppDelegate.AP().usergroup{
-        case "mississauga":
-            self.Region = "mississauga"
-            self.region.isEnabled = false
-        case "waterloo":
-            self.Region = "waterloo"
-            self.region.isEnabled = false
-        case "scarborough":
-            self.Region = "scarborough"
-            self.region.isEnabled = false
-        case "super":
-            self.Region = "mississauga"
-            self.region.isEnabled = true
-        default:
+        if let region = AppDelegate.AP().region{
+            let i = enumService.toInt(e: region)
+            self.region.selectedSegmentIndex = i
+        } else {
             AppDelegate.showError(title: "无法确定用户组", err: "请重新登录", handler:AppDelegate.AP().signout)
         }
         self._gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
@@ -75,19 +63,8 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
         self.fname.endEditing(true)
         self.lname.endEditing(true)
         if self.fname.text != "" && self.lname.text != ""{
-            switch self.region.selectedSegmentIndex {
-            case 0:
-                self.Region = "mississauga"
-            case 1:
-                self.Region = "waterloo"
-            case 2:
-                self.Region = "scarborough"
-            default:
-                AppDelegate.showError(title: "无法读取地区", err: "不允许的值：\(self.region.selectedSegmentIndex)")
-                return
-            }
             self.startLoading()
-            ref.setData(["First Name" : self.fname.text!, "Last Name" : self.lname.text!, "Registered": self.registered.selectedSegmentIndex, "region": self.Region, "usergroup":"trainer", "MemberID":ref.documentID]) { (err) in
+            ref.setData(["First Name" : self.fname.text!, "Last Name" : self.lname.text!, "Registered": self.registered.selectedSegmentIndex, "region": enumService.RegionString[self.region.selectedSegmentIndex], "usergroup":"trainer", "MemberID":ref.documentID]) { (err) in
                 if let err = err{
                     AppDelegate.showError(title: "上传出现错误", err: err.localizedDescription)
                     self.endLoading()
@@ -102,7 +79,7 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
         
     }
     
-    func refresh() {
+    override func refresh() {
         ref.getDocument { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "获取信息时发生错误", err: err.localizedDescription)
@@ -112,7 +89,8 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
                     self.Lname = docData["Last Name"] as! String
                     self.idLabel.text = snap?.documentID
                     self.registered.selectedSegmentIndex = (docData["Registered"] as! Int) % 3
-                    self.Region = docData["region"] as! String
+                    let region = enumService.toRegion(s: docData["region"] as! String)
+                    self.region.selectedSegmentIndex = enumService.toInt(e: region)
                     self.title = "\(self.Fname) \(self.Lname)"
                     self.btnManager.isHidden = false
                 } else {
@@ -124,19 +102,7 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
         }
     }
     
-    func reload() {
-        switch self.Region{
-        case "mississauga":
-            self.region.selectedSegmentIndex = 0
-        case "waterloo":
-            self.region.selectedSegmentIndex = 1
-        case "scarborough":
-            self.region.selectedSegmentIndex = 2
-        default:
-            self.Region = "mississauga"
-            ref.updateData(["region" : "mississauga"])
-            self.region.selectedSegmentIndex = 0
-        }
+    override func reload() {
         self.fname.text = self.Fname
         self.lname.text = self.Lname
         self.fname.text = self.Fname

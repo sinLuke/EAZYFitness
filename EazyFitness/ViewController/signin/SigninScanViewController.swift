@@ -12,11 +12,15 @@ import Firebase
 //#01
 
 class SigninScanViewController: DefaultViewController, QRCodeReaderViewControllerDelegate {
-    
-    var userInfo:[String : Any]?
+
     var db: Firestore!
-    
+    var registered:userStatus?
     var theUserRefrence: DocumentReference?
+    var usergroup:userGroup!
+    var region:userRegion!
+    var fname:String!
+    var lname:String!
+    var memberID:String!
     
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
@@ -34,18 +38,29 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                     if let document = snap!.data(){
                         if let _numberValue = document["MemberID"]{
                             let numberValue = "\(_numberValue)"
+                            self.fname = ""
+                            self.lname = ""
+                            self.memberID = numberValue
                             switch numberValue {
                             case "SUPER":
-                                self.userInfo = ["usergroup":"super", "qrvalue":result.value]
+                                self.usergroup = userGroup.admin
+                                self.region = userRegion.All
                                 self.performSegue(withIdentifier: "special", sender: self)
                             case "MISSISSAUGA":
-                                self.userInfo = ["usergroup":"mississauga", "qrvalue":result.value]
+                                self.usergroup = userGroup.admin
+                                self.region = userRegion.Mississauga
                                 self.performSegue(withIdentifier: "special", sender: self)
                             case "WATERLOO":
-                                self.userInfo = ["usergroup":"waterloo", "qrvalue":result.value]
+                                self.usergroup = userGroup.admin
+                                self.region = userRegion.Waterloo
                                 self.performSegue(withIdentifier: "special", sender: self)
                             case "SCARBOROUGH":
-                                self.userInfo = ["usergroup":"scarborough", "qrvalue":result.value]
+                                self.usergroup = userGroup.admin
+                                self.region = userRegion.Scarborough
+                                self.performSegue(withIdentifier: "special", sender: self)
+                            case "LONDON":
+                                self.usergroup = userGroup.admin
+                                self.region = userRegion.London
                                 self.performSegue(withIdentifier: "special", sender: self)
                             default:
                                 self.fetchUserData(CardID: "\(numberValue)")
@@ -66,16 +81,23 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     
     func fetchUserData(CardID:String){
         if let CardIDNumber = Int(CardID){
-            print(CardIDNumber)
             if CardIDNumber > 1000 && CardIDNumber < 2000{
+                //学生
+                self.usergroup = userGroup.student
                 db.collection("student").document(CardID).getDocument { (snap, err) in
                     if let err = err{
                         self.endLoading()
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                     } else {
-                        if let value = snap!.data(){
-                            self.userInfo = value
+                        if let data = snap!.data(){
                             self.theUserRefrence = (snap?.reference)
+                            self.registered = enumService.toUserStatus(s: data["registered"] as! String)
+                            self.fname = data["firstName"] as! String
+                            self.lname = data["lastName"] as! String
+                            self.memberID = data["memberID"] as! String
+                            let thisStudent = EFStudent(with: snap!.reference)
+                            thisStudent.download()
+                            DataServer.studentDic[snap!.reference.documentID] = thisStudent
                             self.gotUserData()
                         } else {
                             AppDelegate.showError(title: "二维码无效", err: "请与客服联系", of: self)
@@ -83,15 +105,19 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                     }
                 }
             } else {
+                //教练
+                self.usergroup = userGroup.trainer
                 db.collection("trainer").document(CardID).getDocument { (snap, err) in
                     if let err = err{
                         self.endLoading()
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                     } else {
-                        if let value = snap!.data(){
-                            self.userInfo = value
-                            
+                        if let data = snap!.data(){
                             self.theUserRefrence = (snap?.reference)
+                            self.registered = enumService.toUserStatus(s: data["registered"] as! String)
+                            let thisTrainer = EFTrainer(with: snap!.reference)
+                            thisTrainer.download()
+                            DataServer.trainerDic[snap!.reference.documentID] = thisTrainer
                             self.gotUserData()
                         } else {
                             AppDelegate.showError(title: "二维码无效", err: "请与客服联系", of: self)
@@ -107,27 +133,21 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     }
     
     func gotUserData(){
-        let registered = userInfo!["Registered"] as! Int
+        
 
-        if registered == 0{
+        if registered == userStatus.canceled || registered == userStatus.unsigned{
             self.endLoading()
             AppDelegate.showError(title: "此卡不允许注册", err: "此会员卡尚未激活或已被注销，请联系客服(#0105#)", of: self, handler: self.signInCancel)
-        } else if registered == 2{
+        } else if registered == userStatus.signed{
             self.endLoading()
             AppDelegate.showError(title: "用户已存在", err: "此会员卡已经被注册，请直接登录，或联系客服(#0106#)", of: self, handler: self.signInCancel)
             dismiss(animated: true, completion: nil)
         } else {
             self.endLoading()
-            if let usergroup = userInfo?["usergroup"] as? String{
-                if usergroup == "student"{
-                    performSegue(withIdentifier: "password", sender: self)
-                } else {
-                    performSegue(withIdentifier: "special", sender: self)
-                }
+            if AppDelegate.AP().ds?.usergroup == userGroup.student{
+                performSegue(withIdentifier: "password", sender: self)
             } else {
-                self.endLoading()
-                AppDelegate.showError(title: "用户错误", err: "用户组不存在", of: self, handler: self.signInCancel)
-                
+                performSegue(withIdentifier: "special", sender: self)
             }
         }
     }
@@ -158,11 +178,19 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         self.endLoading()
         if let vc = segue.destination as? SigninPasswordViewController{
-            vc.userInfo = self.userInfo
             vc.theUserRefrence = self.theUserRefrence
+            vc.usergroup = self.usergroup
+            vc.region = self.region
+            vc.fname = self.fname
+            vc.lname = self.lname
+            vc.memberID = self.memberID
         } else if let vc = segue.destination as? specialUserSigninViewController{
-            vc.userInfo = self.userInfo
             vc.theUserRefrence = self.theUserRefrence
+            vc.usergroup = self.usergroup
+            vc.region = self.region
+            vc.fname = self.fname
+            vc.lname = self.lname
+            vc.memberID = self.memberID
         }
     }
     

@@ -24,11 +24,11 @@ class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
         db = Firestore.firestore()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
-        print(userInfo)
-        print(userInfo.value(forKey: "First Name")as? String)
-        self.fname = (userInfo.value(forKey: "First Name") as? String) ?? "Name"
-        self.lname = (userInfo.value(forKey: "Last Name") as? String) ?? "Undefine"
-        self.email = (userInfo.value(forKey: "Email") as? String) ?? "email"
+        if let ds = AppDelegate.AP().ds{
+            self.fname = ds.fname
+            self.lname = ds.lname
+            self.email = ds.email
+        }
         
         emailLabel.text = "\(self.fname) \(self.lname)"
         
@@ -67,9 +67,11 @@ class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
                 if let error = error{
                     self.endLoading()
                     AppDelegate.showError(title: "登陆错误", err: error.localizedDescription)
-                }else {
+                } else {
+                    let uuid = UIDevice.current.identifierForVendor!.uuidString
+                    Firestore.firestore().collection("users").document(user!.uid).updateData(["loginDevice" : uuid])
                     self.endLoading()
-                    AppDelegate.AP().login()
+                    AppDelegate.AP().applicationDidStart()
                 }
             })
         } else {

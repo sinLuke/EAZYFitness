@@ -8,18 +8,24 @@
 
 import UIKit
 import Firebase
-class tableStudentSelectionTableViewController: DefaultTableViewController, refreshableVC {
+class tableStudentSelectionTableViewController: DefaultTableViewController {
     
-    
-    var handler:((String?) -> ())!
+    var handler:(([String]) -> ())!
     var listOfStudent:[String] = []
     var listOnlyContainNames = false
+
     var NameOfStudent:[String:String] = [:]
     let _refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let navc = self.navigationController as! SelectionNavigationViewController
+        self.handler = navc.handler
+        self.listOfStudent = navc.listOfStudent
+        self.listOnlyContainNames = navc.listOnlyContainNames
+        
+        self.tableView.allowsMultipleSelection = true
+        
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
         _refreshControl.attributedTitle = NSAttributedString(string: title)
         _refreshControl.addTarget(self, action:
@@ -59,7 +65,7 @@ class tableStudentSelectionTableViewController: DefaultTableViewController, refr
         return listOfStudent.count
     }
     
-    func refresh() {
+    override func refresh() {
         if listOfStudent.count == 0{
             self.dismiss(animated: true)
         } else {
@@ -83,7 +89,7 @@ class tableStudentSelectionTableViewController: DefaultTableViewController, refr
         }
     }
     
-    func reload() {
+    override func reload() {
         self.tableView.reloadData()
         if listOfStudent.count == 0{
             self.dismiss(animated: true)
@@ -112,17 +118,26 @@ class tableStudentSelectionTableViewController: DefaultTableViewController, refr
             cell.nameLabel.text = NameOfStudent[listOfStudent[indexPath.row]] ?? "未知"
             cell.idLabel.text = listOfStudent[indexPath.row]
         }
-        
+        cell.selectionStyle = .default
         return cell
     }
  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.dismiss(animated: true)
-        if let f = self.handler{
-            f(listOfStudent[indexPath.row])
-        }
+        
     }
 
+    @IBAction func doneBtn(_ sender: Any) {
+        self.dismiss(animated: true)
+        if let f = self.handler{
+            var returnList:[String] = []
+            if let selelctedList = self.tableView.indexPathsForSelectedRows{
+                for indexpath in selelctedList{
+                    returnList.append(listOfStudent[indexpath.row])
+                }
+            }
+            f(returnList)
+        }
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

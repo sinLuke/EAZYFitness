@@ -36,11 +36,6 @@ class LoginViewController: DefaultViewController, UITextFieldDelegate {
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vc = segue.destination as? LoginPasswordViewController{
-            vc.userInfo = self.userInfo
-        }
-    }
 
     
     func isValidEmail(testStr:String) -> Bool {
@@ -55,33 +50,12 @@ class LoginViewController: DefaultViewController, UITextFieldDelegate {
     }
     
     @IBAction func nextSetp(_ sender: Any) {
-        print("4")
         if let email = self.emailField.text{
             if isValidEmail(testStr: self.emailField.text!) == false{
-                print("2")
                 AppDelegate.showError(title: "邮箱错误", err: "这不是有效的邮箱")
             } else {
                 self.startLoading()
-                db.collection("users").whereField("Email", isEqualTo: email).getDocuments { (snap, err) in
-                    if let err = err{
-                        self.endLoading()
-                        AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
-                    } else {
-                        if let _snap = snap{
-                            if _snap.documents.count == 0{
-                                self.endLoading()
-                                AppDelegate.showError(title: "邮箱错误", err: "未找到该用户")
-                            } else {
-                                self.endLoading()
-                                self.userInfo = _snap.documents[0].data() as NSDictionary
-                                self.performSegue(withIdentifier: "next", sender: self)
-                            }
-                        } else {
-                            print("snap")
-                        }
-                    }
-                }
-                
+                DataServer.initfunc(email: email)
             }
         } else {
             print("3")

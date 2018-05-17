@@ -9,6 +9,8 @@
 import UIKit
 
 class AdminRequestViewCell: UICollectionViewCell {
+    
+    @IBOutlet weak var waitView: UIActivityIndicatorView!
     @IBOutlet weak var requestTitle: UILabel!
     @IBOutlet weak var requestLabel: UILabel!
     

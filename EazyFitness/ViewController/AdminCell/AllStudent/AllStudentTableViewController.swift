@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class AllStudentTableViewController: DefaultTableViewController, UISearchResultsUpdating, refreshableVC {
+class AllStudentTableViewController: DefaultTableViewController, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filterSearchController(searchBar: searchController.searchBar)
     }
@@ -29,7 +29,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     
     private let searchController = UISearchController(searchResultsController: nil)
     
-    func refresh() {
+    override func refresh() {
         for i in 1001...2000{
             db.collection("student").document("\(i)").getDocument { (snap, err) in
                 if let err = err {
@@ -44,34 +44,14 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                         } else {
                             self.studentEmptyList["\(i)"] = nil
                             self.FstudentEmptyList["\(i)"] = nil
-                            switch AppDelegate.AP().usergroup{
-                            case "mississauga":
-                                if doc.data()!["region"] as? String == "mississauga"{
-                                    self.studentList["\(i)"] = doc.data()
-                                    self.FstudentList["\(i)"] = doc.data()
-                                    self.studentRefList["\(i)"] = doc.reference
-                                }
-                            case "waterloo":
-                                if doc.data()!["region"] as? String == "waterloo"{
-                                    self.studentList["\(i)"] = doc.data()
-                                    self.FstudentList["\(i)"] = doc.data()
-                                    self.studentRefList["\(i)"] = doc.reference
-                                }
-                            case "scarborough":
-                                if doc.data()!["region"] as? String == "scarborough"{
-                                    self.studentList["\(i)"] = doc.data()
-                                    self.FstudentList["\(i)"] = doc.data()
-                                    self.studentRefList["\(i)"] = doc.reference
-                                }
-                            case "super":
+                            
+                            if let _region = doc.data()!["region"] as? String, enumService.toRegion(s: _region) == AppDelegate.AP().region || AppDelegate.AP().region == userRegion.All{
                                 self.studentList["\(i)"] = doc.data()
                                 self.FstudentList["\(i)"] = doc.data()
                                 self.studentRefList["\(i)"] = doc.reference
-                            default:
+                            } else {
                                 AppDelegate.showError(title: "无法确定用户组", err: "请重新登录", handler:AppDelegate.AP().signout)
                             }
-                            
-                            
                         }
                         
                     } else {
@@ -84,7 +64,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         }
     }
     
-    func reload() {
+    override func reload() {
         self.tableView.reloadData()
     }
     

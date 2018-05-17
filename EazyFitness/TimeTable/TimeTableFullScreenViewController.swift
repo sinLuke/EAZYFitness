@@ -11,7 +11,7 @@ import Firebase
 
 class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDelegate {
     var showDate:Date!
-    var collectionRef: [String: CollectionReference]!
+    var StudentCourseList: [String: [ClassObj]]!
     let _refreshControl = UIRefreshControl()
     @IBOutlet weak var noCourseLabel: UIView!
     @IBOutlet weak var timetableView: UIScrollView!
@@ -44,14 +44,14 @@ class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDele
         }
     }
     
-    func refresh() {
+    override func refresh() {
         self.startLoading()
         noCourseLabel.isHidden = true
         if let existTimetable = timetable{
             existTimetable.removeFromSuperview()
         }
         timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
-        TimeTable.makeTimeTable(on: timetable!, withRef: collectionRef, startoftheweek: showDate.startOfWeek(), handeler: self.resizeViews)
+        TimeTable.makeTimeTabel(on: timetable!, with: self.StudentCourseList, startoftheweek: showDate.startOfWeek(), handeler: self.resizeViews)
         timetableView.addSubview(timetable!)
     }
     
@@ -103,7 +103,7 @@ class TimeTableFullScreenViewController: DefaultViewController, UIScrollViewDele
             } else {
                 dvc.title = "下\(self.title ?? "周")"
             }
-            dvc.collectionRef = self.collectionRef
+            dvc.StudentCourseList = self.StudentCourseList
         }
     }
 

@@ -11,7 +11,6 @@ import Firebase
 
 class specialUserSigninViewController: DefaultViewController, UITextFieldDelegate{
     
-    var userInfo:[String:Any]!
     var db: Firestore!
     
     @IBOutlet weak var emailField: UITextField!
@@ -20,23 +19,28 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     
     @IBOutlet weak var fnameField: UITextField!
     @IBOutlet weak var lnameField: UITextField!
-    @IBOutlet weak var usergroup: UILabel!
+    @IBOutlet weak var usergroupLabel: UILabel!
     
     var Userdata: [String:Any] = [:]
     
     var theUserRefrence: DocumentReference!
+    var usergroup:userGroup!
+    var region:userRegion!
+    var fname:String!
+    var lname:String!
+    var memberID:String!
     
     override func viewDidLoad() {
         
         db = Firestore.firestore()
-        
+        self.fnameField.text = fname
+        self.lnameField.text = lname
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
-        
-        if let ug = userInfo!["usergroup"] as? String{
-            usergroup.text = ug
+        if let ug = self.usergroup{
+            usergroupLabel.text = enumService.toDescription(e: ug)
         } else {
-            AppDelegate.showError(title: "发生未知错误", err: "请与技术人员联系", handler: self.cancelfunc)
+            AppDelegate.showError(title: "发生未知错误", err: "无法识别用户组1", handler: self.cancelfunc)
         }
         super.viewDidLoad()
         
@@ -77,19 +81,26 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
             if let cuser = Auth.auth().currentUser{
                 self.db.collection("users").document(cuser.uid).setData(self.Userdata)
                 if let _theUserRefrence = theUserRefrence{
-                    _theUserRefrence.updateData(["Registered": 2])
+                    if let cu = Auth.auth().currentUser{
+                        _theUserRefrence.updateData(["Registered": 2])
+                        _theUserRefrence.updateData(["uid" : cu.uid])
+                    }
                 }
-                switch usergroup.text{
-                case "Super":
-                    AppDelegate.AP().usergroup = "super"
-                    AppDelegate.resetMainVC(with: "super")
-                case "trainer":
-                    AppDelegate.AP().usergroup = "trainer"
-                    AppDelegate.AP().getAllMystudent()
-                    AppDelegate.resetMainVC(with: "trainer")
-                default:
-                    AppDelegate.resetMainVC(with: "admin")
+                
+                if let ug = self.usergroup, let rg = self.region{
+                    AppDelegate.AP().group = ug
+                    AppDelegate.AP().region = rg
+                    switch ug{
+                    case userGroup.trainer:
+                        AppDelegate.resetMainVC(with: "trainer")
+                    default:
+                        AppDelegate.resetMainVC(with: "admin")
+                    }
+                } else {
+                    AppDelegate.showError(title: "发生未知错误", err: "无法识别用户组2", handler: self.cancelfunc)
                 }
+            } else {
+                AppDelegate.showError(title: "注册失败", err: "请联系客服", handler: self.cancelfunc)
             }
         }
     }
@@ -103,24 +114,17 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     self.password2Field.text = ""
                 } else {
                     if let password = passwordField.text{
-                        if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = usergroup.text, let cardID = userInfo["MemberID"] as? String, let email = self.emailField.text{
+                        if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = self.usergroup, let cardID = self.memberID, let email = self.emailField.text{
                             self.startLoading()
+                            let uuid = UIDevice.current.identifierForVendor!.uuidString
                             self.Userdata = [
-                                "First Name": fname,
-                                "Last Name": lname,
-                                "MemberID": cardID,
-                                "Type": ug,
-                                "Email": email
-                            ]
-                            Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
-                        } else if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = usergroup.text, let email = self.emailField.text{
-                            self.startLoading()
-                            self.Userdata = [
-                                "First Name": fname,
-                                "Last Name": lname,
-                                "MemberID": "0",
-                                "Type": ug,
-                                "Email": email
+                                "firstName": fname,
+                                "lastName": lname,
+                                "memberID": cardID,
+                                "usergroup": enumService.toString(e: ug),
+                                "region": enumService.toString(e: self.region),
+                                "email": email,
+                                "loginDevice": uuid
                             ]
                             Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
                         } else {
