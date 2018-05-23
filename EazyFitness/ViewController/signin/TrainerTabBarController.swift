@@ -9,6 +9,8 @@
 import UIKit
 
 class TrainerTabBarController: UITabBarController {
+    
+    var thisTrainer:EFTrainer!
 
     override func viewDidLoad() {
         super.viewDidLoad()

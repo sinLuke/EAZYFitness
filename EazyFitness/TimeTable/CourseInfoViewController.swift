@@ -12,13 +12,15 @@ import Firebase
 class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var noCourseLabel: UIView!
-    var collectionRef: [String: CollectionReference]!
-    var 用来加课的refrence: [CollectionReference] = []
+    
+    var thisTrainer:EFTrainer!
+    var studentListToManageCourse:[EFStudent] = []
+    var StudentCourseList:[String:[EFCourse]] = [:]
+    
     let _refreshControl = UIRefreshControl()
     var _gesture:UIGestureRecognizer!
     @IBOutlet weak var timetableView: UIScrollView!
     var timetable:TimeTableView?
-    var StudentCourseList:[String:[ClassObj]]!
     
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -48,8 +50,8 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     func copyThisCourseFromThisWeel(){
         var ref:[DocumentReference] = []
-        for refs in self.用来加课的refrence{
-            ref.append(refs.parent!)
+        for stduent in self.studentListToManageCourse{
+            ref.append(stduent.ref)
         }
         self.copyCourseFromThisWeel(ref:ref)
     }
@@ -83,7 +85,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
                                     }
                                 }
                                 if allSame {
-                                    if let cMEmeberId = AppDelegate.AP().currentMemberID{
+                                    if let cMEmeberId = AppDelegate.AP().ds?.memberID{
                                         let courseRef:DocumentReference!
                                         print(doc.data())
                                         if ref.count == 1 {
@@ -218,7 +220,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if 用来加课的refrence.count == 1{
+        if self.studentListToManageCourse.count == 1{
             titleLabel.text = "添加单人课"
         } else {
             titleLabel.text = "添加多人课"
@@ -274,24 +276,9 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
-        if let cMEmeberId = AppDelegate.AP().currentMemberID{
-            if 用来加课的refrence.count == 1 {
-                let courseRef = Firestore.firestore().collection("course").addDocument(data: ["note" : courseNoteField.text ?? "无备注", "amount": 准备增加, "date": self.courseDatePicker.date, "type": enumService.toString(e: courseType.general)])
-                let studentRecordRef = 用来加课的refrence[0].addDocument(data: ["ref": courseRef, "status":enumService.toString(e: courseStatus.waitForStudent), "trainer":Firestore.firestore().collection("trainer").document(cMEmeberId)])
-                courseRef.collection("trainee").addDocument(data: ["ref" : studentRecordRef])
-                _ = self.navigationController?.popViewController(animated: true)
-            } else {
-                let courseRef = Firestore.firestore().collection("course").addDocument(data: ["note" : courseNoteField.text ?? "无备注", "amount": 准备增加, "date": self.courseDatePicker.date, "type": enumService.toString(e: courseType.multiple)])
-                for ref in 用来加课的refrence{
-                    let studentRecordRef = ref.addDocument(data: ["ref": courseRef, "status":enumService.toString(e: courseStatus.waitForStudent), "trainer":Firestore.firestore().collection("trainer").document(cMEmeberId)])
-                    courseRef.collection("trainee").addDocument(data: ["ref" : studentRecordRef])
-                }
-                _ = self.navigationController?.popViewController(animated: true)
-            }
-            
-        } else {
-            AppDelegate.showError(title: "添加课程时遇到错误", err: "无法获取教练ID")
-        }
+        EFStudent.addCourse(of: self.studentListToManageCourse, date: self.courseDatePicker.date, amount: 准备增加, note: courseNoteField.text ?? "无备注", trainer: thisTrainer.ref, status: courseStatus.waitForStudent)
+        
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func 减少(_ sender: Any) {

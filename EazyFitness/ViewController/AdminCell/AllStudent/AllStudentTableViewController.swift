@@ -14,7 +14,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         filterSearchController(searchBar: searchController.searchBar)
     }
     
-    
+    var new = false
     var db:Firestore!
     var studentList:[String:String] = [:]
     var studentEmptyList:[String] = []
@@ -30,9 +30,12 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     
     override func refresh() {
         AppDelegate.AP().ds?.download()
+    }
+    
+    override func reload() {
         FstudentEmptyList = []
         studentEmptyList = []
-
+        
         for i in 1001...2000{
             let stringIndex: String = "\(i)"
             if let thisStudent = DataServer.studentDic[stringIndex]{
@@ -43,9 +46,6 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                 FstudentEmptyList.append(stringIndex)
             }
         }
-    }
-    
-    override func reload() {
         self.tableView.reloadData()
     }
     
@@ -57,7 +57,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, *), UIScreen.main.bounds.height >= 580 {
             self.navigationController?.navigationBar.prefersLargeTitles = true
         } else {
         }
@@ -127,7 +127,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "studentCell", for: indexPath) as! AllStudentTableViewCell
         if indexPath.section == 0{
-            if let memberID = self.FstudentList[Array(self.FstudentList.keys)[indexPath.row]]{
+            if let memberID = self.FstudentList[Array(self.FstudentList.keys.sorted())[indexPath.row]]{
                 if let student = DataServer.studentDic[memberID]{
                     cell.nameLabel.text = student.name
                     cell.IDLabel.text = student.memberID
@@ -176,14 +176,18 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         self.FstudentEmptyList = []
         
         self.FstudentList = self.studentList.filter({(theKey, theValue) -> Bool in
+            
             if theKey.lowercased().contains(searchText){
+                print(theKey)
                 return true
             } else {
                 if let _student = DataServer.studentDic[theValue]{
-                    return (_student.name.lowercased().contains(searchText) ||
-                        enumService.toString(e: _student.region).lowercased().contains(searchText) ||
-                        _student.memberID.lowercased().contains(searchText) ||
-                        enumService.toDescription(e: _student.registered).contains(searchText))
+                    let namecontain = _student.name.lowercased().contains(searchText)
+                    let regioncontain = enumService.toString(e: _student.region).lowercased().contains(searchText)
+                    let memberIDcontain = _student.memberID.lowercased().contains(searchText)
+                    let registeredcontain = enumService.toDescription(e: _student.registered).contains(searchText)
+                    print("\(namecontain) \(regioncontain) \(memberIDcontain) \(registeredcontain)")
+                    return (namecontain || regioncontain || memberIDcontain || registeredcontain)
                 } else {
                     return false
                 }
@@ -198,16 +202,18 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
             self.FstudentList = self.studentList
             self.FstudentEmptyList = self.studentEmptyList
         }
-        self.reload()
+        self.tableView.reloadData()
     }
     
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if indexPath.section == 0{
-            if let memberID = self.FstudentList[Array(self.FstudentList.keys)[indexPath.row]]{
+            if let memberID = self.FstudentList[Array(self.FstudentList.keys.sorted())[indexPath.row]]{
                 if let student = DataServer.studentDic[memberID]{
                     self.selected = student
                     self.selectedName = student.name
+                    self.new = false
                     self.performSegue(withIdentifier: "detail", sender: self)
                 } else {
                     AppDelegate.showError(title: "未知错误", err: "发生未知错误")
@@ -229,6 +235,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                 self.selected = EFStudent.addStudent(at: memberID, in: userRegion.Mississauga)
             }
             self.selectedName = "创建新的记录"
+            self.new = true
             self.performSegue(withIdentifier: "detail", sender: self)
         }
     }
@@ -237,6 +244,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         if let dvc = segue.destination as? AllStudentDetailViewController{
             dvc.navigationItem.title = self.selectedName
             dvc.thisStudent = self.selected
+            dvc.new = self.new
         }
     }
     

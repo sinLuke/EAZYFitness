@@ -45,6 +45,13 @@ class EFTrainer: EFData {
                     self.ready = true
                     print("download")
                     AppDelegate.reload()
+                    
+                    for studentRef in self.trainee{
+                        let newStudent = EFStudent(with: studentRef)
+                        newStudent.download()
+                        print(studentRef)
+                        DataServer.studentDic[studentRef.documentID] = newStudent
+                    }
                 }
             }
         }
@@ -66,6 +73,12 @@ class EFTrainer: EFData {
                 AppDelegate.reload()
             }
         }
+        
+    }
+    
+    func finishACourse(By courseRef:DocumentReference){
+        ref.collection("finish").document(courseRef.documentID).setData(["ref" : courseRef])
+        self.download()
     }
     
     class func addTrainer(at memberID:String, in region:userRegion) -> EFTrainer{
@@ -111,7 +124,7 @@ class EFTrainer: EFData {
                 "goal":self.goal]) { (_) in
                     AppDelegate.endLoading()
                     AppDelegate.showError(title: "上传成功", err: "对\(self.name)的修改上传成功")
-                    AppDelegate.reload()
+                    self.download()
             }
         }
     }

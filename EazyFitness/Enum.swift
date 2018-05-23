@@ -1,4 +1,8 @@
+import UIKit
+
 enum courseStatus {
+    case decline
+    case waitForTrainer
     case waitForStudent
     case approved
     case scaned
@@ -46,6 +50,7 @@ enum requestType {
     case studentRemove
     case trainerRemove
     case studentAddValue
+    case other
 }
 
 import Foundation
@@ -74,6 +79,10 @@ class enumService: NSObject {
     }
     class func toString(e:courseStatus) -> String{
         switch e {
+        case .decline:
+            return "decline"
+        case .waitForTrainer:
+            return "waitForTrainer"
         case .waitForStudent:
             return "waitForStudent"
         case .approved:
@@ -134,6 +143,8 @@ class enumService: NSObject {
     
     class func toDescription(e:courseStatus) -> String{
         switch e {
+        case .decline:
+            return "学生已拒绝"
         case .waitForStudent:
             return "等待学生同意"
         case .approved:
@@ -150,6 +161,233 @@ class enumService: NSObject {
             return "没带卡"
         case .other:
             return "其他情况"
+        case .waitForTrainer:
+            return "等待教练同意"
+        }
+    }
+    
+    class func toColor(e:courseStatus) -> UIColor{
+        switch e {
+        case .decline:
+            return UIColor.red
+        case .waitForStudent:
+            return UIColor.gray
+        case .approved:
+            return UIColor.black
+        case .scaned:
+            return HexColor.green
+        case .ill:
+            return HexColor.Red
+        case .noStudent:
+            return HexColor.Red
+        case .noTrainer:
+            return HexColor.Red
+        case .noCard:
+            return HexColor.Red
+        case .other:
+            return HexColor.Blue
+        case .waitForTrainer:
+            return UIColor.gray
+        }
+    }
+    
+    class func toDescription(d:[courseStatus]) -> String{
+        if d.count == 1{
+            return enumService.toDescription(e: d[0])
+        } else {
+            var allWaitForTrainer = true
+            var allWaitForStudent = true
+            var existWaitForStudent = false
+            var allApproved = true
+            var existApproved = true
+            var allScaned = true
+            var allNoTrainer = true
+            var existException = false
+            var existScanned = false
+            for e in d{
+                switch e {
+                case .decline:
+                    return "有学生拒绝"
+                case .waitForTrainer:
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                case .waitForStudent:
+                    allWaitForTrainer = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existWaitForStudent = true
+                case .approved:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existApproved = true
+                case .scaned:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allNoTrainer = false
+                    existScanned = true
+                case .ill:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                case .noStudent:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                case .noTrainer:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    existException = true
+                case .noCard:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                case .other:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                }
+            }
+            if existException{
+                return "有特殊情况"
+            } else if allWaitForTrainer {
+                return "等待教练同意"
+            } else if allWaitForStudent {
+                return "等待所有学生同意"
+            } else if allApproved {
+                return "所有学生已同意"
+            } else if existWaitForStudent {
+                return "有学生尚未同意"
+            } else if allScaned {
+                return "已全部扫描"
+            } else if allNoTrainer {
+                return "教练未到"
+            } else if ((existScanned || existException) && existWaitForStudent){
+                return "有人未同意但有人已扫码"
+            } else if ((existScanned || existException) && existApproved){
+                return "没有全部扫码"
+            } else {
+                return "未知情况"
+            }
+        }
+    }
+    
+    class func toColor(d:[courseStatus]) -> UIColor{
+        if d.count == 1{
+            return enumService.toColor(e: d[0])
+        } else {
+            var allWaitForTrainer = true
+            var allWaitForStudent = true
+            var existWaitForStudent = false
+            var allApproved = true
+            var existApproved = true
+            var allScaned = true
+            var allNoTrainer = true
+            var existException = false
+            var existScanned = false
+            for e in d{
+                switch e {
+                case .decline:
+                    return UIColor.red
+                case .waitForTrainer:
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                case .waitForStudent:
+                    allWaitForTrainer = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existWaitForStudent = true
+                case .approved:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existApproved = true
+                case .scaned:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allNoTrainer = false
+                    existScanned = true
+                case .ill:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                case .noStudent:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                case .noTrainer:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    existException = true
+                case .noCard:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                case .other:
+                    allWaitForTrainer = false
+                    allWaitForStudent = false
+                    allApproved = false
+                    allScaned = false
+                    allNoTrainer = false
+                    existException = true
+                }
+            }
+            if existException{
+                return HexColor.Red
+            } else if allWaitForTrainer {
+                return UIColor.gray
+            } else if allWaitForStudent {
+                return UIColor.gray
+            } else if allApproved {
+                return UIColor.black
+            } else if existWaitForStudent {
+                return HexColor.Blue
+            } else if allScaned {
+                return HexColor.green
+            } else if allNoTrainer {
+                return HexColor.Red
+            } else if ((existScanned || existException) && existWaitForStudent){
+                return HexColor.yellow
+            } else if ((existScanned || existException) && existApproved){
+                return HexColor.yellow
+            } else {
+                return HexColor.yellow
+            }
         }
     }
     
@@ -316,6 +554,10 @@ class enumService: NSObject {
     
     class func toCourseStatus(s:String) -> courseStatus{
         switch s {
+        case "decline":
+            return courseStatus.decline
+        case "waitForTrainer":
+            return courseStatus.waitForTrainer
         case "waitForStudent":
             return courseStatus.waitForStudent
         case "approved":
@@ -334,6 +576,57 @@ class enumService: NSObject {
             return courseStatus.other
         default:
             return courseStatus.other
+        }
+    }
+    
+    class func toRequestType(s:String) -> requestType{
+        switch s {
+        case "studentAddValue":
+            return .studentAddValue
+        case "studentApproveCourse":
+            return .studentApproveCourse
+        case "studentRemove":
+            return .studentRemove
+        case "trainerRemove":
+            return .trainerRemove
+        case "trainerApproveCourse":
+            return .trainerApproveCourse
+        default:
+            return .other
+        }
+    }
+    
+    class func toString(e:requestType) -> String{
+        switch e {
+        case .studentAddValue:
+            return "studentAddValue"
+        case .studentApproveCourse:
+            return "studentApproveCourse"
+        case .studentRemove:
+            return "studentRemove"
+        case .trainerRemove:
+            return "trainerRemove"
+        case .trainerApproveCourse:
+            return "trainerApproveCourse"
+        default:
+            return "other"
+        }
+    }
+    
+    class func toDescription(e:requestType) -> String{
+        switch e {
+        case .studentAddValue:
+            return "为学生加课的申请"
+        case .studentApproveCourse:
+            return "添加新课程的申请"
+        case .studentRemove:
+            return "将学生账户删除的申请"
+        case .trainerRemove:
+            return "将教练账户删除的申请"
+        case .trainerApproveCourse:
+            return "为教练添加新课程的申请"
+        default:
+            return "other"
         }
     }
 }

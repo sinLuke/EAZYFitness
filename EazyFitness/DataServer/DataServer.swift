@@ -63,7 +63,6 @@ class DataServer: NSObject {
     }
     
     static func createDataServer(data:[String:Any], uid:String){
-        print(data)
         if let memberID = data["memberID"] as? String,
             let usergroup = data["usergroup"] as? String,
             let region = data["region"] as? String,
@@ -97,30 +96,21 @@ class DataServer: NSObject {
     }
     
     func download(){
+        DataServer.studentDic = [:]
+        DataServer.courseDic = [:]
+        DataServer.trainerDic = [:]
         switch usergroup {
         case .student:
             let _student = EFStudent(with: studentCollection.document(self.memberID))
             _student.download()
-            DataServer.studentDic[self.memberID] = _student
             
+            DataServer.studentDic[self.memberID] = _student
+            AppDelegate.reload()
+            AppDelegate.endLoading()
         case .trainer:
-            trainerCollection.document(self.memberID).collection("trainee").getDocuments { (snap, err) in
-                if let err = err {
-                    AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
-                } else {
-                    self.studentRef = []
-                    for doc in snap!.documents{
-                        let _ref = doc.data()["ref"] as! DocumentReference
-                        self.studentRef.append(_ref)
-                        let _student = EFStudent(with: _ref)
-                        _student.download()
-                        DataServer.studentDic[_ref.documentID] = _student
-                    }
-                    let _trainer = EFTrainer(with: self.trainerCollection.document(self.memberID))
-                    _trainer.download()
-                    DataServer.trainerDic[self.memberID] = _trainer
-                }
-            }
+            let _trainer = EFTrainer(with: self.trainerCollection.document(self.memberID))
+            _trainer.download()
+            DataServer.trainerDic[self.memberID] = _trainer
         case .admin:
             self.studentCollection.getDocuments { (snap, err) in
                 if let err = err {
@@ -133,6 +123,8 @@ class DataServer: NSObject {
                         _student.download()
                         DataServer.studentDic[doc.documentID] = _student
                     }
+                    AppDelegate.reload()
+                    AppDelegate.endLoading()
                 }
             }
             self.trainerCollection.getDocuments { (snap, err) in
@@ -145,6 +137,9 @@ class DataServer: NSObject {
                             _trainer.download()
                             DataServer.trainerDic[doc.documentID] = _trainer
                     }
+
+                    AppDelegate.reload()
+                    AppDelegate.endLoading()
                 }
             }
         default:

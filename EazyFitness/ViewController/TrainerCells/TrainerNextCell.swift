@@ -16,7 +16,6 @@ class TrainerNextCell: UICollectionViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var studentNameLabel: UILabel!
-    @IBOutlet weak var requirChangeBtn: UIButton!
     
 
     

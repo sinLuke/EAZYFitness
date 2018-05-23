@@ -1,18 +1,20 @@
 //
-//  AllStudentCourseDetailViewController.swift
+//  loadingViewController.swift
 //  EazyFitness
 //
-//  Created by Luke on 2018/5/6.
+//  Created by Luke on 2018/5/21.
 //  Copyright © 2018年 luke. All rights reserved.
 //
 
 import UIKit
 
-class AllStudentCourseDetailViewController: UIViewController {
+class loadingViewController: DefaultViewController {
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.startLoading()
         // Do any additional setup after loading the view.
     }
 

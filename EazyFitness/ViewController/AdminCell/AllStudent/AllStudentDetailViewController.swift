@@ -17,6 +17,9 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     @IBOutlet weak var fname: UITextField!
     @IBOutlet weak var lname: UITextField!
     
+    var new = false
+    var back = false
+    
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var registered: UISegmentedControl!
     @IBOutlet weak var region: UISegmentedControl!
@@ -28,12 +31,20 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     
     var _gesture:UIGestureRecognizer!
     
+    override func viewDidAppear(_ animated: Bool) {
+        if back {
+            AppDelegate.showError(title: "该学生不存在", err: "请返回上一页", handler: self.goBack)
+        }
+    }
+    
+    func goBack(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.startLoading()
         self.title = titleName
-        let backButton = UIBarButtonItem(title: "", style: .plain, target: navigationController, action: nil)
-        navigationItem.leftBarButtonItem = backButton
         
         self.region.isEnabled = false
         print(AppDelegate.AP().ds?.region)
@@ -94,7 +105,9 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         thisStudent.goal = Int(goalField.text!)!
         thisStudent.registered = enumService.toUserStatus(i: self.registered.selectedSegmentIndex)
         thisStudent.region = enumService.Region[self.region.selectedSegmentIndex]
+        self.new = false
         self.title = thisStudent.name
+        self.reload()
     }
     
     
@@ -105,6 +118,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
             self.region.insertSegment(withTitle: enumService.RegionName[i], at: i, animated: false)
         }
         self.region.selectedSegmentIndex = enumService.toInt(e: thisStudent.region)
+        reload()
     }
     override func reload() {
 
@@ -117,17 +131,37 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         self.region.selectedSegmentIndex = enumService.toInt(e: thisStudent.region)
         self.registered.selectedSegmentIndex = enumService.toInt(i: thisStudent.registered)
         self.endLoading()
+        
+        if new {
+            purchaseBtn.isHidden = true
+            courseBtn.isHidden = true
+        } else {
+            purchaseBtn.isHidden = false
+            courseBtn.isHidden = false
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dvc = segue.destination as? AllStudentCourseTableViewController{
-            dvc.thisStudent = self.thisStudent
-            dvc.title = "\(self.title!) 的课程"
+        if let dvc = segue.destination as? CourseTableViewController{
+            dvc.thisStudentOrTrainer = self.thisStudent
+            dvc.title = "\(self.thisStudent.name) 的课程"
         }
         if let dvc = segue.destination as? PurchaseTableViewController{
             dvc.thisStudent = self.thisStudent
-            dvc.studentName = self.title
+            dvc.title = self.title
         }
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("here")
+        
+        if new {
+            back = true
+            if thisStudent != nil {
+                thisStudent.ref.delete()
+                DataServer.studentDic.removeValue(forKey: thisStudent.ref.documentID)
+                AppDelegate.AP().ds?.download()
+            }
+        }
+    }
 }

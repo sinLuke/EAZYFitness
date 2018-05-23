@@ -17,11 +17,11 @@ class MessageListTableViewController: UITableViewController {
     var db:Firestore!
     
     func refresh() {
-        if let cMemberID = AppDelegate.AP().currentMemberID{
+        if let cMemberID = AppDelegate.AP().ds?.memberID{
             for studentRef in AppDelegate.AP().studentList{
                 self.getStudentsName(studentID: studentRef.documentID)
             }
-            if AppDelegate.AP().group == userGroup.student{
+            if AppDelegate.AP().ds?.usergroup == userGroup.student{
                 Firestore.firestore().collection("student").document(cMemberID).collection("Message").document("Last").getDocument { (snap, err) in
                     if let err = err{
                         AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
@@ -93,7 +93,7 @@ class MessageListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "message", for: indexPath)
-        if AppDelegate.AP().group! == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             switch indexPath.row{
             case 0:
                 cell.textLabel?.text = "我的教练"
@@ -102,7 +102,7 @@ class MessageListTableViewController: UITableViewController {
                 cell.textLabel?.text = "小助手"
                 cell.detailTextLabel?.text = lastMessageForStudent[1]
             }
-        } else if AppDelegate.AP().group! == userGroup.trainer{
+        } else if AppDelegate.AP().ds?.usergroup == userGroup.trainer{
             if AppDelegate.AP().studentList.count != 0{
                 cell.textLabel?.text = myStudentsName[AppDelegate.AP().studentList[indexPath.row].documentID]
             } else {
@@ -116,16 +116,16 @@ class MessageListTableViewController: UITableViewController {
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if AppDelegate.AP().group! == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             switch indexPath.row{
             case 0:
-                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("Message")
+                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("Message")
                 performSegue(withIdentifier: "message", sender: self)
             default:
-                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().currentMemberID!).collection("AdminMessage")
+                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("AdminMessage")
                 performSegue(withIdentifier: "message", sender: self)
             }
-        } else if AppDelegate.AP().group! == userGroup.trainer{
+        } else if AppDelegate.AP().ds?.usergroup == userGroup.trainer{
             self.prepareRef = AppDelegate.AP().studentList[indexPath.row].collection("Message")
             performSegue(withIdentifier: "message", sender: self)
         }
@@ -190,7 +190,7 @@ class MessageListTableViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? MessageCollectionViewController{
-            if let currentMemberID = AppDelegate.AP().currentMemberID{
+            if let currentMemberID = AppDelegate.AP().ds?.memberID{
                 dvc.colRef = self.prepareRef
             }
         }

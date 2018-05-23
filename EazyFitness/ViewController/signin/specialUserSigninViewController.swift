@@ -82,20 +82,13 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                 self.db.collection("users").document(cuser.uid).setData(self.Userdata)
                 if let _theUserRefrence = theUserRefrence{
                     if let cu = Auth.auth().currentUser{
-                        _theUserRefrence.updateData(["Registered": 2])
+                        _theUserRefrence.updateData(["registered": enumService.toString(e: .signed)])
                         _theUserRefrence.updateData(["uid" : cu.uid])
                     }
                 }
                 
                 if let ug = self.usergroup, let rg = self.region{
-                    AppDelegate.AP().group = ug
-                    AppDelegate.AP().region = rg
-                    switch ug{
-                    case userGroup.trainer:
-                        AppDelegate.resetMainVC(with: "trainer")
-                    default:
-                        AppDelegate.resetMainVC(with: "admin")
-                    }
+                    AppDelegate.AP().applicationDidStart()
                 } else {
                     AppDelegate.showError(title: "发生未知错误", err: "无法识别用户组2", handler: self.cancelfunc)
                 }
@@ -116,17 +109,19 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     if let password = passwordField.text{
                         if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = self.usergroup, let cardID = self.memberID, let email = self.emailField.text{
                             self.startLoading()
-                            let uuid = UIDevice.current.identifierForVendor!.uuidString
-                            self.Userdata = [
-                                "firstName": fname,
-                                "lastName": lname,
-                                "memberID": cardID,
-                                "usergroup": enumService.toString(e: ug),
-                                "region": enumService.toString(e: self.region),
-                                "email": email,
-                                "loginDevice": uuid
-                            ]
-                            Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
+                            if let cuser = Auth.auth().currentUser{
+                                let uuid = UIDevice.current.identifierForVendor!.uuidString
+                                self.Userdata = [
+                                    "firstName": fname,
+                                    "lastName": lname,
+                                    "memberID": cardID,
+                                    "usergroup": enumService.toString(e: ug),
+                                    "region": enumService.toString(e: self.region),
+                                    "email": email,
+                                    "loginDevice": uuid
+                                ]
+                                Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
+                            }
                         } else {
                             AppDelegate.showError(title: "未知错误", err: "信息输入有误，请检查输入的信息。")
                         }

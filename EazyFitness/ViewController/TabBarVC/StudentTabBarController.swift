@@ -10,6 +10,8 @@ import UIKit
 
 class StudentTabBarController: UITabBarController {
 
+    var thisStudent:EFStudent!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

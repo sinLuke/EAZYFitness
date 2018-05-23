@@ -13,4 +13,23 @@ class EFStudentRegistered: EFData {
     var date:Date!
     var approved:Bool!
     var note:String!
+    var amountString:String{
+        get {
+            let float = Float(amount)/2.0
+            if amount%2 == 0{
+                return String(format: "%.0f", float)
+            } else {
+                return String(float)
+            }
+        }
+    }
+    var dateString:String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateStyle = .none
+        timeFormatter.timeStyle = .short
+        return "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
+    }
 }

@@ -9,9 +9,20 @@
 import UIKit
 
 class ThisMonthViewCell: UICollectionViewCell {
-    @IBOutlet weak var monthFinishedLabel: UILabel!
+    
+    @IBOutlet weak var allCourseFinishedLabel: UILabel!
+    @IBOutlet weak var AllTimeLabel: UILabel!
+    @IBOutlet weak var thisMonthFinishedLabel: UILabel!
+    @IBOutlet weak var goalLabel: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
+    
     
     @IBAction func goCourseRecord(_ sender: Any) {
+        
+    }
+    
+    override func awakeFromNib() {
+        //progressBar.transform = progressBar.transform.scaledBy(x: 1, y: 16)
     }
     
 }

@@ -11,6 +11,9 @@ import UIKit
 class TrainerMonthCell: UICollectionViewCell {
     @IBOutlet weak var monthFinishedLabel: UILabel!
     @IBOutlet weak var totalCourse: UILabel!
+    @IBOutlet weak var goal: UILabel!
+    @IBOutlet weak var progress: UIProgressView!
+    
     @IBAction func goCourseRecord(_ sender: Any) {
     }
 }

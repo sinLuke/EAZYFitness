@@ -13,6 +13,8 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
 
     var thisTrainer:EFTrainer!
     var titleName:String!
+    var new = false
+    var back = false
     
     @IBOutlet weak var fname: UITextField!
     @IBOutlet weak var lname: UITextField!
@@ -25,12 +27,20 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     @IBOutlet weak var btnManager: UIButton!
     var _gesture:UIGestureRecognizer!
     
+    override func viewDidAppear(_ animated: Bool) {
+        if back {
+            AppDelegate.showError(title: "该教练不存在", err: "请返回上一页", handler: self.goBack)
+        }
+    }
+    
+    func goBack(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.startLoading()
         self.title = titleName
-        let backButton = UIBarButtonItem(title: "", style: .plain, target: navigationController, action: nil)
-        navigationItem.leftBarButtonItem = backButton
         
         self.region.isEnabled = false
         
@@ -102,7 +112,9 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
         thisTrainer.goal = Int(goalField.text!)!
         thisTrainer.registered = enumService.toUserStatus(i: self.registered.selectedSegmentIndex)
         thisTrainer.region = enumService.Region[self.region.selectedSegmentIndex]
+        self.new = false
         self.title = thisTrainer.name
+        self.reload()
     }
     
     override func refresh() {
@@ -112,6 +124,7 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
             self.region.insertSegment(withTitle: enumService.RegionName[i], at: i, animated: false)
         }
         self.region.selectedSegmentIndex = enumService.toInt(e: thisTrainer.region)
+        reload()
     }
     
     override func reload() {
@@ -124,6 +137,12 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
         self.region.selectedSegmentIndex = enumService.toInt(e: thisTrainer.region)
         self.registered.selectedSegmentIndex = enumService.toInt(i: thisTrainer.registered)
         self.endLoading()
+        
+        if new {
+            btnManager.isHidden = true
+        } else {
+            btnManager.isHidden = false
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -131,6 +150,20 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
             dvc.title = "\(self.title!) 的学生"
             dvc.thisTrainer = self.thisTrainer
             
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
+        print(new)
+        print(back)
+        if new {
+            back = true
+            if thisTrainer != nil {
+                thisTrainer.ref.delete()
+                DataServer.trainerDic.removeValue(forKey: thisTrainer.ref.documentID)
+                AppDelegate.AP().ds?.download()
+            }
         }
     }
 }

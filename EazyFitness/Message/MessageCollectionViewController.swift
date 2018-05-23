@@ -36,9 +36,9 @@ class MessageCollectionViewController: DefaultViewController,UICollectionViewDat
                     for docs in doctList{
                         if docs.documentID != "Last"{
                             self.MessageList.append(docs.data())
-                            if (docs.data()["byStudent"] as! Bool == true) && AppDelegate.AP().group != userGroup.student{
+                            if (docs.data()["byStudent"] as! Bool == true) && AppDelegate.AP().ds?.usergroup != userGroup.student{
                                 docs.reference.updateData(["Read" : true])
-                            } else if  (docs.data()["byStudent"] as! Bool == false) && AppDelegate.AP().group == userGroup.student{
+                            } else if  (docs.data()["byStudent"] as! Bool == false) && AppDelegate.AP().ds?.usergroup == userGroup.student{
                                 docs.reference.updateData(["Read" : true])
                             }
                         }
@@ -93,7 +93,7 @@ class MessageCollectionViewController: DefaultViewController,UICollectionViewDat
     }
     
     @IBAction func sendMessageAction(_ sender: Any) {
-        colRef.addDocument(data: ["Read" : false, "Text" : self.messageBox.text, "Time":Date(), "byStudent":(AppDelegate.AP().group == userGroup.student)])
+        colRef.addDocument(data: ["Read" : false, "Text" : self.messageBox.text, "Time":Date(), "byStudent":(AppDelegate.AP().ds?.usergroup == userGroup.student)])
         colRef.document("Last").setData(["Text" : self.messageBox.text, "Time":Date()])
         self.messageBox.text = ""
     }
@@ -184,7 +184,7 @@ class MessageCollectionViewController: DefaultViewController,UICollectionViewDat
         timeFormatter.dateStyle = .none
         timeFormatter.timeStyle = .short
         
-        if ((MessageDic["byStudent"] as! Bool) == true && AppDelegate.AP().group == userGroup.student) || ((MessageDic["byStudent"] as! Bool) == false && AppDelegate.AP().group != userGroup.trainer){
+        if ((MessageDic["byStudent"] as! Bool) == true && AppDelegate.AP().ds?.usergroup == userGroup.student) || ((MessageDic["byStudent"] as! Bool) == false && AppDelegate.AP().ds?.usergroup != userGroup.trainer){
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "send", for: indexPath) as! SendTextCell
             if let date = MessageDic["Time"] as? Date{
                 if (MessageDic["Read"] as? Bool) == true {

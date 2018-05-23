@@ -11,22 +11,25 @@ import Firebase
 
 class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
+    var theStudentOrTrainer:Any!
+    var startoftheweek:Date!
     
-    
+    var tableHeightValue:CGFloat = 350
+    @IBOutlet weak var navBar: UINavigationBar!
+    @IBOutlet weak var tableHeight: NSLayoutConstraint!
     @IBOutlet weak var tableViewContainer: UIView!
     @IBOutlet weak var addCourseButton: UIBarButtonItem!
     var db:Firestore!
     var cMemberID:String?
-    var collectionRef: [String: CollectionReference]!
+    
     let _refreshControl = UIRefreshControl()
     let __refreshControl = UIRefreshControl()
     
     @IBOutlet weak var noCourseLabel: UIView!
     @IBOutlet weak var timetableView: UIScrollView!
-    var allCourseList:[String:ClassObj] = [:]
-    var StudentCourseList:[String:[ClassObj]] = [:]
-    var dref:Any!
-    var sdref:[CollectionReference] = []
+    var allCourseList:[String:EFCourse] = [:]
+    var StudentCourseList:[String:[EFCourse]] = [:]
+    var studentListToManageCourse:[EFStudent] = []
     @IBOutlet weak var timeTableCourseTable: UITableView!
     
     
@@ -46,6 +49,12 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         return StudentCourseList[Array(StudentCourseList.keys)[section]]!.count
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if scrollView == self.timetableView{
+            self.tableHide()
+        }
+    }
+    
     func prepareCourseNumber(_ int:Int) -> String{
         let float = Float(int)/2.0
         if int%2 == 0{
@@ -60,16 +69,13 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             let i = Array(StudentCourseList.keys)[indexPath.section]
             if let courseObjs = StudentCourseList[i]{
                 let courseObj = courseObjs[indexPath.row]
-                if let ref = courseObj.courseRef{
-                    ref.delete()
-                    for studentRef in courseObj.student{
-                        studentRef.delete()
-                    }
-                    StudentCourseList[i]!.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                } else {
-                    AppDelegate.showError(title: "无法删除", err: "找不到对应的文档", of: self)
+                let ref = courseObj.ref
+                ref.delete()
+                for studentCourseRef in courseObj.traineeStudentCourseRef{
+                    studentCourseRef.delete()
                 }
+                StudentCourseList[i]!.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
             }
             
         }
@@ -87,92 +93,71 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             let timeFormatter = DateFormatter()
             timeFormatter.dateStyle = .none
             timeFormatter.timeStyle = .short
-            if let date = courseObj.date{
-                cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
-            }
-            
-            
+            let date = courseObj.date
+            cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
+
             cell.typeLabel.textColor = UIColor.black
             cell.noteLabel.textColor = UIColor.black
             cell.timeLabel.textColor = UIColor.black
             cell.courseLabel.textColor = UIColor.black
             cell.backgroundColor = UIColor.white
             
-            var allapproved = true
-            var allScaned = true
-            var exception = false
-            var notrainer = false
-            for statu in courseObj.status.values{
-                if statu == courseStatus.waitForStudent{
-                    allapproved = false
-                }
-                if statu == courseStatus.ill || statu == courseStatus.noStudent || statu == courseStatus.noTrainer || statu == courseStatus.noCard{
-                    exception = true
-                }
-                if statu != courseStatus.scaned{
-                    allScaned = false
-                }
-                if statu == courseStatus.noTrainer{
-                    notrainer = true
-                }
-            }
-            cell.typeLabel.text = "复杂情况"
-            if !allapproved{
-                cell.typeLabel.text = "等待所有学生同意"
-                cell.typeLabel.textColor = HexColor.gray
-                cell.noteLabel.textColor = HexColor.gray
-                cell.timeLabel.textColor = HexColor.gray
-                cell.courseLabel.textColor = HexColor.gray
-                cell.backgroundColor = HexColor.lightColor
-            }
-            if exception{
-                cell.typeLabel.text = "有异常情况"
-                cell.typeLabel.textColor = HexColor.Red
-            }
-            if notrainer{
-                cell.typeLabel.text = "教练没来"
-                cell.typeLabel.textColor = HexColor.Red
-            }
-            if allScaned{
-                cell.typeLabel.text = "全部扫码通过"
-                cell.backgroundColor = HexColor.Green.withAlphaComponent(0.2)
-            }
-            if courseObj.status.count == 1 {
-                
-                let status = Array(courseObj.status.values)[0]
-                cell.typeLabel.text = enumService.toDescription(e: status)
-                switch status {
-                case .waitForStudent:
-                    cell.typeLabel.textColor = HexColor.gray
-                    cell.noteLabel.textColor = HexColor.gray
-                    cell.timeLabel.textColor = HexColor.gray
-                    cell.courseLabel.textColor = HexColor.gray
-                    cell.backgroundColor = HexColor.lightColor
-                case .ill, .noStudent, .noCard, .noTrainer:
-                    cell.typeLabel.textColor = HexColor.Red
-                case .scaned:
-                    cell.backgroundColor = HexColor.Green.withAlphaComponent(0.2)
-                default:
-                    cell.typeLabel.textColor = UIColor.black
-                }
-            }
+            let statusList = courseObj.getTraineesStatus
+            cell.typeLabel.text = enumService.toDescription(d: statusList)
+            cell.typeLabel.textColor = enumService.toColor(d: statusList)
+        } else {
+            cell.noteLabel.text = "课程读取错误"
         }
         return cell
     }
     
     override func reload() {
-        print("allCourseList")
-        print(allCourseList)
-        for courseObj in Array(self.allCourseList.values){
-            self.StudentCourseList = [:]
-            print("courseObj")
-            print(courseObj.student)
-            print(courseObj.allStudentName)
-            if self.StudentCourseList[courseObj.allStudentName] == nil {
-                self.StudentCourseList[courseObj.allStudentName] = [courseObj]
-            } else {
-                self.StudentCourseList[courseObj.allStudentName]?.append(courseObj)
+        
+        if let existTimetable = timetable{
+            existTimetable.removeFromSuperview()
+        }
+        
+        var timeTableList : [String:[EFCourse]] = [:]
+        
+        for course in Array(DataServer.courseDic.values){
+            var contain = true
+            
+            if let thisTrainer = theStudentOrTrainer as? EFTrainer{
+                for traineeref in course.traineeRef{
+                    if !thisTrainer.trainee.contains(traineeref){
+                        contain = false
+                    }
+                }
+            } else if let thisStudent = theStudentOrTrainer as? EFStudent{
+                if course.traineeRef.contains(thisStudent.ref){
+                    contain = true
+                } else {
+                    contain = false
+                }
             }
+            
+            if course.date < self.startoftheweek.startOfWeek() || course.date > self.startoftheweek.endOfWeek() {
+                contain = false
+            }
+            if contain{
+                
+                if timeTableList[course.getTraineesNames] == nil {
+                    timeTableList[course.getTraineesNames] = [course]
+                } else {
+                    timeTableList[course.getTraineesNames]?.append(course)
+                }
+            }
+        }
+
+        if timeTableList.count == 1{
+            if AppDelegate.AP().ds?.usergroup == userGroup.student{
+                self.StudentCourseList = [:]
+                self.StudentCourseList["我的课程"] = timeTableList.first!.value
+            } else {
+                self.StudentCourseList = timeTableList
+            }
+        } else {
+            self.StudentCourseList = timeTableList
         }
         
         for key in self.StudentCourseList.keys{
@@ -180,11 +165,13 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                 return a.date < b.date
             })
         }
-        timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
-        TimeTable.makeTimeTabel(on: timetable!, with: self.StudentCourseList, startoftheweek: Date().startOfWeek(), handeler: self.resizeViews)
-        timetableView.addSubview(timetable!)
 
         self.timeTableCourseTable.reloadData()
+        
+        timetable = TimeTableView(frame: CGRect(x: 0, y: 0, width: timetableView.frame.width, height: timetableView.frame.height))
+        TimeTable.makeTimeTabel(on: timetable!, with: self.StudentCourseList, startoftheweek: startoftheweek.startOfWeek(), handeler: self.resizeViews)
+        timetableView.addSubview(timetable!)
+
     }
     
     @objc func courseTapped(_ gesture:UITapGestureRecognizer){
@@ -218,12 +205,8 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         }
     }
     
-    @IBAction func fullscreen(_ sender: Any) {
-        performSegue(withIdentifier: "full", sender: self)
-    }
-    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if AppDelegate.AP().group == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             return nil
         } else {
             if self.StudentCourseList[Array(self.StudentCourseList.keys)[section]]?.count == 0{
@@ -235,176 +218,35 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     override func refresh() {
+        for student in self.studentListToManageCourse{
+            student.download()
+        }
         self.noCourseLabel.isHidden = true
-        self.startLoading()
         noCourseLabel.isHidden = true
-        if let existTimetable = timetable{
-            existTimetable.removeFromSuperview()
-        }
         
-        if let _dref = dref as? CollectionReference{
-            _dref.getDocuments { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "读取购买时发生错误", err: err.localizedDescription)
-                    self.endLoading()
-                } else {
-                    if let documentList = snap?.documents{
-                        var CourseList:[ClassObj] = []
-                        for docDic in documentList{
-                            let classObj = ClassObj()
-                            let courseRef = docDic["ref"] as! DocumentReference
-                            classObj.courseRef = courseRef
-                            classObj.trainer = docDic["trainer"] as! DocumentReference
-                            self.getCourseInfo(ref: courseRef, classObj: classObj)
-                            print(CourseList)
-                            CourseList.append(classObj)
-                        }
-                        if documentList.count == 0{
-                            self.noCourseLabel.isHidden = false
-                            self.endLoading()
-                        }
-                        if AppDelegate.AP().group == userGroup.student{
-                            self.StudentCourseList["我的课程"] = CourseList
-                        } else {
-                            self.StudentCourseList["该学员的课程"] = CourseList
-                        }
-                    } else {
-                        self.noCourseLabel.isHidden = false
-                        self.endLoading()
-                    }
-                }
-            }
-        } else if let _dref = dref as? [String: CollectionReference] {
-            self.allCourseList = [:]
-            for refs in Array(_dref.keys){
-                _dref[refs]!.getDocuments { (snap, err) in
-                    if let err = err{
-                        AppDelegate.showError(title: "读取购买时发生错误", err: err.localizedDescription)
-                        self.endLoading()
-                    } else {
-                        if let documentList = snap?.documents{
-                            for docDic in documentList{
-                                let classObj = ClassObj()
-                                let courseRef = docDic["ref"] as! DocumentReference
-                                classObj.courseRef = courseRef
-                                classObj.trainer = docDic["trainer"] as! DocumentReference
-                                self.getCourseInfo(ref: courseRef, classObj: classObj)
-                                self.allCourseList[classObj.courseRef.documentID] = classObj
-                            }
-                            if documentList.count == 0{
-                                self.noCourseLabel.isHidden = false
-                                self.endLoading()
-                            }
-                            self.endLoading()
-                        } else {
-                            self.noCourseLabel.isHidden = false
-                            self.endLoading()
-                        }
-                    }
-                }
-                
-            }
-            if Array(_dref.keys).count == 0{
-                self.noCourseLabel.isHidden = false
-                self.endLoading()
-            }
-        }
-    }
-    
-    func getCourseInfo(ref:DocumentReference, classObj:ClassObj){
-        ref.getDocument { (snap, err) in
-            if let err = err{
-                AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
-                self.endLoading()
-            } else {
-                if let dic = snap!.data(){
-                    print(dic)
-                    classObj.note = dic["note"] as! String
-                    classObj.amount = dic["amount"] as! Int
-                    classObj.date = dic["date"] as! Date
-                    self.getListOfStudentInCourse(ref: ref.collection("trainee"), classObj: classObj)
-                    print("getCourseInfo")
-                } else {
-                    AppDelegate.showError(title: "未知错误", err: "读取课程信息时发生错误")
-                    self.endLoading()
-                    
-                }
-            }
-        }
-    }
-    
-    func getListOfStudentInCourse(ref:CollectionReference, classObj:ClassObj){
-        ref.getDocuments { (snap, err) in
-            if let err = err{
-                AppDelegate.showError(title: "获得上课学员时发生错误", err: err.localizedDescription)
-                self.endLoading()
-            } else {
-                print("getListOfStudentInCourse1")
-                print(snap?.count)
-                for doc in snap!.documents{
-                    if snap!.documents.count == 1{
-                        classObj.type = courseType.general
-                    } else {
-                        classObj.type = courseType.multiple
-                    }
-                    if let studentRef = doc["ref"] as? DocumentReference{
-                        classObj.student.append(studentRef)
-                        studentRef.getDocument(completion: { (snap, err) in
-                            if let err = err{
-                                AppDelegate.showError(title: "读取学员信息时发生错误", err: err.localizedDescription)
-                            } else {
-                                if let StudentDic = snap!.data(){
-                                    print("StudentDic")
-                                    print(StudentDic)
-                                    //classObj.studentName[studentRef.parent.parent!.documentID] = FirestoreService.studentNameInfo[studentRef.parent.parent!.documentID]
-                                    classObj.status[studentRef.parent.parent!.documentID] = enumService.toCourseStatus(s: StudentDic["status"] as! String)
-                                    print("studentName")
-                                    print(classObj.studentName)
-                                    self.reload()
-                                    self.endLoading()
-                                } else {
-                                    AppDelegate.showError(title: "未知错误", err: "读取学员姓名时出现问题")
-                                    self.endLoading()
-                                }
-                            }
-                        })
-                    } else {
-                        AppDelegate.showError(title: "未知错误", err: "读取学员信息时发生错误")
-                        self.endLoading()
-                    }
-                }
-            }
-        }
-        self.endLoading()
+        self.reload()
     }
     
     @IBAction func addCourseAction(_ sender: Any) {
-        
-        
-        if let _ = self.dref as? CollectionReference{
-            self.performSegue(withIdentifier: "courseDetail", sender: self)
-        } else if let _ = self.dref as? [String: CollectionReference]{
+        if let theTrainer = self.theStudentOrTrainer as? EFTrainer{
             let story = UIStoryboard(name: "Main", bundle: nil)
             let vc = story.instantiateViewController(withIdentifier: "selection") as! SelectionNavigationViewController
-            if let dref = dref as? [String:CollectionReference]{
-                var listOfStudent:[String] = []
-                /*
-                for student in FirestoreService.trainerStudentInfo[AppDelegate.AP().currentMemberID!]!{
-                    listOfStudent.append(student.documentID)
+            var listOfStudent:[EFStudent] = []
+            for studentRef in theTrainer.trainee{
+                print(DataServer.studentDic)
+                if let theStudent = DataServer.studentDic[studentRef.documentID]{
+                    listOfStudent.append(theStudent)
                 }
- */
-                //vc.listOfStudent = listOfStudent
-                //vc.listOnlyContainNames = false
-                //vc.handler = self.handleStudentSelection
-                self.present(vc, animated: true)
             }
-            
+            vc.listOfStudent = listOfStudent
+            vc.handler = self.handleStudentSelection
+            self.present(vc, animated: true)
         }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        if AppDelegate.AP().group == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             return false
         } else {
             return true
@@ -415,17 +257,76 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     // Override to support editing the table view.
     
     
+    func tableShow(){
+        var offset = 350 - self.tableHeight.constant
+        if offset < 0 {
+            offset = -offset
+        }
+        self.tableHeight.constant = 350
+        UIView.animate(withDuration: TimeInterval(offset/700)) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func tableHide(){
+        var offset = 44 - self.tableHeight.constant
+        if offset < 0 {
+            offset = -offset
+        }
+        self.tableHeight.constant = 44
+        UIView.animate(withDuration: TimeInterval(offset/700)) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @objc func detectPan(_ recognizer:UIPanGestureRecognizer) {
+        if recognizer.state == .ended || recognizer.state == .cancelled || recognizer.state == .failed{
+            var threshold:CGFloat = 300
+            if self.tableHeight.constant >= 175{
+                threshold = 300
+            } else {
+                threshold = 94
+            }
+            if self.tableHeight.constant >= threshold {
+                self.tableShow()
+            } else {
+                self.tableHide()
+            }
+        } else if recognizer.state == .began{
+            tableHeightValue = self.tableHeight.constant
+        } else {
+            let translation  = recognizer.translation(in: self.view)
+            self.tableHeight.constant = tableHeightValue - translation.y
+            self.view.layoutIfNeeded()
+        }
+    }
+    @objc func detectTap(_ recognizer:UITapGestureRecognizer) {
+        print(detectTap)
+        if self.tableHeight.constant >= 175 {
+            self.tableHide()
+        } else {
+            self.tableShow()
+        }
+    }
     
     override func viewDidLoad() {
         noCourseLabel.isHidden = true
         super.viewDidLoad()
         addCourseButton.tintColor = HexColor.Pirmary
         
-        if AppDelegate.AP().group == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             self.addCourseButton.isEnabled = false
         } else {
             self.addCourseButton.isEnabled = true
         }
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(detectPan))
+        self.navBar.addGestureRecognizer(panGesture)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(detectTap))
+        self.navBar.addGestureRecognizer(tapGesture)
+        
+        tableHeightValue = self.tableHeight.constant
         
         db = Firestore.firestore()
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -455,7 +356,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     override func viewDidAppear(_ animated: Bool) {
         self.refresh()
-        if AppDelegate.AP().group == userGroup.student{
+        if AppDelegate.AP().ds?.usergroup == userGroup.student{
             self.addCourseButton.isEnabled = false
         } else {
             self.addCourseButton.isEnabled = true
@@ -481,44 +382,31 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dvc = segue.destination as? TimeTableFullScreenViewController{
-            if AppDelegate.AP().group == userGroup.student{
-                if let MemberID = self.cMemberID{
-                    dvc.StudentCourseList = self.StudentCourseList
-                }
+        if let dvc = segue.destination as? TimeTableViewController{
+            dvc.StudentCourseList = self.StudentCourseList
+            dvc.startoftheweek = Calendar.current.date(byAdding: .day, value: 7, to: self.startoftheweek)
+            dvc.theStudentOrTrainer = self.theStudentOrTrainer
+            if self.title == "本周"{
+                dvc.title = "下周"
             } else {
-                dvc.StudentCourseList = self.StudentCourseList
+                dvc.title = "下\(self.title!)"
             }
-            dvc.showDate = Date()
-            dvc.title = "本周"
+            
         } else if let dvc = segue.destination as? CourseInfoViewController{
             if segue.identifier == "courseDetail"{
-                dvc.collectionRef = self.collectionRef
-                if let _dref = dref as? CollectionReference{
-                    dvc.用来加课的refrence = [_dref]
-                    dvc.StudentCourseList = self.StudentCourseList
-                }
-            } else if segue.identifier == "courseDetailList"{
-                dvc.collectionRef = self.collectionRef
-                if let _dref = dref as? [String: CollectionReference]{
-                    dvc.StudentCourseList = self.StudentCourseList
-                    dvc.用来加课的refrence = self.sdref
-                }
+                dvc.studentListToManageCourse = self.studentListToManageCourse
+                dvc.StudentCourseList = self.StudentCourseList
+                dvc.thisTrainer = self.theStudentOrTrainer as! EFTrainer
             }
         }
     }
     
-    func handleStudentSelection(StudentID:[String]){
-        if let _dref = dref as? [String: CollectionReference], StudentID.count > 0{
-            self.sdref = []
-            for student in StudentID{
-                /*
-                if let studentName = FirestoreService.studentNameInfo[student]{
-                    self.sdref.append(_dref[studentName]!)
-                }
- */
-            }
-            self.performSegue(withIdentifier: "courseDetailList", sender: self)
+    func handleStudentSelection(Student:[EFStudent]){
+        if Student.count > 2 {
+            AppDelegate.showError(title: "无法添加", err: "暂时只支持到双人课")
+        } else if Student.count > 0 {
+            self.studentListToManageCourse = Student
+            self.performSegue(withIdentifier: "courseDetail", sender: self)
         }
     }
 }

@@ -24,7 +24,7 @@ class TimeTable: NSObject {
     static let VERTICALRATIO:CGFloat = 20
     static let HORZAONRATIO:CGFloat = 7
     static let LEFTWIDTH:CGFloat = 47
-    static let TOPHEIGHT:CGFloat = 34
+    static let TOPHEIGHT:CGFloat = 55
     
     var numberOfStudent:Int!
     var finishedStudent:Int = 0
@@ -38,7 +38,7 @@ class TimeTable: NSObject {
         }
     }
     
-    class func makeTimeTabel(on view:TimeTableView, with classObjs:[String:[ClassObj]], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
+    class func makeTimeTabel(on view:TimeTableView, with classObjs:[String:[EFCourse]], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
         print(classObjs)
         
         currentTimeTabel = TimeTable()
@@ -52,13 +52,13 @@ class TimeTable: NSObject {
                     
                     if timetableDicWithName[name] != nil{
                         if timetableDicWithName[name]![weekDayName] != nil{
-                            timetableDicWithName[name]![weekDayName]?.append([numberHour, courseObj.amount, courseObj.courseRef])
+                            timetableDicWithName[name]![weekDayName]?.append([numberHour, courseObj.amount, courseObj.ref])
                         } else {
-                            timetableDicWithName[name]![weekDayName] = [[numberHour, courseObj.amount, courseObj.courseRef]]
+                            timetableDicWithName[name]![weekDayName] = [[numberHour, courseObj.amount, courseObj.ref]]
                         }
                     } else {
                         timetableDicWithName[name] = [:]
-                        timetableDicWithName[name]![weekDayName] = [[numberHour, courseObj.amount, courseObj.courseRef]]
+                        timetableDicWithName[name]![weekDayName] = [[numberHour, courseObj.amount, courseObj.ref]]
                     }
                 }
                 
@@ -68,20 +68,20 @@ class TimeTable: NSObject {
         handeler(TimeTable.makeTimeTable(on: view, with: timetableDicWithName, startoftheweek: startoftheweek))
     }
     
-    class func makeTimeTabel(on view:TimeTableView, with classObjs:[ClassObj], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
+    class func makeTimeTabel(on view:TimeTableView, with classObjs:[EFCourse], startoftheweek:Date, handeler: @escaping (_:CGFloat)->()){
         currentTimeTabel = TimeTable()
         view.backgroundColor = UIColor.white
         var timetableDicWithName: [String: [String:[[Any]]]] = [:]
         for courseObj in classObjs{
             if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek(){
-                let displayName = courseObj.allStudentName
+                let displayName = courseObj.getTraineesNames
                 let numberHour:Int = Calendar.current.component(.hour, from: courseObj.date)*100 + Calendar.current.component(.minute, from: courseObj.date)
                 let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: courseObj.date)]
                 if timetableDicWithName[displayName] != nil && timetableDicWithName[displayName]![weekDayName] != nil{
-                    timetableDicWithName[displayName]![weekDayName]?.append([numberHour, courseObj.amount, courseObj.courseRef])
+                    timetableDicWithName[displayName]![weekDayName]?.append([numberHour, courseObj.amount, courseObj.ref])
                 } else {
                     timetableDicWithName[displayName] = [:]
-                    timetableDicWithName[displayName]![weekDayName]? = [[numberHour, courseObj.amount, courseObj.courseRef]]
+                    timetableDicWithName[displayName]![weekDayName]? = [[numberHour, courseObj.amount, courseObj.ref]]
                 }
             }
             
@@ -174,7 +174,7 @@ class TimeTable: NSObject {
             let _i = CGFloat(i)
             let singleDayView = UIView(frame: CGRect(x: LEFTWIDTH+(_i-1)*((view.frame.width-LEFTWIDTH)/HORZAONRATIO), y: TOPHEIGHT, width: (view.frame.width-LEFTWIDTH)/HORZAONRATIO, height: (VERTICALRATIO-1)*TOPHEIGHT))
             let singleDayLabel = UILabel(frame: CGRect(x: LEFTWIDTH + (_i-1)*((view.frame.width-LEFTWIDTH)/HORZAONRATIO) + 375*0.01, y: 667*0.005, width: (view.frame.width-LEFTWIDTH)/HORZAONRATIO-375*0.02, height: TOPHEIGHT-667*0.01))
-            singleDayLabel.numberOfLines = 1
+            singleDayLabel.numberOfLines = 0
             singleDayLabel.adjustsFontSizeToFitWidth = true
             singleDayLabel.textColor = UIColor.gray
             singleDayLabel.textAlignment = .center
@@ -255,8 +255,23 @@ class TimeTable: NSObject {
                     view.background.addSubview(hourLine4)
                 }
             }
+            let thisDate = Calendar.current.date(byAdding: .day, value: i-1, to: startoftheweek)!
+            var dateString = ""
+            let monthFormatter = DateFormatter()
+            monthFormatter.dateFormat = "L"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "d"
+            if dateFormatter.string(from: thisDate) == "1"{
+                dateString = "\(monthFormatter.string(from: thisDate))月"
+                singleDayLabel.font = UIFont.boldSystemFont(ofSize: singleDayLabel.font.pointSize)
+            } else {
+                dateString = "\(dateFormatter.string(from: thisDate))日"
+                singleDayLabel.font = UIFont.systemFont(ofSize: singleDayLabel.font.pointSize)
+            }
+            if i != 0{
+                singleDayLabel.text = "\(dateString)\n\(Date.weekLongName[i])"
+            }
             
-            singleDayLabel.text = Date.weekLongName[i]
             if (i%2 == 0) && (i != 0){
                 singleDayView.backgroundColor = HexColor.lightColor
             }

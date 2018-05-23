@@ -28,7 +28,7 @@ class EFStudent: EFData {
     var registeredDic:[String:EFStudentRegistered] = [:]
     var messageDic:[String:EFStudentMessage] = [:]
     var personalDic:[String:EFStudentPersonal] = [:]
-    
+    var uid:String?
     
     override func download(){
         AppDelegate.startLoading()
@@ -46,6 +46,7 @@ class EFStudent: EFData {
                     self.heightUnit = data["heightUnit"] as! String
                     self.weightUnit = data["weightUnit"] as! String
                     self.goal = data["goal"] as! Int
+                    self.uid = data["uid"] as? String
                     self.ready = true
                     AppDelegate.reload()
                 }
@@ -61,12 +62,17 @@ class EFStudent: EFData {
                     let efStudentCourse = EFStudentCourse(with: doc.reference)
                     efStudentCourse.parent = self
                     efStudentCourse.courseRef = doc["ref"] as! DocumentReference
+                    efStudentCourse.note = doc["note"] as! String
+                    efStudentCourse.status = enumService.toCourseStatus(s: doc["status"] as! String)
                     if DataServer.courseDic[efStudentCourse.courseRef.documentID] == nil{
                         let _course = EFCourse(with: efStudentCourse.courseRef)
                         _course.download()
                         DataServer.courseDic[efStudentCourse.courseRef.documentID] = _course
+                    } else {
+                        DataServer.courseDic[efStudentCourse.courseRef.documentID]!.download()
                     }
                     self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
+                    print(self.courseDic)
                 }
                 AppDelegate.reload()
             }
@@ -83,7 +89,7 @@ class EFStudent: EFData {
                     efStudentRegistered.approved = doc["approved"] as! Bool
                     efStudentRegistered.date = doc["date"] as! Date
                     efStudentRegistered.note = doc["note"] as! String
-                    self.registeredDic[(doc["ref"] as! DocumentReference).documentID] = efStudentRegistered
+                    self.registeredDic[doc.documentID] = efStudentRegistered
                 }
                 AppDelegate.reload()
             }
@@ -147,6 +153,34 @@ class EFStudent: EFData {
         return newStudent
     }
     
+    class func addCourse(of studentList:[EFStudent], date:Date, amount:Int, note:String?, trainer:DocumentReference, status:courseStatus){
+        for theStudent in studentList{
+            if theStudent.uid == nil || theStudent.uid == "" {
+                AppDelegate.showError(title: "\(theStudent.name)尚未注册", err: "暂时无法添加")
+                return
+            }
+        }
+        var traineeStudentCourse:[DocumentReference] = []
+        var trainee:[DocumentReference] = []
+        let courseRef = Firestore.firestore().collection("course").addDocument(data: ["note" : "正在创建"])
+        for theStudent in studentList{
+            
+            let traineeStudentCourseRef = theStudent.ref.collection("course").document(courseRef.documentID)
+            traineeStudentCourseRef.setData(["note" : note ?? "无备注", "ref":courseRef, "status":enumService.toString(e: status)])
+            let df = DateFormatter()
+            df.dateStyle = .medium
+            df.timeStyle = .medium
+            
+            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["memberID" : theStudent.memberID, "bage":2])
+            EFRequest.createRequest(bageRef:bageRef, title: "为\(theStudent.name)添加课程", sander: trainer.documentID, receiver: theStudent.uid!, text: "申请添加\(df.string(from: date))", requestRef: traineeStudentCourseRef, type: requestType.studentApproveCourse)
+            traineeStudentCourse.append(traineeStudentCourseRef)
+            trainee.append(theStudent.ref)
+            
+        }
+        EFCourse.addCourse(courseRef:courseRef, date: date, amount: amount, note: note, trainer: trainer, trainee: trainee, traineeStudentCourse: traineeStudentCourse)
+        
+    }
+    
     func addRegistered(amount:Int, note:String, approved:Bool){
         ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()]){ (err) in
                 if let err = err{
@@ -155,6 +189,7 @@ class EFStudent: EFData {
                 if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
                     vc.endLoading()
                 }
+            self.download()
             }
     }
     
@@ -175,7 +210,7 @@ class EFStudent: EFData {
     
     override func upload(){
         if ready{
-            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal])
+            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal, "uid":self.uid ?? ""])
         }
         for efStudentCourse in self.courseDic.values{
             efStudentCourse.upload()

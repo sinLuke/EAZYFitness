@@ -50,7 +50,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, *), UIScreen.main.bounds.height >= 580{
             self.navigationController?.navigationBar.prefersLargeTitles = true
         } else {
             

@@ -25,11 +25,13 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
         dismiss(animated: true, completion: nil)
+        self.startLoading()
         let charset = CharacterSet(charactersIn: ".#$[]")
-        if result.value.rangeOfCharacter(from: charset) != nil {
+        if result.value.rangeOfCharacter(from: charset) != nil || result.value == ""{
             self.endLoading()
             AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0101#)", of: self)
         } else{
+            print(result.value)
             db.collection("QRCODE").document(result.value).getDocument { (snap, err) in
                 if let err = err{
                     self.endLoading()
@@ -95,6 +97,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             self.fname = data["firstName"] as! String
                             self.lname = data["lastName"] as! String
                             self.memberID = data["memberID"] as! String
+                            self.region = enumService.toRegion(s: data["region"] as! String)
                             let thisStudent = EFStudent(with: snap!.reference)
                             thisStudent.download()
                             DataServer.studentDic[snap!.reference.documentID] = thisStudent
@@ -115,6 +118,10 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                         if let data = snap!.data(){
                             self.theUserRefrence = (snap?.reference)
                             self.registered = enumService.toUserStatus(s: data["registered"] as! String)
+                            self.fname = data["firstName"] as! String
+                            self.lname = data["lastName"] as! String
+                            self.memberID = data["memberID"] as! String
+                            self.region = enumService.toRegion(s: data["region"] as! String)
                             let thisTrainer = EFTrainer(with: snap!.reference)
                             thisTrainer.download()
                             DataServer.trainerDic[snap!.reference.documentID] = thisTrainer
@@ -135,7 +142,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     func gotUserData(){
         
 
-        if registered == userStatus.canceled || registered == userStatus.unsigned{
+        if registered == userStatus.canceled || registered == userStatus.avaliable{
             self.endLoading()
             AppDelegate.showError(title: "此卡不允许注册", err: "此会员卡尚未激活或已被注销，请联系客服(#0105#)", of: self, handler: self.signInCancel)
         } else if registered == userStatus.signed{
@@ -144,10 +151,10 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
             dismiss(animated: true, completion: nil)
         } else {
             self.endLoading()
-            if AppDelegate.AP().ds?.usergroup == userGroup.student{
-                performSegue(withIdentifier: "password", sender: self)
-            } else {
+            if self.usergroup == userGroup.trainer || self.usergroup == userGroup.admin {
                 performSegue(withIdentifier: "special", sender: self)
+            } else {
+                performSegue(withIdentifier: "password", sender: self)
             }
         }
     }

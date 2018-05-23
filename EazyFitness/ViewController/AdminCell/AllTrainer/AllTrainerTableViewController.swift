@@ -13,6 +13,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         filterSearchController(searchBar: searchController.searchBar)
     }
     
+    var new = false
     var trainerList:[String:String] = [:]
     var trainerEmptyList:[String] = []
 
@@ -26,9 +27,13 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     override func refresh() {
         AppDelegate.AP().ds?.download()
+    }
+    
+    override func reload() {
+        self.tableView.reloadData()
         FtrainerEmptyList = []
         trainerEmptyList = []
-        print(DataServer.trainerDic)
+        print("reload")
         for i in 1...999{
             let stringIndex: String = "\(i)"
             if let thisTrainer = DataServer.trainerDic[stringIndex]{
@@ -41,10 +46,6 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         }
     }
     
-    override func reload() {
-        self.tableView.reloadData()
-    }
-    
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
@@ -52,7 +53,8 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 11.0, *) {
+        print(UIScreen.main.bounds.height)
+        if #available(iOS 11.0, *), UIScreen.main.bounds.height >= 580 {
             self.navigationController?.navigationBar.prefersLargeTitles = true
         } else {
             // Fallback on earlier versions
@@ -123,7 +125,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "trainerCell", for: indexPath) as! AllTrainerTableViewCell
         if indexPath.section == 0{
-            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys)[indexPath.row]]{
+            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys.sorted())[indexPath.row]]{
                 if let trainer = DataServer.trainerDic[memberID]{
                     cell.nameLabel.text = trainer.name
                     cell.idLabel.text = trainer.ref.documentID
@@ -163,10 +165,11 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.section == 0{
-            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys)[indexPath.row]]{
+            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys.sorted())[indexPath.row]]{
                 if let trainer = DataServer.trainerDic[memberID]{
                     self.selected = trainer
                     self.selectedName = trainer.name
+                    self.new = false
                     self.performSegue(withIdentifier: "detail", sender: self)
                 } else {
                     AppDelegate.showError(title: "未知错误", err: "发生未知错误")
@@ -188,6 +191,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
                 self.selected = EFTrainer.addTrainer(at: memberID, in: userRegion.Mississauga)
             }
             self.selectedName = "创建新的记录"
+            self.new = true
             self.performSegue(withIdentifier: "detail", sender: self)
         }
         
@@ -228,13 +232,14 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
             self.FtrainerList = self.trainerList
             self.FtrainerEmptyList = self.trainerEmptyList
         }
-        self.reload()
+        self.tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllTrainerDetailViewController{
             dvc.thisTrainer = self.selected
             dvc.titleName = self.selectedName
+            dvc.new = self.new
         }
     }
     

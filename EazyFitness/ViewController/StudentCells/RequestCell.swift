@@ -15,7 +15,7 @@ class RequestCell: UICollectionViewCell {
     
     @IBOutlet weak var approveBtn: UIButton!
     @IBOutlet weak var waitView: UIActivityIndicatorView!
-    var docRef:DocumentReference!
+    var efRequest:EFRequest!
     
     @IBAction func cancel(_ sender: Any) {
         waitView.isHidden = false
@@ -24,7 +24,10 @@ class RequestCell: UICollectionViewCell {
         UIView.animate(withDuration: 0.5, animations: {
             self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
         }) { (_) in
-            print(self.docRef.path)
+            self.efRequest.cancel()
+            self.waitView.isHidden = true
+            self.waitView.stopAnimating()
+            AppDelegate.refresh()
         }
     }
     
@@ -35,25 +38,19 @@ class RequestCell: UICollectionViewCell {
         UIView.animate(withDuration: 0.5, animations: {
             self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
         }) { (_) in
-            print(self.docRef.path)
-            self.docRef.updateData(["status" : enumService.toString(e: courseStatus.approved)]) { (err) in
-                if let err = err {
-                    AppDelegate.showError(title: "网络发生问题", err: err.localizedDescription)
-                } else {
-                    UIView.animate(withDuration: 0.3, animations: {
-                        //D9FAD9
-                        self.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
-                    }, completion: { (_) in
-                        UIView.animate(withDuration: 0.2, animations: {
-                            self.alpha = 0
-                        }, completion: { (_) in
-                            self.waitView.isHidden = true
-                            self.waitView.stopAnimating()
-                            AppDelegate.refresh()
-                        })
-                    })
-                }
-            }
+            UIView.animate(withDuration: 0.3, animations: {
+                //D9FAD9
+                self.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
+            }, completion: { (_) in
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.alpha = 0
+                }, completion: { (_) in
+                    self.efRequest.approve()
+                    self.waitView.isHidden = true
+                    self.waitView.stopAnimating()
+                    AppDelegate.refresh()
+                })
+            })
         }
     }
 }

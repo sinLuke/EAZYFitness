@@ -14,18 +14,32 @@ class SettingVC: DefaultViewController, UITableViewDelegate, UITableViewDataSour
         switch section{
         case 0:
             return 1
+        case 1:
+            return 1
         default:
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "signout")
-        return cell!
+        
+        switch indexPath.section{
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "signout")
+            return cell!
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "local")
+            cell?.textLabel?.text = "本地缓存"
+            return cell!
+        default:
+            return tableView.dequeueReusableCell(withIdentifier: "local")!
+        }
+        
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -37,7 +51,15 @@ class SettingVC: DefaultViewController, UITableViewDelegate, UITableViewDataSour
                 
                 default: break
             }
+        case 1:
+            switch indexPath.row{
+            case 0:
+                self.performSegue(withIdentifier: "local", sender: self)
+                
             default: break
+            }
+        default:
+            break
         }
     }
 

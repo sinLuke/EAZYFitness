@@ -12,7 +12,6 @@ import Firebase
 class AllStudentNewPurchaseViewController: DefaultViewController {
 
     @IBOutlet weak var courseTime: UITextField!
-    var studentName:String!
     var _gesture:UIGestureRecognizer!
     @IBOutlet weak var plusOrMinus: UISegmentedControl!
     @IBOutlet weak var Note: UITextField!
@@ -21,7 +20,7 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self._gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
-        self.title = "为\(studentName!)加课"
+        self.title = "为\(thisStudent.name)加课"
         // Do any additional setup after loading the view.
     }
 
@@ -46,14 +45,10 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
                     if self.Note.text != "" {
                         note = self.Note.text!
                     }
-                    let approve = (AppDelegate.AP().region == userRegion.All)
-                    thisStudent.ref.collection("registered").addDocument(data: ["Amount" : amount * updateAmount, "Approved":approve, "Date":Date(), "Note":note]) { (err) in
-                        if let err = err{
-                            AppDelegate.showError(title: "添加课程时发生错误", err: err.localizedDescription)
-                        } else {
-                            _ = self.navigationController?.popViewController(animated: true)
-                        }
-                    }
+                    let approve = (AppDelegate.AP().ds?.region == userRegion.All)
+                    self.startLoading()
+                    thisStudent.addRegistered(amount: amount * updateAmount, note: note, approved: approve)
+                    _ = self.navigationController?.popViewController(animated: true)
                 }
             } else {
                 AppDelegate.showError(title: "请填写课时数", err: "请注意，填写的数字代表半小时数，例如，1代表该节课长度为半小时，如果要为一个学员加课20节，则填写40。")

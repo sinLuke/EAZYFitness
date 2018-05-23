@@ -36,7 +36,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
-        nameLabel.text = "\(self.fname) \(self.lname)"
+        nameLabel.text = "\(self.fname!) \(self.lname!)"
         
         super.viewDidLoad()
 
@@ -83,10 +83,9 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
                         "email": self.emailField.text!,
                         "loginDevice": uuid
                         ])
+                    theUserRefrence.updateData(["registered": enumService.toString(e: .signed), "uid" : cuser.uid])
                     
-                    theUserRefrence.updateData(["Registered":2])
-                    
-                    AppDelegate.resetMainVC(with: "student")
+                    AppDelegate.AP().applicationDidStart()
                 } else {
                     AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: "无法确认卡号")
                     self.endLoading()

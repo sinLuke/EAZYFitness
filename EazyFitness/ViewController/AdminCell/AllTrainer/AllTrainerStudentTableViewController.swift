@@ -17,7 +17,9 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
         refreshControl.endRefreshing()
         self.refresh()
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        self.refresh()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -54,28 +56,34 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        print((self.studentList).count)
         return (self.studentList).count
     }
     
     override func refresh() {
-        print(thisTrainer.trainee)
+        thisTrainer.download()
+        self.reload()
+    }
+    
+    override func reload() {
         self.studentList = []
         for studentRef in thisTrainer.trainee{
             if let thisStudent = DataServer.studentDic[studentRef.documentID]{
                 self.studentList.append(thisStudent)
             }
         }
-    }
-    
-    override func reload() {
         self.tableView.reloadData()
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AllTrainerStudentTableViewCell
+        
         if studentList.count >= indexPath.row + 1 {
             cell.nameLabel.text = studentList[indexPath.row].name
             cell.typeLabel.text = studentList[indexPath.row].memberID
+        } else {
+            cell.nameLabel.text = "请稍候……"
+            cell.typeLabel.text = ""
         }
         return cell
     }
@@ -92,6 +100,7 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
     }
     
     func handleStudentSelection(_Student:[EFStudent]){
+        
         for _student in _Student{
             var abletoadd = true
             for items in self.thisTrainer.trainee{
@@ -105,7 +114,6 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
                 thisTrainer.upload()
             }
         }
-        self.refresh()
     }
  
     
@@ -120,9 +128,12 @@ class AllTrainerStudentTableViewController: DefaultTableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            for i in 0...thisTrainer.trainee.count{
+            for i in 0...thisTrainer.trainee.count - 1{
+                print("\(thisTrainer.trainee.count) \(self.studentList.count)")
                 if thisTrainer.trainee[i] == self.studentList[indexPath.row].ref{
+                    
                     thisTrainer.trainee.remove(at: i)
+                    break
                 }
             }
             self.studentList.remove(at: indexPath.row)

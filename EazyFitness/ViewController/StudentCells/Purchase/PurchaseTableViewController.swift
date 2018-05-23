@@ -12,28 +12,16 @@ import Firebase
 class PurchaseTableViewController: UITableViewController {
 
     let _refreshControl = UIRefreshControl()
-    var studentName:String!
-    var CourseList:[[String:Any]] = []
     
     @IBOutlet weak var addNew: UIBarButtonItem!
     
     var thisStudent:EFStudent!
     
     func refresh() {
-        CourseList = []
-        
-        thisStudent.ref.collection("registered").order(by: "Date").getDocuments { (snap, err) in
-            if let err = err{
-                AppDelegate.showError(title: "读取购买时发生错误", err: err.localizedDescription)
-            } else {
-                if let documentList = snap?.documents{
-                    for docDic in documentList{
-                        self.CourseList.append(docDic.data())
-                    }
-                }
-                self.reload()
-            }
+        self.thisStudent.registeredDic.sorted { (itm1, itm2) -> Bool in
+            return itm1.value.date > itm2.value.date
         }
+        self.reload()
     }
     
     func reload() {
@@ -51,10 +39,10 @@ class PurchaseTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "\(self.studentName!)的购买记录"
+        self.title = "\(self.thisStudent.name)的购买记录"
         
         
-        if (AppDelegate.AP().group == userGroup.student || AppDelegate.AP().group == userGroup.trainer){
+        if (AppDelegate.AP().ds!.usergroup == userGroup.student || AppDelegate.AP().ds!.usergroup == userGroup.trainer){
             self.addNew.isEnabled = false
         } else {
             self.addNew.isEnabled = true
@@ -91,24 +79,17 @@ class PurchaseTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return CourseList.count
+        return thisStudent.registeredDic.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "finishedCell", for: indexPath) as! PurchaseTableViewCell
-        if let courseDic = CourseList[indexPath.row] as? [String:Any]{
-            cell.courseLabel.text = "课时：\(prepareCourseNumber(courseDic["Amount"] as! Int))"
-            cell.noteLabel.text = courseDic["Note"] as! String
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .long
-            dateFormatter.timeStyle = .none
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateStyle = .none
-            timeFormatter.timeStyle = .short
-            if let date = courseDic["Date"] as? Date{
-                cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
-            }
-            if (courseDic["Approved"] as! Bool) == true{
+        
+        if let efStudentRegistered = self.thisStudent.registeredDic[Array(self.thisStudent.registeredDic.keys)[indexPath.row]]{
+            cell.courseLabel.text = "课时：\(efStudentRegistered.amountString)"
+            cell.noteLabel.text = efStudentRegistered.note
+            cell.timeLabel.text = efStudentRegistered.dateString
+            if efStudentRegistered.approved {
                 cell.typeLabel.text = "有效"
                 cell.typeLabel.textColor = HexColor.Green
                 cell.backgroundColor = UIColor.white
@@ -117,24 +98,13 @@ class PurchaseTableViewController: UITableViewController {
                 cell.typeLabel.textColor = UIColor.gray
                 cell.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
             }
-            
         }
         return cell
-    }
-    
-    func prepareCourseNumber(_ int:Int) -> String{
-        let float = Float(int)/2.0
-        if int%2 == 0{
-            return String(format: "%.0f", float)
-        } else {
-            return String(float)
-        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllStudentNewPurchaseViewController{
             dvc.thisStudent = self.thisStudent
-            dvc.studentName = self.studentName
         }
     }
 }

@@ -23,24 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     //教练
     var messageListener:[ListenerRegistration] = []
     
-    var group:userGroup?
-    var region:userRegion?
-    var myName:String?
-    var currentMemberID:String?
-    
-    var UserDoc:[String:Any]?
-    var StudentDoc:[String:Any]?
-    var TrainerDoc:[String:Any]?
-    
     var authUI: FUIAuth? = nil
     var db: Firestore!
-    var myStudent:NSDictionary?
-    var allStudent:[String:String]?
-    var trainer:NSDictionary?
-    
-    var myStudentBOOL = false
-    var allStudentBOOL = false
-    var trainerBOOL = false
     
     var listener:ListenerRegistration?
 
@@ -88,9 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     class func reload() {
-        print("reload")
         if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
-            print("refreshableVC")
             cvc.reload()
         }
     }
@@ -224,9 +206,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         
-        if Auth.auth().currentUser == nil{
+        if Auth.auth().currentUser == nil  && AppDelegate.AP().ds == nil{
             self.applicationDidStart()
-        } else {
+        } else if AppDelegate.AP().ds != nil{
             self.startListener()
         }
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.\
@@ -236,7 +218,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         if Auth.auth().currentUser == nil{
             self.applicationDidStart()
-        } else {
+        } else if AppDelegate.AP().ds != nil{
             self.startListener()
         }
     }
@@ -252,9 +234,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         for listener in self.messageListener{
             listener.remove()
         }
-        
-        
-        
         if let currentUser = Auth.auth().currentUser{
             Firestore.firestore().collection("users").document(currentUser.uid).addSnapshotListener { (snap, err) in
                 if let err = err {
@@ -263,13 +242,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                     let uuid = UIDevice.current.identifierForVendor!.uuidString
                     if let data = snap!.data(){
                         if let onlineID = data["loginDevice"] as? String, onlineID != uuid{
+                            
                             self.signout()
+                            AppDelegate.showError(title: "您被强制登出", err: "您的账号已在另外一部设备登录，请尽快与管理员联系")
                         }
                     }
                     
                 }
             }
-            Firestore.firestore().collection("Message").whereField("memberID", isEqualTo: ds?.memberID).addSnapshotListener{ (snap, err) in
+            Firestore.firestore().collection("Message").whereField("memberID", isEqualTo: ds!.memberID).addSnapshotListener{ (snap, err) in
+                print("--------------")
                 if let err = err {
                     AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
                 } else {
@@ -380,8 +362,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         
         let initialViewController = storyboard.instantiateViewController(withIdentifier: ID)
         
-        AppDelegate.AP().window?.rootViewController = initialViewController
-        AppDelegate.AP().window?.makeKeyAndVisible()
+        //为不同的 ViewCointroller 赋初始值
+        if let ivc = initialViewController as? StudentTabBarController{
+            print("StudentVC")
+            ivc.thisStudent = DataServer.studentDic[AppDelegate.AP().ds!.memberID]
+            AppDelegate.AP().window?.rootViewController = ivc
+            AppDelegate.AP().window?.makeKeyAndVisible()
+        } else if let ivc = initialViewController as? TrainerTabBarController {
+            print("trainerMyStudentVC")
+            print(DataServer.trainerDic)
+            ivc.thisTrainer = DataServer.trainerDic[AppDelegate.AP().ds!.memberID]
+            AppDelegate.AP().window?.rootViewController = ivc
+            AppDelegate.AP().window?.makeKeyAndVisible()
+        } else {
+            print("else")
+            AppDelegate.AP().window?.rootViewController = initialViewController
+            AppDelegate.AP().window?.makeKeyAndVisible()
+        }
     }
     
     class func refHandler(dic:[String:Any]) -> DocumentReference {
