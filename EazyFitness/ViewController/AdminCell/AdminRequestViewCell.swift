@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class AdminRequestViewCell: UICollectionViewCell {
+import MaterialComponents
+class AdminRequestViewCell: MDCCardCollectionCell {
     
     @IBOutlet weak var waitView: UIActivityIndicatorView!
     @IBOutlet weak var requestTitle: UILabel!

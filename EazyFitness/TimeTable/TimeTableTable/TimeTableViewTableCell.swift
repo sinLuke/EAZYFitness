@@ -14,6 +14,8 @@ class TimeTableViewTableCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var courseLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var colorStrip: UIView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none

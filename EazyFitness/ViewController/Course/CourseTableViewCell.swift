@@ -14,6 +14,7 @@ class CourseTableViewCell: UITableViewCell {
     @IBOutlet weak var status: UILabel!
     @IBOutlet weak var note: UILabel!
     @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var colorStrip: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

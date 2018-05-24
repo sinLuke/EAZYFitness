@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class AdminTrainerViewCell: UICollectionViewCell {
+import MaterialComponents
+class AdminTrainerViewCell: MDCCardCollectionCell {
     @IBOutlet weak var numberOfTrainerLabel: UILabel!
     @IBAction func specialBtn(_ sender: Any) {
     }

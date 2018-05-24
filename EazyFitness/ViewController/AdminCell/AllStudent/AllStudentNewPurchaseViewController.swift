@@ -46,7 +46,6 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
                         note = self.Note.text!
                     }
                     let approve = (AppDelegate.AP().ds?.region == userRegion.All)
-                    self.startLoading()
                     thisStudent.addRegistered(amount: amount * updateAmount, note: note, approved: approve)
                     _ = self.navigationController?.popViewController(animated: true)
                 }

@@ -14,7 +14,9 @@ class EFStudentCourse: EFData {
     var courseRef:DocumentReference!
     weak var parent:EFStudent!
     override func download() {
+        AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
+            AppDelegate.endLoading()
             if let err = err {
                 AppDelegate.showError(title: "获取学生课程时错误", err: err.localizedDescription)
             } else {

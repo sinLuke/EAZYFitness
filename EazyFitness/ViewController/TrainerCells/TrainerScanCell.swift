@@ -32,7 +32,6 @@ class TrainerScanCell: UICollectionViewCell {
     }
     
     @IBAction func report(_ sender: Any) {
-        vc.startLoading()
         
         trainer.finishACourse(By: thisStudentCourse.courseRef)
         let alert = UIAlertController(title: "记录学生没到", message: "请选择该学生未到原因", preferredStyle: .actionSheet)
@@ -62,7 +61,7 @@ class TrainerScanCell: UICollectionViewCell {
             }))
         }))
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
-            self.vc.endLoading()
+
         }))
         vc.present(alert, animated: true, completion: nil)
     }

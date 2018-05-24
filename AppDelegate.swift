@@ -247,11 +247,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                             AppDelegate.showError(title: "您被强制登出", err: "您的账号已在另外一部设备登录，请尽快与管理员联系")
                         }
                     }
-                    
                 }
             }
             Firestore.firestore().collection("Message").whereField("memberID", isEqualTo: ds!.memberID).addSnapshotListener{ (snap, err) in
-                print("--------------")
                 if let err = err {
                     AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
                 } else {
@@ -318,6 +316,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         print(err)
         let alert: UIAlertController = UIAlertController(title: title, message: err, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {_ in
+            self.endLoading()
             if let _handler = handler{
                 _handler()
             }
@@ -331,11 +330,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         print(text)
         let alert: UIAlertController = UIAlertController(title: title, message: text, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .`default`, handler: {_ in
+            self.endLoading()
             if let _handler = handlerAgree{
                 _handler()
             }
         }))
         alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: "Default action"), style: .cancel, handler: {_ in
+            self.endLoading()
             if let _handler = handlerDismiss{
                 _handler()
             }
@@ -368,12 +369,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
             ivc.thisStudent = DataServer.studentDic[AppDelegate.AP().ds!.memberID]
             AppDelegate.AP().window?.rootViewController = ivc
             AppDelegate.AP().window?.makeKeyAndVisible()
+            
         } else if let ivc = initialViewController as? TrainerTabBarController {
             print("trainerMyStudentVC")
             print(DataServer.trainerDic)
             ivc.thisTrainer = DataServer.trainerDic[AppDelegate.AP().ds!.memberID]
             AppDelegate.AP().window?.rootViewController = ivc
             AppDelegate.AP().window?.makeKeyAndVisible()
+            
         } else {
             print("else")
             AppDelegate.AP().window?.rootViewController = initialViewController

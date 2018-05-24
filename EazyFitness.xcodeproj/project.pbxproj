@@ -79,6 +79,9 @@
 		A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35B1844209031AD0058EA7B /* MyStudentVC.swift */; };
 		A35F26AE20A0DF7A00697BB3 /* tableStudentSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35F26AD20A0DF7A00697BB3 /* tableStudentSelectionTableViewController.swift */; };
 		A35F26B020A0E2E500697BB3 /* selectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35F26AF20A0E2E500697BB3 /* selectionTableViewCell.swift */; };
+		A367993920B60FC000A582D7 /* DataCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367993820B60FC000A582D7 /* DataCollectionViewController.swift */; };
+		A367993B20B60FD700A582D7 /* MemberCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367993A20B60FD700A582D7 /* MemberCollectionViewCell.swift */; };
+		A367993D20B60FE500A582D7 /* DataItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367993C20B60FE500A582D7 /* DataItemCollectionViewCell.swift */; };
 		A36D4AED20A53B790059F54F /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D4AEC20A53B790059F54F /* Enum.swift */; };
 		A38DEB6720A67A06002350FB /* ClassObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38DEB6620A67A06002350FB /* ClassObj.swift */; };
 		A39C5D892092B2A600D46739 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39C5D882092B2A600D46739 /* LoginViewController.swift */; };
@@ -215,6 +218,9 @@
 		A35B1844209031AD0058EA7B /* MyStudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStudentVC.swift; sourceTree = "<group>"; };
 		A35F26AD20A0DF7A00697BB3 /* tableStudentSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tableStudentSelectionTableViewController.swift; sourceTree = "<group>"; };
 		A35F26AF20A0E2E500697BB3 /* selectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = selectionTableViewCell.swift; sourceTree = "<group>"; };
+		A367993820B60FC000A582D7 /* DataCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollectionViewController.swift; sourceTree = "<group>"; };
+		A367993A20B60FD700A582D7 /* MemberCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCollectionViewCell.swift; sourceTree = "<group>"; };
+		A367993C20B60FE500A582D7 /* DataItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		A36D4AEC20A53B790059F54F /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
 		A38DEB6620A67A06002350FB /* ClassObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassObj.swift; sourceTree = "<group>"; };
 		A39C5D882092B2A600D46739 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -340,6 +346,7 @@
 		A31E2FE4209EC79400677D86 /* AdminCell */ = {
 			isa = PBXGroup;
 			children = (
+				A367993720B60F9500A582D7 /* Data */,
 				A3F3E645209EE7E40054AEF0 /* AllStudent */,
 				A3F3E644209EE7DD0054AEF0 /* AllTrainer */,
 				A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */,
@@ -557,6 +564,16 @@
 				A34D051C20A8FCBB00813B7D /* SelectionNavigationViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		A367993720B60F9500A582D7 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A367993820B60FC000A582D7 /* DataCollectionViewController.swift */,
+				A367993A20B60FD700A582D7 /* MemberCollectionViewCell.swift */,
+				A367993C20B60FE500A582D7 /* DataItemCollectionViewCell.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		A39C5D862092ACFE00D46739 /* Setting */ = {
@@ -780,6 +797,12 @@
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
+				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
+				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
@@ -800,6 +823,12 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
@@ -942,6 +971,7 @@
 				A35735932096502500995346 /* TimeTabelCell.swift in Sources */,
 				A349236D2090EBC7004C5455 /* SigninPasswordViewController.swift in Sources */,
 				A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */,
+				A367993D20B60FE500A582D7 /* DataItemCollectionViewCell.swift in Sources */,
 				A3CEFF67209809AC00B05FC1 /* TrainerMonthCell.swift in Sources */,
 				A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */,
 				A31E2FEA209EC7CC00677D86 /* AdminSummaryViewCell.swift in Sources */,
@@ -955,6 +985,7 @@
 				A39FF64C20ACE2AF00B54353 /* EFStudentCourse.swift in Sources */,
 				A3252A9A2094F14D00FD5EC3 /* blankVCViewController.swift in Sources */,
 				A357359E2096583D00995346 /* refreshableVC.swift in Sources */,
+				A367993920B60FC000A582D7 /* DataCollectionViewController.swift in Sources */,
 				A3F3E651209EE8710054AEF0 /* AllTrainerDetailViewController.swift in Sources */,
 				A34923702090EF15004C5455 /* scan.swift in Sources */,
 				A3F3E64B209EE8310054AEF0 /* AllStudentTableViewCell.swift in Sources */,
@@ -986,6 +1017,7 @@
 				A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */,
 				A35B1843209031990058EA7B /* StudentVC.swift in Sources */,
 				A3EDEBE820B3A5A0005DDE45 /* LocalNextDataTableViewController.swift in Sources */,
+				A367993B20B60FD700A582D7 /* MemberCollectionViewCell.swift in Sources */,
 				A39FF64620ACDB5200B54353 /* EFStudent.swift in Sources */,
 				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
 				A3CEFF632098098900B05FC1 /* TrainerNextCell.swift in Sources */,

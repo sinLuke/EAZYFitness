@@ -28,7 +28,9 @@ class EFTrainer: EFData {
     var trainee:[DocumentReference] = []
     
     override func download(){
+        AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
+            AppDelegate.endLoading()
             if let err = err {
                 AppDelegate.showError(title: "读取教练时错误", err: err.localizedDescription)
             } else {
@@ -56,6 +58,7 @@ class EFTrainer: EFData {
             }
         }
         ref.collection("finish").getDocuments { (snap, err) in
+            AppDelegate.endLoading()
             if let err = err {
                 AppDelegate.showError(title: "课程学生时错误", err: err.localizedDescription)
             } else {

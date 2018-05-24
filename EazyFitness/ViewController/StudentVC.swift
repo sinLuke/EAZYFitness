@@ -41,11 +41,32 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
     override func refresh() {
        
         super.refresh()
+        thisStudent.download()
+        if thisCourse != nil {
+            thisCourse.download()
+        }
+        if nextCourse != nil {
+            nextCourse.download()
+        }
         
         CourseRegisteredNumber = 0
         TotalCourseFinished = 0
         MonthCourseFinished = 0
         print("读取当前学生")
+        
+        //获取申请
+        EFRequest.getRequestForCurrentUser(type: requestType.studentApproveCourse)
+        
+        self.reload()
+    }
+    
+    @objc func finishedCourse(){
+        performSegue(withIdentifier: "finish", sender: self)
+    }
+    
+    override func reload() {
+        super.reload()
+        self.collectionView?.reloadData()
         //读取当前学生
         if let thisStudent = DataServer.studentDic[thisStudent.memberID]{
             
@@ -63,9 +84,7 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
             self.MonthCourseFinished = 0
             self.TotalCourseFinished = 0
             
-            //获取申请
-            print("获取申请")
-            EFRequest.getRequestForCurrentUser(type: requestType.studentApproveCourse)
+            
             
             for efStudentCourse in thisStudent.courseDic.values{
                 
@@ -96,7 +115,7 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                         if let theCourseEndTime = Calendar.current.date(byAdding: .minute, value: 30*theCourse.amount, to: theCourse.date){
                             
                             //如果当前时间在theCourse开始和结束之间，则放入 self.thisCourse
-                            if theCourse.date < Date() && Date() < theCourseEndTime{
+                            if theCourse.date < Date() && Date() < theCourseEndTime || efStudentCourse.status == .scaned || efStudentCourse.status == .approved || efStudentCourse.status == .noTrainer || efStudentCourse.status == .noStudent || efStudentCourse.status == .ill{
                                 self.thisCourse = theCourse
                                 self.thisStudentCourse = efStudentCourse
                             }
@@ -131,18 +150,6 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                 }
             }
         }
-        
-        self.reload()
-    }
-    
-    @objc func finishedCourse(){
-        performSegue(withIdentifier: "finish", sender: self)
-    }
-    
-    override func reload() {
-        super.reload()
-        self.collectionView?.reloadData()
-        print("===========")
     }
     
 
@@ -178,6 +185,7 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.row == EFRequest.requestList.count {
+            
             
             //本月成就
             return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 300)
@@ -217,22 +225,53 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
             
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.titleLabel.text = "下一节课"
+            
+            //课程开始之后才能使用举报教练未到的功能
+            if (Date() > self.thisCourse.date){
+                cell.report.isHidden = false
+            } else {
+                cell.report.isHidden = true
+            }
+            
+            cell.requirChangeBtn.isHidden = true
+            
+            
+            
             if self.thisCourse != nil{
                 //如果当前课程存在
-                cell.titleLabel.text = "正在上课"
-                cell.backgroundColor = HexColor.Blue.withAlphaComponent(0.3)
-                cell.dateLabel.text = self.thisCourse.dateOnlyString
-                cell.TimeLabel.text = self.thisCourse.timeOnlyString
-                cell.noteLabel.text = self.thisCourse.note
                 
-                //课程开始之后才能使用举报教练未到的功能
-                if (Date() > self.thisCourse.date){
-                    cell.report.isHidden = false
+                if let currentStudentCouser = thisStudent.courseDic[thisCourse.ref.documentID]{
+                    
+                    if currentStudentCouser.status == courseStatus.scaned {
+                        cell.titleLabel.text = "正在上课（已成功扫码）"
+                        cell.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
+                        cell.dateLabel.text = self.thisCourse.dateOnlyString
+                        cell.TimeLabel.text = self.thisCourse.timeOnlyString
+                        cell.noteLabel.text = self.thisCourse.note
+                        cell.report.isHidden = true
+                    } else if currentStudentCouser.status == courseStatus.noTrainer {
+                        cell.titleLabel.text = "正在上课（已举报）"
+                        cell.backgroundColor = HexColor.red.withAlphaComponent(0.3)
+                        cell.dateLabel.text = self.thisCourse.dateOnlyString
+                        cell.TimeLabel.text = self.thisCourse.timeOnlyString
+                        cell.noteLabel.text = "如果教练未及时扫码，则记为教练未到"
+                        cell.report.isHidden = true
+                    } else {
+                        cell.titleLabel.text = "正在上课"
+                        cell.backgroundColor = HexColor.blue.withAlphaComponent(0.3)
+                        cell.dateLabel.text = self.thisCourse.dateOnlyString
+                        cell.TimeLabel.text = self.thisCourse.timeOnlyString
+                        cell.noteLabel.text = self.thisCourse.note
+                        cell.report.isHidden = false
+                    }
                 } else {
+                    cell.titleLabel.text = "正在读取……"
+                    cell.backgroundColor = HexColor.Purple.withAlphaComponent(0.3)
+                    cell.dateLabel.text = ""
+                    cell.TimeLabel.text = ""
+                    cell.noteLabel.text = ""
                     cell.report.isHidden = true
                 }
-                
-                cell.requirChangeBtn.isHidden = true
                 
             } else if self.nextCourse != nil{
                 
@@ -312,7 +351,7 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                                                           for: indexPath) as! RequestCell
             cell.self.alpha = 1
             cell.waitView.isHidden = true
-            cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
+            
             cell.approveBtn.isHidden = false
             
             if EFRequest.requestList.count <= indexPath.row{
@@ -334,9 +373,17 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                             dateFormatter2.dateStyle = .none
                             dateFormatter2.timeStyle = .short
                             
-                            cell.requestDiscriptionLabel.text = "添加自\(dateFormatter1.string(from: startTime)) \(startTime.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime))至\(dateFormatter2.string(from: endTime!))的课程"
-                            cell.layer.cornerRadius = 10
                             
+                            cell.layer.cornerRadius = 10
+                            if startTime < Date(){
+                                cell.approveBtn.isHidden = true
+                                cell.requestDiscriptionLabel.text = "该申请已过期"
+                                cell.backgroundColor = UIColor.red.withAlphaComponent(0.1)
+                            } else {
+                                cell.approveBtn.isHidden = false
+                                cell.requestDiscriptionLabel.text = "添加自\(dateFormatter1.string(from: startTime)) \(startTime.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime))至\(dateFormatter2.string(from: endTime!))的课程"
+                                cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
+                            }
                         }
                     }
                 }

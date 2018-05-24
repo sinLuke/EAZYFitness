@@ -136,7 +136,7 @@ class EFRequest: EFData {
                     AppDelegate.showError(title: "获取申请失败", err: err.localizedDescription)
                 } else {
                     for doc in snap!.documents{
-                        if (enumService.toRequestType(s: doc["type"] as! String) == type && type != nil) || type == nil{
+                        if ((enumService.toRequestType(s: doc["type"] as! String) == type && type != nil) || type == nil) {
                             let efRequest = EFRequest(with: doc.reference)
                             efRequest.download()
                             EFRequest.requestList.append(efRequest)

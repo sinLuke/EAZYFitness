@@ -139,7 +139,9 @@ class EFCourse: EFData {
     }
     
     override func download(){
+        AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
+            AppDelegate.endLoading()
             if let err = err {
                 AppDelegate.showError(title: "课程下载时错误", err: err.localizedDescription)
             } else {

@@ -196,7 +196,11 @@ class TimeTable: NSObject {
                                         courseView.startOfTheWeek = startoftheweek
                                         courseView.superView = view
                                         courseView.courseRef = courseTimeList[2] as! DocumentReference
-                                        courseView.backgroundColor = colorList![count%HexColor.colorList.count]
+                                        courseView.backgroundColor = colorList![count%HexColor.colorList.count].withAlphaComponent(0.2)
+                                        courseView.layer.borderWidth = 1
+                                        courseView.layer.borderColor = colorList![count%HexColor.colorList.count].cgColor
+                                        courseView.layer.cornerRadius = 5
+                                        courseView.clipsToBounds = true
                                         
                                         let courseLabel = UILabel(frame: CGRect(x: 0, y: 0, width: courseView.frame.width, height: courseView.frame.height))
                                         courseLabel.text = "\(eachTimetable)"
@@ -204,7 +208,7 @@ class TimeTable: NSObject {
                                         courseLabel.numberOfLines = 0
                                         courseLabel.font = UIFont.boldSystemFont(ofSize: 10)
                                         courseLabel.textAlignment = .center
-                                        courseLabel.textColor = UIColor.white
+                                        courseLabel.textColor = colorList![count%HexColor.colorList.count]
                                         
                                         view.CourseViewList.append(courseView)
                                         courseView.addSubview(courseLabel)

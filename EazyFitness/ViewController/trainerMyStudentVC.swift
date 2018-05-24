@@ -22,8 +22,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     
     var TotalCourseFinished:Int = 0
     var MonthCourseFinished:Int = 0
-    var nextCourse:EFCourse!
-    var thisCourse:EFCourse!
+    var nextCourse:EFCourse?
+    var thisCourse:EFCourse?
     var nextStudentCourse:[EFStudentCourse]!
     var thisStudentCourse:[EFStudentCourse]!
     var goal:Int = 0
@@ -34,16 +34,28 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     }
     
     override func refresh() {
+        thisTrainer.download()
+        
+        
+        
+        self.reload()
+    }
+    
+    override func reload() {
+        
+        self.thisCourse = nil
+        self.nextCourse = nil
         self.thisStudentCourse = []
         self.nextStudentCourse = []
         TotalCourseFinished = 0
         MonthCourseFinished = 0
+        
         for theStudentRef in self.thisTrainer.trainee{
             if let thisStudent = DataServer.studentDic[theStudentRef.documentID]{
                 for efStudentCourse in thisStudent.courseDic.values{
                     //通过课程引用取得课程
                     if let theCourse = DataServer.courseDic[efStudentCourse.courseRef.documentID]{
-
+                        
                         //获取申请
                         EFRequest.getRequestForCurrentUser(type: requestType.trainerApproveCourse)
                         
@@ -52,7 +64,11 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                             
                             //获取下一节课
                             //比较时间并将最接近当前时间的课程放入 self.nextCourse
-                            if theCourse.date < self.nextCourse.date && efStudentCourse.status == .approved{
+                            if self.nextCourse == nil{
+                                if efStudentCourse.status == .approved{
+                                    self.nextCourse = theCourse
+                                }
+                            } else if theCourse.date < self.nextCourse!.date && efStudentCourse.status == .approved{
                                 self.nextCourse = theCourse
                             }
                         } else {
@@ -60,7 +76,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                             //取得 theCourse 结束的时间
                             if let theCourseEndTime = Calendar.current.date(byAdding: .minute, value: 30*theCourse.amount, to: theCourse.date){
                                 //如果当前时间在theCourse开始和结束之间，则放入 self.thisCourse
-                                if theCourse.date < Date() && Date() < theCourseEndTime && enumService.toDescription(d: theCourse.getTraineesStatus) == "所有学生已同意" || enumService.toDescription(d: theCourse.getTraineesStatus) == "已全部扫描"{
+                                let statusList = theCourse.getTraineesStatus
+                                if theCourse.date < Date() && Date() < theCourseEndTime && (enumService.toDescription(d: statusList) == "所有学生已同意" || enumService.toDescription(d: statusList) == "已全部扫描" || enumService.toDescription(d: statusList) == "没有全部扫码" || statusList == [courseStatus.approved] || statusList == [courseStatus.scaned]){
                                     self.thisCourse = theCourse
                                 }
                             }
@@ -82,12 +99,12 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
         for studentRef in self.thisTrainer.trainee{
             if let thisStudent = DataServer.studentDic[studentRef.documentID]{
                 if thisCourse != nil {
-                    if let thisStudentCourse = thisStudent.courseDic[thisCourse.ref.documentID]{
+                    if let thisStudentCourse = thisStudent.courseDic[thisCourse!.ref.documentID]{
                         self.thisStudentCourse.append(thisStudentCourse)
                     }
                 }
                 if nextCourse != nil{
-                    if let nextStudentCourse = thisStudent.courseDic[nextCourse.ref.documentID]{
+                    if let nextStudentCourse = thisStudent.courseDic[nextCourse!.ref.documentID]{
                         self.nextStudentCourse.append(nextStudentCourse)
                         
                     }
@@ -95,10 +112,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             }
         }
         
-        self.reload()
-    }
-    
-    override func reload() {
         self.collectionView?.reloadData()
         self.myStudentCollectionView?.reloadData()
     }
@@ -236,25 +249,23 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                                                           for: indexPath) as! TrainerNextCell
             
             cell.titleLabel.text = "下一节课"
-            print("self.thisCourse")
-            print(self.thisCourse)
             if self.thisCourse != nil{
                 //如果当前课程存在
                 cell.titleLabel.text = "正在上课"
                 cell.backgroundColor = HexColor.Blue.withAlphaComponent(0.3)
-                cell.dateLabel.text = self.thisCourse.dateOnlyString
-                cell.TimeLabel.text = self.thisCourse.timeOnlyString
-                cell.noteLabel.text = self.thisCourse.note
-                cell.studentNameLabel.text = self.thisCourse.getTraineesNames
+                cell.dateLabel.text = self.thisCourse!.dateOnlyString
+                cell.TimeLabel.text = self.thisCourse!.timeOnlyString
+                cell.noteLabel.text = self.thisCourse!.note
+                cell.studentNameLabel.text = self.thisCourse!.getTraineesNames
                 
             } else if self.nextCourse != nil{
                 
                 //如果下一节课存在
                 cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-                cell.dateLabel.text = self.nextCourse.dateOnlyString
-                cell.TimeLabel.text = self.nextCourse.timeOnlyString
-                cell.noteLabel.text = self.nextCourse.note
-                cell.studentNameLabel.text = self.nextCourse.getTraineesNames
+                cell.dateLabel.text = self.nextCourse!.dateOnlyString
+                cell.TimeLabel.text = self.nextCourse!.timeOnlyString
+                cell.noteLabel.text = self.nextCourse!.note
+                cell.studentNameLabel.text = self.nextCourse!.getTraineesNames
                 
             } else {
                 cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
@@ -269,7 +280,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             //当月
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MonthFinishedBoard",
                                                           for: indexPath) as! TrainerMonthCell
-            cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+            
             cell.totalCourse.text = "共计：\(prepareCourseNumber(self.TotalCourseFinished))"
             cell.monthFinishedLabel.text = "\(prepareCourseNumber(self.MonthCourseFinished))"
             
@@ -281,6 +292,14 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             
             cell.goal.text = "\(percentage)% (\(prepareCourseNumber(MonthCourseFinished))/\(prepareCourseNumber(self.thisTrainer.goal)))"
             cell.progress.progress = percentageValue
+            if percentageValue == 1 {
+                cell.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
+                cell.backgroundColor = HexColor.Green
+            } else {
+                cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                cell.progress.tintColor = HexColor.Pirmary
+            }
+            
             cell.layer.cornerRadius = 10
             return cell
         default:
@@ -297,27 +316,29 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                     let efStudentCourseRef = thiscourse.traineeStudentCourseRef[indexPath.row]
                     if let efStudentRef = efStudentCourseRef.parent.parent {
                         if let efStudent = DataServer.studentDic[efStudentRef.documentID]{
-                            cell.thisStudent = efStudent
-                            cell.thisStudentCourse = efStudent.courseDic[efStudentCourseRef.documentID]
-                            cell.NameLabel.text = efStudent.name
-                            
-                            
-                            let startTime = thiscourse.date
-                            if (Date() > Calendar.current.date(byAdding: .minute, value: self.TimeTolerant, to: startTime)!){
-                                cell.report.isHidden = false
-                            } else {
-                                cell.report.isHidden = true
-                            }
-                        
-                            let recorded = !(cell.thisStudentCourse.status == courseStatus.approved)
-                            if (recorded == true){
-                                cell.TitleLabel.text = "课程已扫码"
-                                cell.backgroundColor = UIColor.green.withAlphaComponent(0.3)
-                                cell.scanButton.isHidden = true
-                            } else {
-                                cell.TitleLabel.text = "课程尚未扫码"
-                                cell.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
-                                cell.scanButton.isHidden = false
+                            if let thisStudentCourse = efStudent.courseDic[efStudentCourseRef.documentID]{
+                                cell.thisStudent = efStudent
+                                cell.thisStudentCourse = thisStudentCourse
+                                cell.NameLabel.text = efStudent.name
+                                
+                                let recorded = !(cell.thisStudentCourse.status == courseStatus.approved)
+                                if (recorded == true){
+                                    cell.TitleLabel.text = "课程已扫码"
+                                    cell.backgroundColor = HexColor.Green.withAlphaComponent(0.2)
+                                    cell.scanButton.isHidden = true
+                                    cell.report.isHidden = true
+                                } else {
+                                    cell.TitleLabel.text = "课程尚未扫码"
+                                    cell.backgroundColor = HexColor.Yellow.withAlphaComponent(0.2)
+                                    cell.scanButton.isHidden = false
+                                    
+                                    let startTime = thiscourse.date
+                                    if (Date() > Calendar.current.date(byAdding: .minute, value: self.TimeTolerant, to: startTime)!){
+                                        cell.report.isHidden = false
+                                    } else {
+                                        cell.report.isHidden = true
+                                    }
+                                }
                             }
                         } else {
                             AppDelegate.showError(title: "获取扫码信息时错误", err: "无法找到与之对应的学生，请稍后重试")

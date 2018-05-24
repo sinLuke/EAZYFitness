@@ -9,25 +9,131 @@
 import UIKit
 import Firebase
 
-private let reuseIdentifier = "Cell"
-
 class AdminViewController: DefaultCollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let 刷新菊花 = UIRefreshControl()
     var 数据库:Firestore!
     
+    var selectedRegion:userRegion!
+    
     var 教练ref列表:[[String:DocumentReference]] = []
     var 学生ref列表:[[String:DocumentReference]] = []
     
-    var 申请标题列表:[String:String] = [:]
-    var 申请ref列表:[String:DocumentReference] = [:]
+    //Data
+    var timeid = 0 // 0:总，1:本月，2:本日
+    var totalCourse:[userRegion: [EFCourse]] = [:]
+    var totalCourseAmount: [userRegion: Int] = [:]
+    var totalPurchase:[userRegion: [EFStudentRegistered]] = [:]
+    var totalPurchaseAmount:[userRegion: Int] = [:]
+    var totalNoStudent:[userRegion: [EFStudentCourse]] = [:]
+    var totalNoTrainer:[userRegion: [EFCourse]] = [:]
+    var totalNoCard:[userRegion: [EFStudentCourse]] = [:]
+    var totalIll:[userRegion: [EFStudentCourse]] = [:]
     
     override func refresh() {
-
+        AppDelegate.AP().ds?.download()
+        self.reload()
     }
     
     override func reload() {
+        
+        totalCourse = [:]
+        totalCourseAmount = [:]
+        totalPurchase = [:]
+        totalPurchaseAmount = [:]
+        totalNoStudent = [:]
+        totalNoTrainer = [:]
+        totalNoCard = [:]
+        totalIll = [:]
+        
         self.collectionView?.reloadData()
+        
+        for theStudent in DataServer.studentDic.values{
+            for regester in theStudent.registeredDic.values{
+                switch timeid{
+                case 1:
+                    if regester.date < Date().startOfMonth(){
+                        continue
+                    }
+                case 2:
+                    if regester.date < Date().startOfTheDay(){
+                        continue
+                    }
+                default:
+                    break
+                }
+                if totalPurchase[theStudent.region] == nil {
+                    totalPurchase[theStudent.region] = [regester]
+                    totalPurchaseAmount[theStudent.region] = regester.amount
+                } else {
+                    totalPurchase[theStudent.region]!.append(regester)
+                    totalPurchaseAmount[theStudent.region]! += regester.amount
+                }
+            }
+        }
+        
+        for theCourse in DataServer.courseDic.values{
+            switch timeid{
+            case 1:
+                if theCourse.date < Date().startOfMonth(){
+                    continue
+                }
+            case 2:
+                if theCourse.date < Date().startOfTheDay(){
+                    continue
+                }
+            default:
+                break
+            }
+            
+            //totalCourse
+            if let regionForCourse = DataServer.studentDic[theCourse.traineeRef[0].documentID]?.region{
+                if enumService.toDescription(d: theCourse.getTraineesStatus) == "已全部扫描" {
+                    if totalCourse[regionForCourse] == nil {
+                        totalCourse[regionForCourse] = [theCourse]
+                    } else {
+                        totalCourse[regionForCourse]!.append(theCourse)
+                    }
+                } else if enumService.toDescription(d: theCourse.getTraineesStatus) == "教练未到" {
+                    if totalNoTrainer[regionForCourse] == nil {
+                        totalNoTrainer[regionForCourse] = [theCourse]
+                    } else {
+                        totalNoTrainer[regionForCourse]!.append(theCourse)
+                    }
+                }
+            }
+            
+            for theStudentRef in theCourse.traineeRef{
+                if let theStudent = DataServer.studentDic[theStudentRef.documentID]{
+                    if let theStudentCourse = theStudent.courseDic[theCourse.ref.documentID]{
+                        
+                        if theStudentCourse.status == .noStudent{
+                            if totalNoStudent[theStudent.region] == nil {
+                                totalNoStudent[theStudent.region] = [theStudentCourse]
+                            } else {
+                                totalNoStudent[theStudent.region]!.append(theStudentCourse)
+                            }
+                        }
+                        
+                        if theStudentCourse.status == .noCard{
+                            if totalNoCard[theStudent.region] == nil {
+                                totalNoCard[theStudent.region] = [theStudentCourse]
+                            } else {
+                                totalNoCard[theStudent.region]!.append(theStudentCourse)
+                            }
+                        }
+                        
+                        if theStudentCourse.status == .ill{
+                            if totalIll[theStudent.region] == nil {
+                                totalIll[theStudent.region] = [theStudentCourse]
+                            } else {
+                                totalIll[theStudent.region]!.append(theStudentCourse)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     @objc func 用户刷新(_ refreshControl: UIRefreshControl){
@@ -99,35 +205,81 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         // #warning Incomplete implementation, return the number of items
         if AppDelegate.AP().ds?.region == userRegion.All{
             return 2 //总学生，总教练
-            + 1//总课程统计
             + enumService.Region.count//分区数
-            + 0//request数
+            + EFRequest.requestList.count//request数
         } else {
             return 2 //总学生，总教练
                 + 1//总课程统计
-                + 0//request数
+                + EFRequest.requestList.count//request数
         }
     }
 
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        print("cellForItemAt \(indexPath) collectionView")
         switch indexPath.row {
-        case 申请ref列表.count:
+        case EFRequest.requestList.count + 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "allStudent", for: indexPath) as! AdminStudentViewCell
             cell.numberOfStudentsLabel.text = "\(DataServer.studentDic.count)"
-            cell.layer.cornerRadius = 10
-            cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             return cell
-        case 申请ref列表.count + 1:
+        case EFRequest.requestList.count:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "allTrainer", for: indexPath) as! AdminTrainerViewCell
             cell.numberOfTrainerLabel.text = "\(DataServer.trainerDic.count)"
-            cell.layer.cornerRadius = 10
-            cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             return cell
         default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RequestBoard", for: indexPath) as! AdminRequestViewCell
-            cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
-            cell.layer.cornerRadius = 10
-            return cell
+            
+             
+            if AppDelegate.AP().ds?.region == userRegion.All{
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
+                cell.itemCollectionView.delegate = cell
+                cell.itemCollectionView.dataSource = cell
+                if (indexPath.row - EFRequest.requestList.count - 2) < enumService.RegionString.count{
+                    cell.nameLabel.text = enumService.RegionString[(indexPath.row - EFRequest.requestList.count - 2)]
+                    cell.region = enumService.Region[(indexPath.row - EFRequest.requestList.count - 2)]
+                }
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
+                cell.itemCollectionView.delegate = cell
+                cell.itemCollectionView.dataSource = cell
+                if indexPath.row == (EFRequest.requestList.count + 2){
+                    if let reg = AppDelegate.AP().ds?.region{
+                        cell.region = reg
+                        cell.nameLabel.text = "总统计数据"
+                    } else {
+                        cell.region = .Mississauga
+                        cell.nameLabel.text = "总统计数据"
+                    }
+                }
+                return cell
+            }
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if AppDelegate.AP().ds?.region == userRegion.All{
+            if indexPath.row - EFRequest.requestList.count - 2 >= 0 && indexPath.row - EFRequest.requestList.count - 2 < enumService.Region.count{
+                self.selectedRegion = enumService.Region[(indexPath.row - EFRequest.requestList.count - 2)]
+                self.performSegue(withIdentifier: "showTrainerData", sender: self)
+            }
+        } else {
+            if indexPath.row - EFRequest.requestList.count - 2 == 0 {
+                if let reg = AppDelegate.AP().ds?.region{
+                    self.selectedRegion = reg
+                    self.performSegue(withIdentifier: "showTrainerData", sender: self)
+                } else {
+                    self.selectedRegion = .Mississauga
+                    self.performSegue(withIdentifier: "showTrainerData", sender: self)
+                }
+            }
+        }
+        
+        if indexPath.row == EFRequest.requestList.count {
+            self.performSegue(withIdentifier: "allTrainer", sender: self)
+        }
+        
+        if indexPath.row == EFRequest.requestList.count + 1 {
+            self.performSegue(withIdentifier: "allStudent", sender: self)
         }
     }
     
@@ -135,22 +287,30 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch indexPath.row {
-        case 申请ref列表.count:
+        case EFRequest.requestList.count:
             return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 124)
-        case 申请ref列表.count + 1:
+        case EFRequest.requestList.count + 1:
             return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 124)
         default:
-            if indexPath.row < 申请ref列表.count{
-                return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 124)
+            
+            if AppDelegate.AP().ds?.region == userRegion.All{
+                switch (indexPath.row - EFRequest.requestList.count - 2) {
+                case 0:
+                    return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 150)
+                default:
+                    return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 150)
+                }
+                
             } else {
-                return CGSize(width: ((self.collectionView?.frame.width)! - 10)/3 - 10, height: 124)
+                if indexPath.row == (EFRequest.requestList.count + 2){
+                    return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 150)
+                }
             }
-            
         }
-        if indexPath.row == 申请ref列表.count {
-            
+        if indexPath.row == EFRequest.requestList.count {
+            return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 150)
         } else {
-            
+            return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 150)
         }
     }
 
@@ -184,5 +344,11 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     
     }
     */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let dvc = segue.destination as? DataCollectionViewController {
+            dvc.region = self.selectedRegion
+        }
+    }
 
 }

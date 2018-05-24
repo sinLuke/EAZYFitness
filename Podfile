@@ -18,6 +18,8 @@ pod 'FirebaseUI/Facebook'
 pod 'FirebaseUI/Twitter'
 pod 'FirebaseUI/Phone'
 
+pod 'MaterialComponents'
+
   target 'EazyFitnessTests' do
     inherit! :search_paths
     # Pods for testing

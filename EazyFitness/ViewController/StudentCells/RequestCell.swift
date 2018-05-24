@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+
 class RequestCell: UICollectionViewCell {
     
     @IBOutlet weak var requestTitleLabel: UILabel!

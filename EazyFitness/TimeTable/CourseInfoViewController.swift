@@ -178,7 +178,6 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     }
     
     override func refresh() {
-        self.startLoading()
         if let existTimetable = timetable{
             existTimetable.removeFromSuperview()
         }

@@ -43,7 +43,6 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.startLoading()
         self.title = titleName
         
         self.region.isEnabled = false
@@ -130,7 +129,6 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         self.goalField.text = String(thisStudent.goal)
         self.region.selectedSegmentIndex = enumService.toInt(e: thisStudent.region)
         self.registered.selectedSegmentIndex = enumService.toInt(i: thisStudent.registered)
-        self.endLoading()
         
         if new {
             purchaseBtn.isHidden = true

@@ -39,7 +39,6 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.startLoading()
         self.title = titleName
         
         self.region.isEnabled = false
@@ -97,7 +96,6 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
             goalField.text = "30"
         }
         if self.fname.text != "" && self.lname.text != "" && goalField.text != "" {
-            self.startLoading()
             self.uploadData()
             thisTrainer.upload()
             _ = self.navigationController?.popViewController(animated: true)

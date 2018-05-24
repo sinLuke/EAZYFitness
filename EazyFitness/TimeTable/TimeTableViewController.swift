@@ -100,11 +100,12 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             cell.noteLabel.textColor = UIColor.black
             cell.timeLabel.textColor = UIColor.black
             cell.courseLabel.textColor = UIColor.black
-            cell.backgroundColor = UIColor.white
             
             let statusList = courseObj.getTraineesStatus
             cell.typeLabel.text = enumService.toDescription(d: statusList)
             cell.typeLabel.textColor = enumService.toColor(d: statusList)
+            cell.backgroundColor = enumService.toColor(d: statusList).withAlphaComponent(0.02)
+            cell.colorStrip.backgroundColor = enumService.toColor(d: statusList)
         } else {
             cell.noteLabel.text = "课程读取错误"
         }
