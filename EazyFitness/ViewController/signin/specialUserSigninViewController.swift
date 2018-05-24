@@ -109,19 +109,17 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     if let password = passwordField.text{
                         if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = self.usergroup, let cardID = self.memberID, let email = self.emailField.text{
                             self.startLoading()
-                            if let cuser = Auth.auth().currentUser{
-                                let uuid = UIDevice.current.identifierForVendor!.uuidString
-                                self.Userdata = [
-                                    "firstName": fname,
-                                    "lastName": lname,
-                                    "memberID": cardID,
-                                    "usergroup": enumService.toString(e: ug),
-                                    "region": enumService.toString(e: self.region),
-                                    "email": email,
-                                    "loginDevice": uuid
-                                ]
-                                Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
-                            }
+                            let uuid = UIDevice.current.identifierForVendor!.uuidString
+                            self.Userdata = [
+                                "firstName": fname,
+                                "lastName": lname,
+                                "memberID": cardID,
+                                "usergroup": enumService.toString(e: ug),
+                                "region": enumService.toString(e: self.region),
+                                "email": email,
+                                "loginDevice": uuid
+                            ]
+                            Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
                         } else {
                             AppDelegate.showError(title: "未知错误", err: "信息输入有误，请检查输入的信息。")
                         }

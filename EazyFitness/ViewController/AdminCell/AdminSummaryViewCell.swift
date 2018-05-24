@@ -14,7 +14,7 @@ class AdminSummaryViewCell: MDCCardCollectionCell, UICollectionViewDataSource, U
     @IBOutlet weak var itemCollectionView: UICollectionView!
     
     var tinmString = "总"
-    
+    var vc: AdminViewController!
     var region:userRegion!
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -27,22 +27,38 @@ class AdminSummaryViewCell: MDCCardCollectionCell, UICollectionViewDataSource, U
         switch indexPath.row {
         case 0:
             cell.itemName.text = "\(tinmString)上课数"
-            return cell
-        case 0:
-            cell.itemName.text = "\(tinmString)购买课程数"
+            cell.itemValue.text = prepareCourseNumber((vc.totalCourseAmount[region] as? Int) ?? 0)
             return cell
         case 1:
-            cell.itemName.text = "\(tinmString)学生缺勤数"
+            cell.itemName.text = "\(tinmString)购买课程次数"
+            cell.itemValue.text = prepareCourseNumber((vc.totalPurchaseAmount[region] as? Int) ?? 0)
             return cell
         case 2:
-            cell.itemName.text = "\(tinmString)教练缺勤数"
+            cell.itemName.text = "\(tinmString)学生缺勤次数"
+            cell.itemValue.text = prepareCourseNumber(vc.totalNoStudent[region]?.count ?? 0)
             return cell
         case 3:
+            cell.itemName.text = "\(tinmString)教练缺勤次数"
+            cell.itemValue.text = prepareCourseNumber(vc.totalNoTrainer[region]?.count ?? 0)
+            return cell
+        case 4:
             cell.itemName.text = "\(tinmString)没带卡次数"
+            cell.itemValue.text = prepareCourseNumber(vc.totalNoCard[region]?.count ?? 0)
             return cell
         default:
             cell.itemName.text = "\(tinmString)生病次数"
+            cell.itemValue.text = prepareCourseNumber(vc.totalIll[region]?.count ?? 0)
             return cell
         }
     }
+    
+    func prepareCourseNumber(_ int:Int) -> String{
+        let float = Float(int)/2.0
+        if int%2 == 0{
+            return String(format: "%.0f", float)
+        } else {
+            return String(float)
+        }
+    }
+    
 }

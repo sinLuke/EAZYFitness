@@ -87,21 +87,26 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
             }
             
             //totalCourse
-            if let regionForCourse = DataServer.studentDic[theCourse.traineeRef[0].documentID]?.region{
-                if enumService.toDescription(d: theCourse.getTraineesStatus) == "已全部扫描" {
-                    if totalCourse[regionForCourse] == nil {
-                        totalCourse[regionForCourse] = [theCourse]
-                    } else {
-                        totalCourse[regionForCourse]!.append(theCourse)
-                    }
-                } else if enumService.toDescription(d: theCourse.getTraineesStatus) == "教练未到" {
-                    if totalNoTrainer[regionForCourse] == nil {
-                        totalNoTrainer[regionForCourse] = [theCourse]
-                    } else {
-                        totalNoTrainer[regionForCourse]!.append(theCourse)
+            if theCourse.traineeRef.count != 0{
+                if let regionForCourse = DataServer.studentDic[theCourse.traineeRef[0].documentID]?.region{
+                    if enumService.toDescription(d: theCourse.getTraineesStatus) == "已全部扫描" {
+                        if totalCourse[regionForCourse] == nil {
+                            totalCourse[regionForCourse] = [theCourse]
+                            totalCourseAmount [regionForCourse] = theCourse.amount
+                        } else {
+                            totalCourse[regionForCourse]!.append(theCourse)
+                            totalCourseAmount [regionForCourse]! += theCourse.amount
+                        }
+                    } else if enumService.toDescription(d: theCourse.getTraineesStatus) == "教练未到" {
+                        if totalNoTrainer[regionForCourse] == nil {
+                            totalNoTrainer[regionForCourse] = [theCourse]
+                        } else {
+                            totalNoTrainer[regionForCourse]!.append(theCourse)
+                        }
                     }
                 }
             }
+            
             
             for theStudentRef in theCourse.traineeRef{
                 if let theStudent = DataServer.studentDic[theStudentRef.documentID]{
@@ -231,6 +236,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
              
             if AppDelegate.AP().ds?.region == userRegion.All{
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
+                cell.vc = self
                 cell.itemCollectionView.delegate = cell
                 cell.itemCollectionView.dataSource = cell
                 if (indexPath.row - EFRequest.requestList.count - 2) < enumService.RegionString.count{
@@ -240,6 +246,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
+                cell.vc = self
                 cell.itemCollectionView.delegate = cell
                 cell.itemCollectionView.dataSource = cell
                 if indexPath.row == (EFRequest.requestList.count + 2){
