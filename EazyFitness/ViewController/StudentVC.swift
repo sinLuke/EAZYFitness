@@ -226,12 +226,18 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
             cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
             cell.titleLabel.text = "下一节课"
             
+            
+            
             //课程开始之后才能使用举报教练未到的功能
-            if (Date() > self.thisCourse.date){
-                cell.report.isHidden = false
-            } else {
-                cell.report.isHidden = true
+            if let thisCourse = self.thisCourse{
+                cell.thisCourseRef = thisCourse.ref
+                if (Date() > thisCourse.date){
+                    cell.report.isHidden = false
+                } else {
+                    cell.report.isHidden = true
+                }
             }
+            
             
             cell.requirChangeBtn.isHidden = true
             

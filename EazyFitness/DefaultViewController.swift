@@ -48,23 +48,26 @@ class DefaultViewController: UIViewController, refreshableVC {
     
     
     func startLoading() -> (){
-        
-        loadingView.isHidden = false
-        loadingIndicator.isHidden = false
-        loadingIndicator.startAnimating()
-        view.isUserInteractionEnabled = false
-        
-        self.view.addSubview(loadingView)
-        self.view.addSubview(loadingIndicator)
+        if let loadingView = loadingView{
+            loadingView.isHidden = false
+            loadingIndicator.isHidden = false
+            loadingIndicator.startAnimating()
+            view.isUserInteractionEnabled = false
+            
+            self.view.addSubview(loadingView)
+            self.view.addSubview(loadingIndicator)
+        }
     }
     
     func endLoading() -> (){
-        loadingView.isHidden = true
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
-        self.view.isUserInteractionEnabled = true
-        self.loadingView.removeFromSuperview()
-        self.loadingIndicator.removeFromSuperview()
+        if let loadingView = loadingView {
+            loadingView.isHidden = true
+            loadingIndicator.isHidden = true
+            loadingIndicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+            self.loadingView.removeFromSuperview()
+            self.loadingIndicator.removeFromSuperview()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -136,22 +139,26 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
     
     func startLoading() -> (){
         
-        loadingView.isHidden = false
-        loadingIndicator.isHidden = false
-        loadingIndicator.startAnimating()
-        view.isUserInteractionEnabled = false
-        
-        self.view.addSubview(loadingView)
-        self.view.addSubview(loadingIndicator)
+        if let loadingView = loadingView{
+            loadingView.isHidden = false
+            loadingIndicator.isHidden = false
+            loadingIndicator.startAnimating()
+            view.isUserInteractionEnabled = false
+            
+            self.view.addSubview(loadingView)
+            self.view.addSubview(loadingIndicator)
+        }
     }
     
     func endLoading() -> (){
-        loadingView.isHidden = true
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
-        self.view.isUserInteractionEnabled = true
-        self.loadingView.removeFromSuperview()
-        self.loadingIndicator.removeFromSuperview()
+        if let loadingView = loadingView {
+            loadingView.isHidden = true
+            loadingIndicator.isHidden = true
+            loadingIndicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+            self.loadingView.removeFromSuperview()
+            self.loadingIndicator.removeFromSuperview()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -224,22 +231,26 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     
     func startLoading() -> (){
         
-        loadingView.isHidden = false
-        loadingIndicator.isHidden = false
-        loadingIndicator.startAnimating()
-        view.isUserInteractionEnabled = false
-        
-        self.view.addSubview(loadingView)
-        self.view.addSubview(loadingIndicator)
+        if let loadingView = loadingView{
+            loadingView.isHidden = false
+            loadingIndicator.isHidden = false
+            loadingIndicator.startAnimating()
+            view.isUserInteractionEnabled = false
+            
+            self.view.addSubview(loadingView)
+            self.view.addSubview(loadingIndicator)
+        }
     }
     
     func endLoading() -> (){
-        loadingView.isHidden = true
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
-        self.view.isUserInteractionEnabled = true
-        self.loadingView.removeFromSuperview()
-        self.loadingIndicator.removeFromSuperview()
+        if let loadingView = loadingView {
+            loadingView.isHidden = true
+            loadingIndicator.isHidden = true
+            loadingIndicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+            self.loadingView.removeFromSuperview()
+            self.loadingIndicator.removeFromSuperview()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

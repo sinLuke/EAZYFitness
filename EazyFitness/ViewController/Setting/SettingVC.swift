@@ -26,6 +26,7 @@ class SettingVC: DefaultViewController, UITableViewDelegate, UITableViewDataSour
         switch indexPath.section{
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "signout")
+            cell?.selectionStyle = .none
             return cell!
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "local")
@@ -39,7 +40,7 @@ class SettingVC: DefaultViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

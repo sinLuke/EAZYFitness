@@ -26,12 +26,12 @@ class AdminSummaryViewCell: MDCCardCollectionCell, UICollectionViewDataSource, U
         
         switch indexPath.row {
         case 0:
-            cell.itemName.text = "\(tinmString)上课数"
-            cell.itemValue.text = prepareCourseNumber((vc.totalCourseAmount[region] as? Int) ?? 0)
+            cell.itemName.text = "\(tinmString)上课数\(enumService.toDescription(e: region))"
+            cell.itemValue.text = prepareCourseNumber(vc.totalCourseAmount[region] ?? 0)
             return cell
         case 1:
             cell.itemName.text = "\(tinmString)购买课程次数"
-            cell.itemValue.text = prepareCourseNumber((vc.totalPurchaseAmount[region] as? Int) ?? 0)
+            cell.itemValue.text = prepareCourseNumber(vc.totalPurchaseAmount[region] ?? 0)
             return cell
         case 2:
             cell.itemName.text = "\(tinmString)学生缺勤次数"

@@ -52,6 +52,7 @@
 		A32EEE57209D6EFE0018FBB5 /* TimeTableViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */; };
 		A32EEE5A209D78CE0018FBB5 /* PurchaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */; };
 		A32EEE5C209D78DC0018FBB5 /* PurchaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */; };
+		A33E418920B7C23800E79A1D /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33E418820B7C23800E79A1D /* MessageListTableViewCell.swift */; };
 		A345101620B2B527007E1267 /* loadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A345101520B2B526007E1267 /* loadingViewController.swift */; };
 		A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34923592090DD81004C5455 /* StudentTabBarController.swift */; };
 		A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A349235B2090DD90004C5455 /* TrainerTabBarController.swift */; };
@@ -189,6 +190,7 @@
 		A32EEE56209D6EFE0018FBB5 /* TimeTableViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableViewTableCell.swift; sourceTree = "<group>"; };
 		A32EEE59209D78CE0018FBB5 /* PurchaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTableViewCell.swift; sourceTree = "<group>"; };
 		A32EEE5B209D78DB0018FBB5 /* PurchaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTableViewController.swift; sourceTree = "<group>"; };
+		A33E418820B7C23800E79A1D /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
 		A345101520B2B526007E1267 /* loadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadingViewController.swift; sourceTree = "<group>"; };
 		A34923592090DD81004C5455 /* StudentTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentTabBarController.swift; sourceTree = "<group>"; };
 		A349235B2090DD90004C5455 /* TrainerTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerTabBarController.swift; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 				A32EEE34209CEADF0018FBB5 /* MessageCollectionViewController.swift */,
 				A32EEE4E209CF4DA0018FBB5 /* SendTextCell.swift */,
 				A32EEE4F209CF4DA0018FBB5 /* SendTextCell.xib */,
+				A33E418820B7C23800E79A1D /* MessageListTableViewCell.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -501,6 +504,7 @@
 		A34923582090DD48004C5455 /* TabBarVC */ = {
 			isa = PBXGroup;
 			children = (
+				A349235B2090DD90004C5455 /* TrainerTabBarController.swift */,
 				A34923592090DD81004C5455 /* StudentTabBarController.swift */,
 				A349235D2090DDA0004C5455 /* AdminTabBarController.swift */,
 			);
@@ -514,7 +518,6 @@
 				A34923632090E4F8004C5455 /* SigninViewController.swift */,
 				A349236A2090EBAF004C5455 /* SigninScanViewController.swift */,
 				A3492376209113E2004C5455 /* specialUserSigninViewController.swift */,
-				A349235B2090DD90004C5455 /* TrainerTabBarController.swift */,
 			);
 			path = signin;
 			sourceTree = "<group>";
@@ -975,6 +978,7 @@
 				A3CEFF67209809AC00B05FC1 /* TrainerMonthCell.swift in Sources */,
 				A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */,
 				A31E2FEA209EC7CC00677D86 /* AdminSummaryViewCell.swift in Sources */,
+				A33E418920B7C23800E79A1D /* MessageListTableViewCell.swift in Sources */,
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
 				A39FF65A20ACEA9B00B54353 /* EFStudentMessage.swift in Sources */,
 				A34923662090EAB7004C5455 /* HexColor.swift in Sources */,

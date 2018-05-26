@@ -14,10 +14,12 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     let 刷新菊花 = UIRefreshControl()
     var 数据库:Firestore!
     
-    var selectedRegion:userRegion!
-    
     var 教练ref列表:[[String:DocumentReference]] = []
     var 学生ref列表:[[String:DocumentReference]] = []
+    
+    var reloadList:[Int:UICollectionView] = [:]
+    
+    var selectedRegion:userRegion?
     
     //Data
     var timeid = 0 // 0:总，1:本月，2:本日
@@ -62,6 +64,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                 default:
                     break
                 }
+                
                 if totalPurchase[theStudent.region] == nil {
                     totalPurchase[theStudent.region] = [regester]
                     totalPurchaseAmount[theStudent.region] = regester.amount
@@ -69,6 +72,15 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                     totalPurchase[theStudent.region]!.append(regester)
                     totalPurchaseAmount[theStudent.region]! += regester.amount
                 }
+                
+                if totalPurchase[.All] == nil {
+                    totalPurchase[.All] = [regester]
+                    totalPurchaseAmount[.All] = regester.amount
+                } else {
+                    totalPurchase[.All]!.append(regester)
+                    totalPurchaseAmount[.All]! += regester.amount
+                }
+                
             }
         }
         
@@ -89,7 +101,9 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
             //totalCourse
             if theCourse.traineeRef.count != 0{
                 if let regionForCourse = DataServer.studentDic[theCourse.traineeRef[0].documentID]?.region{
-                    if enumService.toDescription(d: theCourse.getTraineesStatus) == "已全部扫描" {
+                    //AppDelegate.showError(title: "regionForCourse", err: enumService.toDescription(d: theCourse.getTraineesStatus))
+                    if enumService.toDescription(d: theCourse.getTraineesStatus) == "已全部扫描" || enumService.toDescription(d: theCourse.getTraineesStatus) == "已扫描" {
+                        
                         if totalCourse[regionForCourse] == nil {
                             totalCourse[regionForCourse] = [theCourse]
                             totalCourseAmount [regionForCourse] = theCourse.amount
@@ -97,12 +111,29 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                             totalCourse[regionForCourse]!.append(theCourse)
                             totalCourseAmount [regionForCourse]! += theCourse.amount
                         }
+                        
+                        if totalCourse[.All] == nil {
+                            totalCourse[.All] = [theCourse]
+                            totalCourseAmount [.All] = theCourse.amount
+                        } else {
+                            totalCourse[.All]!.append(theCourse)
+                            totalCourseAmount [.All]! += theCourse.amount
+                        }
+                        
                     } else if enumService.toDescription(d: theCourse.getTraineesStatus) == "教练未到" {
+                        
                         if totalNoTrainer[regionForCourse] == nil {
                             totalNoTrainer[regionForCourse] = [theCourse]
                         } else {
                             totalNoTrainer[regionForCourse]!.append(theCourse)
                         }
+                        
+                        if totalNoTrainer[.All] == nil {
+                            totalNoTrainer[.All] = [theCourse]
+                        } else {
+                            totalNoTrainer[.All]!.append(theCourse)
+                        }
+                        
                     }
                 }
             }
@@ -118,6 +149,11 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                             } else {
                                 totalNoStudent[theStudent.region]!.append(theStudentCourse)
                             }
+                            if totalNoStudent[.All] == nil {
+                                totalNoStudent[.All] = [theStudentCourse]
+                            } else {
+                                totalNoStudent[.All]!.append(theStudentCourse)
+                            }
                         }
                         
                         if theStudentCourse.status == .noCard{
@@ -125,6 +161,11 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                                 totalNoCard[theStudent.region] = [theStudentCourse]
                             } else {
                                 totalNoCard[theStudent.region]!.append(theStudentCourse)
+                            }
+                            if totalNoCard[.All] == nil {
+                                totalNoCard[.All] = [theStudentCourse]
+                            } else {
+                                totalNoCard[.All]!.append(theStudentCourse)
                             }
                         }
                         
@@ -134,11 +175,21 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                             } else {
                                 totalIll[theStudent.region]!.append(theStudentCourse)
                             }
+                            if totalIll[.All] == nil {
+                                totalIll[.All] = [theStudentCourse]
+                            } else {
+                                totalIll[.All]!.append(theStudentCourse)
+                            }
                         }
                     }
                 }
             }
         }
+        
+        for views in reloadList.values{
+            views.reloadData()
+        }
+        
     }
     
     @objc func 用户刷新(_ refreshControl: UIRefreshControl){
@@ -210,6 +261,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         // #warning Incomplete implementation, return the number of items
         if AppDelegate.AP().ds?.region == userRegion.All{
             return 2 //总学生，总教练
+                + 1 //总课程统计
             + enumService.Region.count//分区数
             + EFRequest.requestList.count//request数
         } else {
@@ -233,40 +285,56 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
             return cell
         default:
             
-             
-            if AppDelegate.AP().ds?.region == userRegion.All{
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-                cell.vc = self
-                cell.itemCollectionView.delegate = cell
-                cell.itemCollectionView.dataSource = cell
-                if (indexPath.row - EFRequest.requestList.count - 2) < enumService.RegionString.count{
-                    cell.nameLabel.text = enumService.RegionString[(indexPath.row - EFRequest.requestList.count - 2)]
-                    cell.region = enumService.Region[(indexPath.row - EFRequest.requestList.count - 2)]
-                }
+            if indexPath.row < EFRequest.requestList.count {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RequestBoard", for: indexPath) as! AdminRequestViewCell
                 return cell
             } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
-                cell.vc = self
-                cell.itemCollectionView.delegate = cell
-                cell.itemCollectionView.dataSource = cell
-                if indexPath.row == (EFRequest.requestList.count + 2){
-                    if let reg = AppDelegate.AP().ds?.region{
-                        cell.region = reg
-                        cell.nameLabel.text = "总统计数据"
+                if AppDelegate.AP().ds?.region == userRegion.All{
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
+                    cell.vc = self
+                    cell.itemCollectionView.delegate = cell
+                    cell.itemCollectionView.dataSource = cell
+                    reloadList[indexPath.row] = cell.itemCollectionView
+                    cell.itemCollectionView.reloadData()
+                    if (indexPath.row - EFRequest.requestList.count - 2) < enumService.RegionString.count{
+                        cell.nameLabel.text = enumService.RegionString[(indexPath.row - EFRequest.requestList.count - 2)]
+                        cell.region = enumService.Region[(indexPath.row - EFRequest.requestList.count - 2)]
                     } else {
-                        cell.region = .Mississauga
                         cell.nameLabel.text = "总统计数据"
+                        cell.region = .All
                     }
+                    return cell
+                } else {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as! AdminSummaryViewCell
+                    cell.vc = self
+                    cell.itemCollectionView.delegate = cell
+                    cell.itemCollectionView.dataSource = cell
+                    reloadList[indexPath.row] = cell.itemCollectionView
+                    cell.itemCollectionView.reloadData()
+                    if indexPath.row == (EFRequest.requestList.count + 2){
+                        if let reg = AppDelegate.AP().ds?.region{
+                            cell.region = reg
+                            cell.nameLabel.text = "总统计数据"
+                        } else {
+                            cell.region = .Mississauga
+                            cell.nameLabel.text = "总统计数据"
+                        }
+                    }
+                    return cell
                 }
-                return cell
             }
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if AppDelegate.AP().ds?.region == userRegion.All{
-            if indexPath.row - EFRequest.requestList.count - 2 >= 0 && indexPath.row - EFRequest.requestList.count - 2 < enumService.Region.count{
-                self.selectedRegion = enumService.Region[(indexPath.row - EFRequest.requestList.count - 2)]
+            if indexPath.row - EFRequest.requestList.count - 2 >= 0 && indexPath.row - EFRequest.requestList.count - 2 < enumService.Region.count + 1{
+                if (indexPath.row - EFRequest.requestList.count - 2) >= enumService.Region.count{
+                    self.selectedRegion = .All
+                } else {
+                    self.selectedRegion = enumService.Region[(indexPath.row - EFRequest.requestList.count - 2)]
+                }
+                
                 self.performSegue(withIdentifier: "showTrainerData", sender: self)
             }
         } else {
@@ -355,6 +423,16 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? DataCollectionViewController {
             dvc.region = self.selectedRegion
+            if self.selectedRegion == .All{
+                dvc.title = "总统计数据"
+            } else {
+                if AppDelegate.AP().ds?.region == .All{
+                    dvc.title = "\(enumService.toDescription(e: self.selectedRegion!)) 统计数据"
+                } else {
+                    dvc.title = "总统计数据"
+                }
+            }
+            
         }
     }
 

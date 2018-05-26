@@ -5,6 +5,14 @@
 //  Created by Luke on 2018-03-15.
 //  Copyright © 2018 luke. All rights reserved.
 //
+//  总完成课时会把取消的可加进去
+//  取消的课时间会被重写
+//  刷新不完整
+//  有时候已过期
+//
+//
+//
+//
 
 import UIKit
 import UserNotifications
@@ -90,6 +98,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     func dataServerDidFinishInit(){
+        
+        for listener in self.messageListener{
+            listener.remove()
+        }
+        
+        let uuid = UIDevice.current.identifierForVendor!.uuidString
+        if let ds = self.ds{
+            Firestore.firestore().collection("users").document(ds.uid).updateData(["loginDevice" : uuid])
+        }
+        
         self.startListener()
         if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
             cvc.endLoading()
@@ -242,14 +260,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                     let uuid = UIDevice.current.identifierForVendor!.uuidString
                     if let data = snap!.data(){
                         if let onlineID = data["loginDevice"] as? String, onlineID != uuid{
-                            
                             self.signout()
                             AppDelegate.showError(title: "您被强制登出", err: "您的账号已在另外一部设备登录，请尽快与管理员联系")
                         }
                     }
                 }
             }
-            Firestore.firestore().collection("Message").whereField("memberID", isEqualTo: ds!.memberID).addSnapshotListener{ (snap, err) in
+            Firestore.firestore().collection("Message").whereField("uid", isEqualTo: ds!.uid).addSnapshotListener{ (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
                 } else {

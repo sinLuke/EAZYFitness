@@ -28,6 +28,8 @@ class EFStudent: EFData {
     var registeredDic:[String:EFStudentRegistered] = [:]
     var messageDic:[String:EFStudentMessage] = [:]
     var personalDic:[String:EFStudentPersonal] = [:]
+    var trainer:String?
+    var trainerUID:String?
     var uid:String?
     
     override func download(){
@@ -171,7 +173,7 @@ class EFStudent: EFData {
             df.dateStyle = .medium
             df.timeStyle = .medium
             
-            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["memberID" : theStudent.memberID, "bage":2])
+            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
             EFRequest.createRequest(bageRef:bageRef, title: "为\(theStudent.name)添加课程", sander: trainer.documentID, receiver: theStudent.uid!, text: "申请添加\(df.string(from: date))", requestRef: traineeStudentCourseRef, type: requestType.studentApproveCourse)
             traineeStudentCourse.append(traineeStudentCourseRef)
             trainee.append(theStudent.ref)
@@ -191,6 +193,26 @@ class EFStudent: EFData {
                 }
             self.download()
             }
+    }
+    
+    func getTrainer(){
+        Firestore.firestore().collection("trainer").getDocuments { (snaps, err) in
+            if let err = err {
+                AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
+            } else {
+                for doc in snaps!.documents{
+                    if let traineeList = doc.data()["trainee"] as? [DocumentReference]{
+                        for ref in traineeList {
+                            if ref.documentID == self.memberID {
+                                self.trainer = doc.documentID
+                                self.trainerUID = doc.data()["uid"] as? String
+                            }
+                        }
+                    }
+                }
+            }
+            AppDelegate.reload()
+        }
     }
     
     func addMessage(text:String, type:messageType){

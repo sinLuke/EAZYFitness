@@ -17,6 +17,7 @@ class EFTrainer: EFData {
             return "\(firstName) \(lastName)"
         }
     }
+    var uid:String?
     var memberID:String = ""
     var registered:userStatus = .canceled
     var region:userRegion = .Mississauga
@@ -45,6 +46,7 @@ class EFTrainer: EFData {
                     self.goal = data["goal"] as! Int
                     self.trainee = data["trainee"] as! [DocumentReference]
                     self.ready = true
+                    self.uid = data["uid"] as? String
                     print("download")
                     AppDelegate.reload()
                     

@@ -10,6 +10,8 @@ import UIKit
 
 class DataCollectionViewController: DefaultCollectionViewController {
     
+    let _refreshControl = UIRefreshControl()
+    
     var region:userRegion!
     var thisTrainer:EFTrainer!
     var listOfTrainer:[EFTrainer] = []
@@ -26,6 +28,7 @@ class DataCollectionViewController: DefaultCollectionViewController {
         listOfStudent = []
         if thisTrainer == nil{
             for trainers in DataServer.trainerDic.values {
+                
                 if trainers.region == region || region == .All{
                     listOfTrainer.append(trainers)
                 }
@@ -37,16 +40,33 @@ class DataCollectionViewController: DefaultCollectionViewController {
                 }
             }
         }
+        self.collectionView?.reloadData()
+    }
+    
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl){
+        refreshControl.endRefreshing()
+        self.refresh()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
+        _refreshControl.attributedTitle = NSAttributedString(string: title)
+        _refreshControl.addTarget(self, action:
+            #selector(handleRefresh(_:)),
+                                  for: UIControlEvents.valueChanged)
+        _refreshControl.tintColor = HexColor.Pirmary
+        
+        self.collectionView!.refreshControl = self._refreshControl
+        self.collectionView!.addSubview(self._refreshControl)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
 
         // Do any additional setup after loading the view.
+        self.refresh()
     }
 
     override func didReceiveMemoryWarning() {

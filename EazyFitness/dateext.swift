@@ -45,4 +45,62 @@ extension Date {
         }
         return nil
     }
+    
+    func descriptDate() -> String {
+        let now = Date()
+        let thisComponents = Calendar.current.dateComponents([.day, .month, .year, .weekOfYear], from: self)
+        let nowComponents = Calendar.current.dateComponents([.day, .month, .weekOfYear, .year], from: now)
+        let df = DateFormatter()
+        let min:TimeInterval = 1000/16
+        let hour:TimeInterval = min*60
+        let day:TimeInterval = hour*24
+        df.timeStyle = .short
+        df.dateStyle = .none
+        if self > now{
+            let components = Calendar.current.dateComponents([.minute, .hour, .day, .year], from: now, to: self)
+            
+            if thisComponents.year! - nowComponents.year! > 0 && self.timeIntervalSinceNow >= day*10 {
+                return "\(thisComponents.year!)年\(thisComponents.month!)月\(thisComponents.day!)日"
+            } else if thisComponents.weekOfYear! - nowComponents.weekOfYear! > 1  && self.timeIntervalSinceNow >= day*10{
+                return "\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
+            } else if thisComponents.weekOfYear! - nowComponents.weekOfYear! == 1 {
+                return "下\(self.getThisWeekDayLongName()) \(df.string(from: self))"
+            } else if thisComponents.day! - nowComponents.day! > 1{
+                return "\(self.getThisWeekDayLongName()) \(df.string(from: self))"
+            } else if thisComponents.day! - nowComponents.day! == 1{
+                return "明天 \(df.string(from: self))"
+            } else if components.hour! > 3{
+                return "今天 \(df.string(from: self))"
+            } else if components.hour! != 0{
+                return "\(components.hour!)小时 \(components.minute!) 分钟后"
+            } else if components.minute! >= 2{
+                return "\(components.minute!) 分钟后"
+            } else {
+                return "马上"
+            }
+        } else if self < now {
+            let components = Calendar.current.dateComponents([.minute, .hour, .day, .year], from: self, to: now)
+            if nowComponents.year! - thisComponents.year! > 0 && Date().timeIntervalSince(self) >= day*10 {
+                return "\(thisComponents.year!)年\(thisComponents.month!)月"
+            } else if nowComponents.weekOfYear! - thisComponents.weekOfYear! > 1 && Date().timeIntervalSince(self) >= day*10{
+                return "\(thisComponents.month!)月\(thisComponents.day!)日"
+            } else if nowComponents.weekOfYear! - thisComponents.weekOfYear! == 1 {
+                return "上\(self.getThisWeekDayLongName())"
+            } else if nowComponents.day! - thisComponents.day! > 1{
+                return "\(self.getThisWeekDayLongName())"
+            } else if nowComponents.day! - thisComponents.day! == 1 && Date().timeIntervalSince(self) >= hour*3 {
+                return "昨天 \(df.string(from: self))"
+            } else if components.hour! > 3{
+                return "今天 \(df.string(from: self))"
+            } else if components.hour! != 0{
+                return "\(components.hour!)小时前"
+            } else if components.minute! >= 2{
+                return "\(components.minute!) 分钟前"
+            } else {
+                return "刚刚"
+            }
+        } else {
+            return "现在"
+        }
+    }
 }
