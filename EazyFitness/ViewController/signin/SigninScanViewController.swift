@@ -24,6 +24,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     
     func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
         reader.stopScanning()
+        
         dismiss(animated: true, completion: nil)
         self.startLoading()
         let charset = CharacterSet(charactersIn: ".#$[]")
@@ -43,7 +44,9 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             self.fname = ""
                             self.lname = ""
                             self.memberID = numberValue
+                            print(numberValue)
                             switch numberValue {
+                                
                             case "SUPER":
                                 self.usergroup = userGroup.admin
                                 self.region = userRegion.All
@@ -195,6 +198,8 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
             vc.theUserRefrence = self.theUserRefrence
             vc.usergroup = self.usergroup
             vc.region = self.region
+            print("vc.region = self.region")
+            print(enumService.toString(e: self.region))
             vc.fname = self.fname
             vc.lname = self.lname
             vc.memberID = self.memberID

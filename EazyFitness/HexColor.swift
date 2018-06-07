@@ -42,5 +42,4 @@ class HexColor: UIColor {
             blue: rgb & 0xFF
         )
     }
-    
 }

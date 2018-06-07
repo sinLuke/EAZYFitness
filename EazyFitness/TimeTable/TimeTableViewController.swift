@@ -65,6 +65,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
             let i = Array(StudentCourseList.keys)[indexPath.section]
             if let courseObjs = StudentCourseList[i]{
@@ -74,11 +75,25 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                 for studentCourseRef in courseObj.traineeStudentCourseRef{
                     studentCourseRef.delete()
                 }
+                EFRequest.removeRequestForReference(ref: ref)
+                for student in DataServer.studentDic.values{
+                    for studentCourse in student.courseDic{
+                        if studentCourse.value.courseRef == ref{
+                            student.courseDic.removeValue(forKey: studentCourse.key)
+                        }
+                    }
+                }
+                for course in DataServer.courseDic{
+                    if course.value.ref == ref{
+                        DataServer.courseDic.removeValue(forKey: course.key)
+                    }
+                }
                 StudentCourseList[i]!.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
             
         }
+ 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -96,16 +111,23 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             let date = courseObj.date
             cell.timeLabel.text = "\(dateFormatter.string(from: date)) \(date.getThisWeekDayLongName()) \(timeFormatter.string(from: date))"
 
+            if courseObj.note == ""{
+                cell.noteLabel.text = date.descriptDate()
+            } else {
+                cell.timeLabel.text = date.descriptDate()
+            }
+            
             cell.typeLabel.textColor = UIColor.black
             cell.noteLabel.textColor = UIColor.black
             cell.timeLabel.textColor = UIColor.black
             cell.courseLabel.textColor = UIColor.black
             
             let statusList = courseObj.getTraineesStatus
-            cell.typeLabel.text = enumService.toDescription(d: statusList)
-            cell.typeLabel.textColor = enumService.toColor(d: statusList)
-            cell.backgroundColor = enumService.toColor(d: statusList).withAlphaComponent(0.02)
-            cell.colorStrip.backgroundColor = enumService.toColor(d: statusList)
+            let multiStatus = enumService.toMultiCourseStataus(list: statusList)
+            cell.typeLabel.text = enumService.toDescription(e: multiStatus)
+            cell.typeLabel.textColor = enumService.toColor(d: multiStatus)
+            cell.backgroundColor = enumService.toColor(d: multiStatus).withAlphaComponent(0.02)
+            cell.colorStrip.backgroundColor = enumService.toColor(d: multiStatus)
         } else {
             cell.noteLabel.text = "课程读取错误"
         }
@@ -219,6 +241,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     override func refresh() {
+        print("refresh")
         for student in self.studentListToManageCourse{
             student.download()
         }
@@ -246,11 +269,10 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        if AppDelegate.AP().ds?.usergroup == userGroup.student{
-            return false
-        } else {
+        if AppDelegate.AP().ds?.usergroup == userGroup.admin{
             return true
+        } else {
+            return false
         }
     }
     
@@ -315,10 +337,10 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         super.viewDidLoad()
         addCourseButton.tintColor = HexColor.Pirmary
         
-        if AppDelegate.AP().ds?.usergroup == userGroup.student{
-            self.addCourseButton.isEnabled = false
-        } else {
+        if AppDelegate.AP().ds?.usergroup == userGroup.admin{
             self.addCourseButton.isEnabled = true
+        } else {
+            self.addCourseButton.isEnabled = false
         }
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(detectPan))

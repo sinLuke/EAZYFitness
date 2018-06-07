@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class MessageListTableViewController: UITableViewController {
+class MessageListTableViewController: DefaultTableViewController {
     
     var thisUser:EFData!
     var thisUsergroup:userGroup!
@@ -23,8 +23,7 @@ class MessageListTableViewController: UITableViewController {
     var receiverUID:String!
     var db:Firestore!
     
-    func refresh() {
-        
+    override func refresh() {
         if let thisStudnet = thisUser as? EFStudent{
             Firestore.firestore().collection("student").document(thisStudnet.memberID).collection("Message").document("Last").getDocument { (snap, err) in
                 if let err = err{
@@ -97,7 +96,7 @@ class MessageListTableViewController: UITableViewController {
         reload()
     }
     
-    func reload() {
+    override func reload() {
         self.tableView.reloadData()
     }
     
@@ -300,6 +299,7 @@ class MessageListTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? MessageCollectionViewController{
             if let currentMemberID = AppDelegate.AP().ds?.memberID{
+                dvc.receiver = self.receiverUID
                 dvc.colRef = self.prepareRef
                 dvc.thisTrainerStudent = self.thisUser
             }

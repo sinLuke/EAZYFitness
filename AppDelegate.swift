@@ -20,12 +20,13 @@ import Firebase
 import FirebaseMessaging
 import FirebaseAuthUI
 import FirebaseGoogleAuthUI
+import MaterialComponents
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     var ds:DataServer?
-    
+    var superUID:String!
     var studentList:[DocumentReference] = []
 
     //教练
@@ -98,15 +99,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     func dataServerDidFinishInit(){
-        
+        getSuperUID()
         for listener in self.messageListener{
             listener.remove()
         }
         
         let uuid = UIDevice.current.identifierForVendor!.uuidString
-        if let ds = self.ds{
-            Firestore.firestore().collection("users").document(ds.uid).updateData(["loginDevice" : uuid])
-        }
+        
         
         self.startListener()
         if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
@@ -121,6 +120,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                 AppDelegate.resetMainVC(with: "loginPassword")
             }
         } else {
+            if let ds = self.ds{
+                Firestore.firestore().collection("users").document(ds.uid).updateData(["loginDevice" : uuid])
+            }
             switch self.ds!.usergroup {
             case .student:
                 AppDelegate.resetMainVC(with: "student")
@@ -128,8 +130,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                 AppDelegate.resetMainVC(with: "trainer")
             case .admin:
                 AppDelegate.resetMainVC(with: "admin")
-            default:
-                AppDelegate.resetMainVC(with: "login")
             }
         }
     }
@@ -148,14 +148,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         application.registerForRemoteNotifications()
         
         return true
     }
+    
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        for listener in self.messageListener{
+            listener.remove()
+        }
+        if let _ds = ds {
+            Firestore.firestore().collection("Message").whereField("uid", isEqualTo: _ds.uid).getDocuments{ (snap, err) in
+                if let err = err {
+                    AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
+                } else {
+                    var bages = [0,0,0,0]
+                    var bagesTotal = 0
+                    for doc in snap!.documents{
+                        let bageID = doc.data()["bage"] as! Int
+                        bages[bageID] += 1
+                        bagesTotal += 1
+                    }
+                    for i in 0...3 {
+                        AppDelegate.setBadges(notificationValue: bages[i], for: i)
+                    }
+                    let center = UNUserNotificationCenter.current()
+                    center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+                        
+                    }
+                    application.registerForRemoteNotifications()
+                    application.applicationIconBadgeNumber = bagesTotal
+                    completionHandler(UIBackgroundFetchResult.newData)
+                }
+            }
+        } else {
+            completionHandler(UIBackgroundFetchResult.noData)
+        }
+        
+    }
+        
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+        self.window!.tintColor = HexColor.Pirmary
         FirebaseApp.configure()
         
         //云消息
@@ -271,13 +306,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                     AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
                 } else {
                     var bages = [0,0,0,0]
+                    var bagesTotal = 0
                     for doc in snap!.documents{
                         let bageID = doc.data()["bage"] as! Int
                         bages[bageID] += 1
+                        bagesTotal += 1
                     }
                     for i in 0...3 {
                         AppDelegate.setBadges(notificationValue: bages[i], for: i)
                     }
+                    let center = UNUserNotificationCenter.current()
+                    center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+                        
+                    }
+                    UIApplication.shared.registerForRemoteNotifications()
+                    UIApplication.shared.applicationIconBadgeNumber = bagesTotal
                 }
             }
         }
@@ -331,8 +374,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     class func showError(title:String, err:String, of cvc:UIViewController, handler:(()->())? = nil){
         print(title)
         print(err)
-        let alert: UIAlertController = UIAlertController(title: title, message: err, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {_ in
+        let alert: MDCAlertController = MDCAlertController(title: title, message: err)
+        alert.addAction(MDCAlertAction(title: "确定", handler: {_ in
             self.endLoading()
             if let _handler = handler{
                 _handler()
@@ -345,14 +388,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     class func showSelection(title:String, text:String, of cvc:UIViewController, handlerAgree:(()->())? = nil, handlerDismiss:(()->())? = nil){
         print(title)
         print(text)
-        let alert: UIAlertController = UIAlertController(title: title, message: text, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .`default`, handler: {_ in
+        let alert: MDCAlertController = MDCAlertController(title: title, message: text)
+        alert.addAction(MDCAlertAction(title: "确定", handler: {_ in
             self.endLoading()
             if let _handler = handlerAgree{
                 _handler()
             }
         }))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: "Default action"), style: .cancel, handler: {_ in
+        alert.addAction(MDCAlertAction(title: "取消", handler: {_ in
             self.endLoading()
             if let _handler = handlerDismiss{
                 _handler()
@@ -372,6 +415,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         return appDelegate
     }
     
+    func getSuperUID(){
+        Firestore.firestore().collection("users").whereField("memberID", isEqualTo: "SUPER").getDocuments { (snaps, err) in
+            for document in snaps!.documents{
+                self.superUID = document.reference.documentID
+            }
+        }
+    }
+    
     class func resetMainVC(with ID: String){
         print(ID)
         AppDelegate.AP().window = UIWindow(frame: UIScreen.main.bounds)
@@ -384,19 +435,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         if let ivc = initialViewController as? StudentTabBarController{
             print("StudentVC")
             ivc.thisStudent = DataServer.studentDic[AppDelegate.AP().ds!.memberID]
-            AppDelegate.AP().window?.rootViewController = ivc
+            UIView.transition(with: AppDelegate.AP().window!, duration: 0.3, options: .transitionFlipFromRight, animations: {
+                AppDelegate.AP().window?.rootViewController = ivc
+            })
             AppDelegate.AP().window?.makeKeyAndVisible()
             
         } else if let ivc = initialViewController as? TrainerTabBarController {
             print("trainerMyStudentVC")
             print(DataServer.trainerDic)
             ivc.thisTrainer = DataServer.trainerDic[AppDelegate.AP().ds!.memberID]
-            AppDelegate.AP().window?.rootViewController = ivc
+            
+            UIView.transition(with: AppDelegate.AP().window!, duration: 0.3, options: .transitionFlipFromRight, animations: {
+                AppDelegate.AP().window?.rootViewController = ivc
+            })
+                
+            
             AppDelegate.AP().window?.makeKeyAndVisible()
             
         } else {
             print("else")
-            AppDelegate.AP().window?.rootViewController = initialViewController
+            UIView.transition(with: AppDelegate.AP().window!, duration: 0.3, options: .transitionFlipFromRight, animations: {
+                AppDelegate.AP().window?.rootViewController = initialViewController
+            })
             AppDelegate.AP().window?.makeKeyAndVisible()
         }
     }

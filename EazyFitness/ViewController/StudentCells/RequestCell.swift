@@ -8,9 +8,10 @@
 
 import UIKit
 import Firebase
+import MaterialComponents
 
-class RequestCell: UICollectionViewCell {
-    
+class RequestCell: MDCCardCollectionCell {
+    var startTime:Date!
     @IBOutlet weak var requestTitleLabel: UILabel!
     @IBOutlet weak var requestDiscriptionLabel: UILabel!
     
@@ -33,25 +34,30 @@ class RequestCell: UICollectionViewCell {
     }
     
     @IBAction func approve(_ sender: Any) {
-        waitView.isHidden = false
-        approveBtn.isHidden = true
-        waitView.startAnimating()
-        UIView.animate(withDuration: 0.5, animations: {
-            self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-        }) { (_) in
-            UIView.animate(withDuration: 0.3, animations: {
-                //D9FAD9
-                self.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
-            }, completion: { (_) in
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.alpha = 0
+        
+        if startTime != nil, startTime < Date(){
+            AppDelegate.showError(title: "无法同意", err: "申请已过期")
+        } else {
+            waitView.isHidden = false
+            approveBtn.isHidden = true
+            waitView.startAnimating()
+            UIView.animate(withDuration: 0.5, animations: {
+                self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+            }) { (_) in
+                UIView.animate(withDuration: 0.3, animations: {
+                    //D9FAD9
+                    self.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
                 }, completion: { (_) in
-                    self.efRequest.approve()
-                    self.waitView.isHidden = true
-                    self.waitView.stopAnimating()
-                    AppDelegate.refresh()
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.alpha = 0
+                    }, completion: { (_) in
+                        self.efRequest.approve()
+                        self.waitView.isHidden = true
+                        self.waitView.stopAnimating()
+                        AppDelegate.refresh()
+                    })
                 })
-            })
+            }
         }
     }
 }

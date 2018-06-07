@@ -8,7 +8,7 @@
 
 import UIKit
 import MaterialComponents
-class AdminSummaryViewCell: MDCCardCollectionCell, UICollectionViewDataSource, UICollectionViewDelegate {
+class AdminSummaryViewCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var itemCollectionView: UICollectionView!
@@ -23,10 +23,19 @@ class AdminSummaryViewCell: MDCCardCollectionCell, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DataItemCollectionViewCell", for: indexPath) as! DataItemCollectionViewCell
+        switch vc.timeid {
+        case 0:
+            tinmString = "总"
+        case 1:
+            tinmString = "本月"
+        default:
+            tinmString = "本日"
+        }
+        //print(vc.totalCourseAmount)
         
         switch indexPath.row {
         case 0:
-            cell.itemName.text = "\(tinmString)上课数\(enumService.toDescription(e: region))"
+            cell.itemName.text = "\(tinmString)上课数"
             cell.itemValue.text = prepareCourseNumber(vc.totalCourseAmount[region] ?? 0)
             return cell
         case 1:
@@ -59,6 +68,10 @@ class AdminSummaryViewCell: MDCCardCollectionCell, UICollectionViewDataSource, U
         } else {
             return String(float)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 165, height: 110)
     }
     
 }

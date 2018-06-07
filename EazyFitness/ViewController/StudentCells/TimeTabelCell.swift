@@ -8,16 +8,17 @@
 
 import UIKit
 import Firebase
+import MaterialComponents
 
-class TimeTabelCell: UICollectionViewCell {
+class TimeTabelCell: MDCCardCollectionCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var TimeLabel: UILabel!
     @IBOutlet weak var noteLabel: UILabel!
     @IBOutlet weak var report: UIButton!
     @IBOutlet weak var requirChangeBtn: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
-    
-    var thisCourseRef:DocumentReference!
+
+    var thisStudentCourseRef:DocumentReference!
     
     @IBAction func requirChangeTime(_ sender: Any) {
     }
@@ -27,21 +28,7 @@ class TimeTabelCell: UICollectionViewCell {
     
     @IBAction func report(_ sender: Any) {
         //教练没来
-        thisCourseRef.getDocument { (snap, err) in
-            if let err = err {
-                AppDelegate.showError(title: "记录异常时发生错误", err: err.localizedDescription)
-            } else{
-                if let datadic = snap?.data(){
-                    if (datadic["Record"] as? Bool) == false{
-                        self.thisCourseRef.updateData(["notrainer" : true])
-                        self.thisCourseRef.updateData(["nostudent" : false])
-                        AppDelegate.showError(title: "记录完成", err: "已记录为教练未按时到达")
-                    } else {
-                        AppDelegate.showError(title: "无法记录", err: "该课程已经被记录")
-                    }
-                }
-            }
-        }
-        
+        self.thisStudentCourseRef.updateData(["status" : enumService.toString(e: .noTrainer)])
+        AppDelegate.showError(title: "记录成功", err: "已成功记录教练为没来")
     }
 }

@@ -8,8 +8,8 @@
 
 import UIKit
 import Firebase
-
-class TrainerScanCell: UICollectionViewCell {
+import MaterialComponents
+class TrainerScanCell: MDCCardCollectionCell {
     func readerDidCancel(_ reader: QRCodeReaderViewController) {
         //dismiss(animated: true, completion: nil)
     }
@@ -60,9 +60,11 @@ class TrainerScanCell: UICollectionViewCell {
             alert.addAction(UIAlertAction(title: "提交", style: .default, handler: { (action) in
                 for textfield in alert.textFields!{
                     self.thisStudentCourse.note = textfield.text ?? "原因未注明"
+                    self.thisStudentCourse.status = .other
                     self.thisStudentCourse.upload()
                 }
             }))
+            self.vc.present(alert, animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
             self.vc.endLoading()

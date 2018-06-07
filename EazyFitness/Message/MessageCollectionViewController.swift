@@ -13,7 +13,7 @@ private let reuseIdentifier = "Cell"
 class MessageCollectionViewController: DefaultViewController, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate {
 
     var receiver:String!
-   
+    var keyboardCanHide = false
     
     @IBOutlet weak var fieldHeight: NSLayoutConstraint!
     @IBOutlet weak var inputViewContainer: UIView!
@@ -46,9 +46,12 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
                             self.MessageList.append(docs.data())
                             if (docs.data()["byStudent"] as! Bool == true) && AppDelegate.AP().ds?.usergroup != userGroup.student{
                                 docs.reference.updateData(["Read" : true])
+                                (docs.data()["bage"] as! DocumentReference).delete()
                             } else if (docs.data()["byStudent"] as! Bool == false) && AppDelegate.AP().ds?.usergroup == userGroup.student{
                                 docs.reference.updateData(["Read" : true])
+                                (docs.data()["bage"] as! DocumentReference).delete()
                             }
+                            
                         }
                     }
                 } else {
@@ -96,7 +99,9 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.dismissKeyboard()
+        if keyboardCanHide {
+            self.dismissKeyboard()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -116,18 +121,30 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     }
     
     @IBAction func sendMessageAction(_ sender: Any) {
-        let lastRef = colRef.addDocument(data: ["Read" : false, "Text" : self.messageField.text, "Time":Date(), "byStudent":(AppDelegate.AP().ds?.usergroup == userGroup.student)])
-        colRef.document("Last").setData(["Text" : self.messageField.text, "ref":lastRef])
         if let receiverUID = receiver{
-            Firestore.firestore().collection("Message").addDocument(data: ["bage":1, "uid":receiverUID])
+            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : receiverUID, "bage":1])
+            let lastRef = colRef.addDocument(data: ["Read" : false,
+                                                    "Text" : self.messageField.text,
+                                                    "Time":Date(),
+                                                    "byStudent":(AppDelegate.AP().ds?.usergroup == userGroup.student),
+                                                    "bage" : bageRef])
+            colRef.document("Last").setData(["Text" : self.messageField.text, "ref":lastRef])
         }
         fieldHeight.constant = 34
         self.messageField.text = ""
     }
     
     @objc func dismissKeyboard(){
+        self.keyboardCanHide = false
         self.messageField.endEditing(true)
         bottomSpace.constant = 0
+        UIView.animate(withDuration: 0.1, animations: {
+            self.view.layoutIfNeeded()
+            let bottomOffset = CGPoint(x: 0, y: max(0, self.collectionView.contentSize.height - self.collectionView.bounds.size.height))
+            self.collectionView.setContentOffset(bottomOffset, animated: false)
+        }) { (_) in
+            
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -148,6 +165,14 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
         let keyboardHeight = keyboardRectangle.height
         
         bottomSpace.constant = keyboardHeight - (self.tabBarController?.tabBar.frame.height)!
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }) { (_) in
+            
+            self.keyboardCanHide = true
+        }
+        let bottomOffset = CGPoint(x: 0, y: max(0, self.collectionView.contentSize.height - self.collectionView.bounds.size.height))
+        self.collectionView.setContentOffset(bottomOffset, animated: true)
     }
     
     

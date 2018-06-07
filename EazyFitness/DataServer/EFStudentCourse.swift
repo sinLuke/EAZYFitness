@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import MaterialComponents
+
 class EFStudentCourse: EFData {
     var status:courseStatus = courseStatus.other
     var note:String = ""
@@ -18,7 +20,9 @@ class EFStudentCourse: EFData {
         ref.getDocument { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "获取学生课程时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取学生课程时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 if let data = snap?.data(){
                     self.status = enumService.toCourseStatus(s: data["status"] as! String)

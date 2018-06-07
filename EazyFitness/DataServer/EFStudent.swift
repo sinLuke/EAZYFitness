@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import MaterialComponents
 
 class EFStudent: EFData {
     var firstName:String = ""
@@ -37,7 +38,9 @@ class EFStudent: EFData {
         ref.getDocument { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "读取学生时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取学生时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 if let data = snap?.data(){
                     self.firstName = data["firstName"] as! String
@@ -57,7 +60,9 @@ class EFStudent: EFData {
         ref.collection("course").getDocuments { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "读取学生时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取学生时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 self.courseDic = [:]
                 for doc in snap!.documents{
@@ -82,9 +87,10 @@ class EFStudent: EFData {
         ref.collection("registered").getDocuments { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "读取学生时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取学生时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
-                self.registeredDic = [:]
                 for doc in snap!.documents{
                     let efStudentRegistered = EFStudentRegistered(with: doc.reference)
                     efStudentRegistered.amount = doc["amount"] as! Int
@@ -99,7 +105,9 @@ class EFStudent: EFData {
         ref.collection("message").getDocuments { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "读取学生时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取学生时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 self.messageDic = [:]
                 for doc in snap!.documents{
@@ -117,7 +125,9 @@ class EFStudent: EFData {
         ref.collection("personal").getDocuments { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "读取学生时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取学生时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 self.personalDic = [:]
                 for doc in snap!.documents{
@@ -144,9 +154,14 @@ class EFStudent: EFData {
             "weightUnit":"kg",
             "goal":30]){ (err) in
             if let err = err{
-                AppDelegate.showError(title: "添加学生失败", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "添加学生失败: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             }
             if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
+                let message = MDCSnackbarMessage()
+                message.text = "添加学生完成"
+                MDCSnackbarManager.show(message)
                 vc.endLoading()
             }
         }
@@ -158,7 +173,9 @@ class EFStudent: EFData {
     class func addCourse(of studentList:[EFStudent], date:Date, amount:Int, note:String?, trainer:DocumentReference, status:courseStatus){
         for theStudent in studentList{
             if theStudent.uid == nil || theStudent.uid == "" {
-                AppDelegate.showError(title: "\(theStudent.name)尚未注册", err: "暂时无法添加")
+                let message = MDCSnackbarMessage()
+                message.text = "\(theStudent.name)尚未注册, 暂时无法添加"
+                MDCSnackbarManager.show(message)
                 return
             }
         }
@@ -174,7 +191,13 @@ class EFStudent: EFData {
             df.timeStyle = .medium
             
             let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
-            EFRequest.createRequest(bageRef:bageRef, title: "为\(theStudent.name)添加课程", sander: trainer.documentID, receiver: theStudent.uid!, text: "申请添加\(df.string(from: date))", requestRef: traineeStudentCourseRef, type: requestType.studentApproveCourse)
+            EFRequest.createRequest(
+                bageRef:bageRef,
+                title: "为\(theStudent.name)添加课程",
+                receiver: theStudent.uid!,
+                text: "申请添加\(df.string(from: date))",
+                requestRef: traineeStudentCourseRef,
+                type: requestType.studentApproveCourse)
             traineeStudentCourse.append(traineeStudentCourseRef)
             trainee.append(theStudent.ref)
             
@@ -183,22 +206,28 @@ class EFStudent: EFData {
         
     }
     
-    func addRegistered(amount:Int, note:String, approved:Bool){
-        ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()]){ (err) in
-                if let err = err{
-                    AppDelegate.showError(title: "添加课时失败", err: err.localizedDescription)
-                }
-                if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-                    vc.endLoading()
-                }
-            self.download()
-            }
+    func addRegistered(amount:Int, note:String, approved:Bool, sutdentName:String){
+        let registerRef = ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()])
+        let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
+        EFRequest.createRequest(
+            bageRef: bageRef,
+            title: "小助手为\(sutdentName)购买课时",
+            receiver: AppDelegate.AP().superUID,
+            text: note,
+            requestRef: registerRef,
+            type: requestType.studentAddValue)
+        if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
+            vc.endLoading()
+        }
+        self.download()
     }
     
     func getTrainer(){
         Firestore.firestore().collection("trainer").getDocuments { (snaps, err) in
             if let err = err {
-                AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "未知错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 for doc in snaps!.documents{
                     if let traineeList = doc.data()["trainee"] as? [DocumentReference]{
@@ -219,14 +248,18 @@ class EFStudent: EFData {
         if let ds = AppDelegate.AP().ds{
             ref.collection("message").addDocument(data: ["byStudent" : ds.usergroup == .student, "text":text, "read":false, "type":type, "date":Date()]){ (err) in
                 if let err = err{
-                    AppDelegate.showError(title: "发送信息失败", err: err.localizedDescription)
+                    let message = MDCSnackbarMessage()
+                    message.text = "发送信息失败: \(err.localizedDescription)"
+                    MDCSnackbarManager.show(message)
                 }
                 if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
                     vc.endLoading()
                 }
             }
         } else {
-            AppDelegate.showError(title: "发送失败", err: "无法确定用户组", handler: AppDelegate.AP().signout)
+            let message = MDCSnackbarMessage()
+            message.text = "发送信息失败: 无法确定用户组"
+            MDCSnackbarManager.show(message)
         }
     }
     

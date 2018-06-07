@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class ThisMonthViewCell: UICollectionViewCell {
+import MaterialComponents
+class ThisMonthViewCell: MDCCardCollectionCell {
     
     @IBOutlet weak var allCourseFinishedLabel: UILabel!
     @IBOutlet weak var AllTimeLabel: UILabel!

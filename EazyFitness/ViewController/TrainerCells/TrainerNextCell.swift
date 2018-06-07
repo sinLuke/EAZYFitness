@@ -8,8 +8,8 @@
 
 import UIKit
 import Firebase
-
-class TrainerNextCell: UICollectionViewCell {
+import MaterialComponents
+class TrainerNextCell: MDCCardCollectionCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var TimeLabel: UILabel!
     @IBOutlet weak var noteLabel: UILabel!

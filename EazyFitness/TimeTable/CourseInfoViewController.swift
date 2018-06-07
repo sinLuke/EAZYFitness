@@ -276,8 +276,13 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
         EFStudent.addCourse(of: self.studentListToManageCourse, date: self.courseDatePicker.date, amount: 准备增加, note: courseNoteField.text ?? "无备注", trainer: thisTrainer.ref, status: courseStatus.waitForStudent)
-        
+        for student in studentListToManageCourse{
+            student.download()
+        }
         _ = self.navigationController?.popViewController(animated: true)
+        if let cvc = self.navigationController?.topViewController as? refreshableVC {
+            cvc.refresh()
+        }
     }
     
     @IBAction func 减少(_ sender: Any) {

@@ -147,10 +147,10 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                         cell.statusLabel.textColor = HexColor.gray
                     }
                 } else {
-                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
+                    //AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
                 }
             } else {
-                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
+                AppDelegate.showError(title: "未知错误", err: "无法读取列表中的第 \(indexPath.row) 行")
             }
             return cell
         } else {
@@ -216,10 +216,10 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                     self.new = false
                     self.performSegue(withIdentifier: "detail", sender: self)
                 } else {
-                    AppDelegate.showError(title: "未知错误", err: "发生未知错误")
+                    //AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
                 }
             } else {
-                AppDelegate.showError(title: "未知错误", err: "发生未知错误")
+                AppDelegate.showError(title: "未知错误", err: "无法读取列表中的第 \(indexPath.row) 行")
             }
             
         } else {

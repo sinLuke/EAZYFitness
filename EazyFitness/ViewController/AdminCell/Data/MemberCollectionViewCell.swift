@@ -8,7 +8,7 @@
 
 import UIKit
 import MaterialComponents
-class MemberCollectionViewCell: MDCCardCollectionCell, UICollectionViewDelegate, UICollectionViewDataSource {
+class MemberCollectionViewCell: UICollectionViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var studentOrTrainer:EFData!
     
@@ -22,7 +22,7 @@ class MemberCollectionViewCell: MDCCardCollectionCell, UICollectionViewDelegate,
         } else if (studentOrTrainer as? EFStudent) != nil {
             return 7
         } else {
-            return 0
+            return 4
         }
     }
     
@@ -77,5 +77,9 @@ class MemberCollectionViewCell: MDCCardCollectionCell, UICollectionViewDelegate,
         } else {
             return cell
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 165, height: 110)
     }
 }

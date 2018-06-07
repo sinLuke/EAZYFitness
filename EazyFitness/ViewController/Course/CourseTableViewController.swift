@@ -167,24 +167,24 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
     
     func loadInfo(efCourse:EFCourse){
         let statusList:[courseStatus] = efCourse.getTraineesStatus
-        
+        let multiStatus = enumService.toMultiCourseStataus(list: statusList)
         switch self.typerSelector.selectedSegmentIndex {
         case 0: //全部
             self.appendCourse(efCourse: efCourse)
             
             self.listedCourseStatus[efCourse.ref.documentID] = statusList
         case 1: //已完成
-            if enumService.toDescription(d: statusList) == "已全部扫描" || enumService.toDescription(d: statusList) == "有特殊情况" {
+            if enumService.FinishedAmountForAdmin(s: multiStatus) == 1{
                 self.appendCourse(efCourse: efCourse)
                 self.listedCourseStatus[efCourse.ref.documentID] = statusList
             }
         case 2: //未完成
-            if enumService.toDescription(d: statusList) == "教练未到" || enumService.toDescription(d: statusList) == "所有学生已同意" {
+            if enumService.FinishedAmountForAdmin(s: multiStatus) == 0 && multiStatus != .special && multiStatus != .other{
                 self.appendCourse(efCourse: efCourse)
                 self.listedCourseStatus[efCourse.ref.documentID] = statusList
             }
         case 3: //异常
-            if enumService.toDescription(d: statusList) == "有特殊情况" || enumService.toDescription(d: statusList) == "等待教练同意" || enumService.toDescription(d: statusList) == "等待所有学生同意" || enumService.toDescription(d: statusList) == "有学生尚未同意" || enumService.toDescription(d: statusList) == "有人未同意但有人已扫码" || enumService.toDescription(d: statusList) == "没有全部扫码" || enumService.toDescription(d: statusList) == "未知情况" {
+            if multiStatus == .special && multiStatus == .other  {
                 self.appendCourse(efCourse: efCourse)
                 self.listedCourseStatus[efCourse.ref.documentID] = statusList
             }
@@ -226,12 +226,11 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
         cell.date.text = efCourse.dateString
         cell.amount.text = efCourse.amountString
         if let status = self.listedCourseStatus[efCourse.ref.documentID]{
-            print("status")
-            print(status)
-            cell.status.textColor = enumService.toColor(d: status)
-            cell.backgroundColor = enumService.toColor(d: status).withAlphaComponent(0.02)
-            cell.colorStrip.backgroundColor = enumService.toColor(d: status)
-            cell.status.text = enumService.toDescription(d: status)
+            let multiStatus = enumService.toMultiCourseStataus(list: status)
+            cell.status.textColor = enumService.toColor(d: multiStatus)
+            cell.backgroundColor = enumService.toColor(d: multiStatus).withAlphaComponent(0.02)
+            cell.colorStrip.backgroundColor = enumService.toColor(d: multiStatus)
+            cell.status.text = enumService.toDescription(e: multiStatus)
         } else {
             cell.status.text = "未知"
         }

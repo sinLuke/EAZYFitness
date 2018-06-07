@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import MaterialComponents
 
 class EFTrainer: EFData {
     var firstName:String = ""
@@ -33,7 +34,9 @@ class EFTrainer: EFData {
         ref.getDocument { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "读取教练时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取教练时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 if let data = snap?.data(){
                     self.firstName = data["firstName"] as! String
@@ -62,7 +65,9 @@ class EFTrainer: EFData {
         ref.collection("finish").getDocuments { (snap, err) in
             AppDelegate.endLoading()
             if let err = err {
-                AppDelegate.showError(title: "课程学生时错误", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "读取已完成课程时错误: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             } else {
                 self.finish = []
                 for doc in snap!.documents{
@@ -102,12 +107,13 @@ class EFTrainer: EFData {
             "trainee":[],
             "goal":30]){ (err) in
             if let err = err{
-                AppDelegate.showError(title: "添加教练失败", err: err.localizedDescription)
+                let message = MDCSnackbarMessage()
+                message.text = "添加教练失败: \(err.localizedDescription)"
+                MDCSnackbarManager.show(message)
             }
             if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
                 vc.endLoading()
             }
-            print("addTrainer")
             AppDelegate.reload()
         }
         let newTrainer = EFTrainer(with: newref)
@@ -128,7 +134,9 @@ class EFTrainer: EFData {
                 "trainee":self.trainee,
                 "goal":self.goal]) { (_) in
                     AppDelegate.endLoading()
-                    AppDelegate.showError(title: "上传成功", err: "对\(self.name)的修改上传成功")
+                    let message = MDCSnackbarMessage()
+                    message.text = "对\(self.name)的修改上传成功"
+                    MDCSnackbarManager.show(message)
                     self.download()
             }
         }

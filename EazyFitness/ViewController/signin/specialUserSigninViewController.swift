@@ -20,6 +20,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     @IBOutlet weak var fnameField: UITextField!
     @IBOutlet weak var lnameField: UITextField!
     @IBOutlet weak var usergroupLabel: UILabel!
+    @IBOutlet weak var regionLabel: UILabel!
     
     var Userdata: [String:Any] = [:]
     
@@ -37,8 +38,9 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
         self.lnameField.text = lname
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
-        if let ug = self.usergroup{
+        if let ug = self.usergroup, let rg = self.region{
             usergroupLabel.text = enumService.toDescription(e: ug)
+            regionLabel.text = enumService.toDescription(e: rg)
         } else {
             AppDelegate.showError(title: "发生未知错误", err: "无法识别用户组1", handler: self.cancelfunc)
         }
@@ -88,6 +90,8 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                 }
                 
                 if let ug = self.usergroup, let rg = self.region{
+                    print("if let ug = self.usergroup, let rg = self.region{")
+                    print(enumService.toString(e: rg))
                     AppDelegate.AP().applicationDidStart()
                 } else {
                     AppDelegate.showError(title: "发生未知错误", err: "无法识别用户组2", handler: self.cancelfunc)

@@ -73,6 +73,7 @@ class DefaultViewController: UIViewController, refreshableVC {
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        self.refresh()
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = false
         }
@@ -180,7 +181,9 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
         // Dispose of any resources that can be recreated.
     }
     override func viewDidAppear(_ animated: Bool) {
+        
         super.viewDidAppear(animated)
+        self.refresh()
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }
@@ -256,6 +259,7 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        self.refresh()
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = false
         }

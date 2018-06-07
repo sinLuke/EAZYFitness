@@ -42,6 +42,10 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     }
     
     override func reload() {
+        if let _ds = AppDelegate.AP().ds{
+            self.title = "\(_ds.fname) \(_ds.lname)"
+        }
+        
         
         self.thisCourse = nil
         self.nextCourse = nil
@@ -77,7 +81,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                             if let theCourseEndTime = Calendar.current.date(byAdding: .minute, value: 30*theCourse.amount, to: theCourse.date){
                                 //如果当前时间在theCourse开始和结束之间，则放入 self.thisCourse
                                 let statusList = theCourse.getTraineesStatus
-                                if theCourse.date < Date() && Date() < theCourseEndTime && (enumService.toDescription(d: statusList) == "所有学生已同意" || enumService.toDescription(d: statusList) == "已全部扫描" || enumService.toDescription(d: statusList) == "没有全部扫码" || statusList == [courseStatus.approved] || statusList == [courseStatus.scaned]){
+                                let multiStatus = enumService.toMultiCourseStataus(list: statusList)
+                                if theCourse.date < Date() && Date() < theCourseEndTime && enumService.ifCourseValid(s: multiStatus) {
                                     self.thisCourse = theCourse
                                 }
                             }
@@ -251,29 +256,36 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             cell.titleLabel.text = "下一节课"
             if self.thisCourse != nil{
                 //如果当前课程存在
-                cell.titleLabel.text = "正在上课"
+                cell.noteLabel.text = self.thisCourse!.note
                 cell.backgroundColor = HexColor.Blue.withAlphaComponent(0.3)
                 cell.dateLabel.text = self.thisCourse!.dateOnlyString
                 cell.TimeLabel.text = self.thisCourse!.timeOnlyString
-                cell.noteLabel.text = self.thisCourse!.note
+                if enumService.toMultiCourseStataus(list: thisCourse!.getTraineesStatus) == .noTrainer {
+                    cell.titleLabel.text = "你被学生出卖了"
+                    cell.backgroundColor = HexColor.Red.withAlphaComponent(0.3)
+                } else {
+                    cell.titleLabel.text = "正在上课"
+                    
+                    cell.backgroundColor = HexColor.Red.withAlphaComponent(0.3)
+                }
+                
                 cell.studentNameLabel.text = self.thisCourse!.getTraineesNames
                 
             } else if self.nextCourse != nil{
                 
                 //如果下一节课存在
-                cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                cell.backgroundColor = UIColor.white
                 cell.dateLabel.text = self.nextCourse!.dateOnlyString
                 cell.TimeLabel.text = self.nextCourse!.timeOnlyString
                 cell.noteLabel.text = self.nextCourse!.note
                 cell.studentNameLabel.text = self.nextCourse!.getTraineesNames
                 
             } else {
-                cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                cell.backgroundColor = UIColor.white
                 cell.dateLabel.text = ""
                 cell.TimeLabel.text = "暂无课程"
                 cell.noteLabel.text = ""
             }
-            cell.layer.cornerRadius = 10
             return cell
             
         case ((self.thisCourse?.traineeStudentCourseRef.count) ?? 0) + EFRequest.requestList.count + 1:
@@ -296,18 +308,16 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                 cell.backgroundColor = HexColor.Green.withAlphaComponent(0.3)
                 cell.backgroundColor = HexColor.Green
             } else {
-                cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                cell.backgroundColor = UIColor.white
                 cell.progress.tintColor = HexColor.Pirmary
             }
             
-            cell.layer.cornerRadius = 10
             return cell
         default:
             if indexPath.row < ((self.thisCourse?.traineeStudentCourseRef.count) ?? 0){
                 //扫码通知
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "scanBoard",
                                                               for: indexPath) as! TrainerScanCell
-                cell.layer.cornerRadius = 10
                 cell.rootViewComtroller = self
                 cell.trainer = self.thisTrainer
                 cell.vc = self
@@ -321,7 +331,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                                 cell.thisStudentCourse = thisStudentCourse
                                 cell.NameLabel.text = efStudent.name
                                 
-                                let recorded = !(cell.thisStudentCourse.status == courseStatus.approved)
+                                let recorded = !(cell.thisStudentCourse.status == courseStatus.approved || cell.thisStudentCourse.status == courseStatus.noTrainer)
                                 if (recorded == true){
                                     cell.TitleLabel.text = "课程已扫码"
                                     cell.backgroundColor = HexColor.Green.withAlphaComponent(0.2)
@@ -333,7 +343,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                                     cell.scanButton.isHidden = false
                                     
                                     let startTime = thiscourse.date
-                                    if (Date() > Calendar.current.date(byAdding: .minute, value: self.TimeTolerant, to: startTime)!){
+                                    if ((cell.thisStudentCourse.status == courseStatus.approved || cell.thisStudentCourse.status == courseStatus.noTrainer) && Date() > Calendar.current.date(byAdding: .minute, value: self.TimeTolerant, to: startTime)!){
                                         cell.report.isHidden = false
                                     } else {
                                         cell.report.isHidden = true
@@ -356,7 +366,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                 cell.waitView.isHidden = true
                 cell.backgroundColor = UIColor.red.withAlphaComponent(0.3)
                 cell.approveBtn.isHidden = false
-                cell.layer.cornerRadius = 10
                 
                 if EFRequest.requestList.count <= indexPath.row{
                     return cell
@@ -377,7 +386,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                             dateFormatter2.timeStyle = .short
                             
                             cell.requestDiscriptionLabel.text = "添加自\(dateFormatter1.string(from: startTime)) \(startTime.getThisWeekDayLongName()) \(dateFormatter2.string(from: startTime))至\(dateFormatter2.string(from: endTime!))的课程"
-                            cell.layer.cornerRadius = 10
                         }
                     }
                     

@@ -145,7 +145,7 @@ class EFCourse: EFData {
             if let err = err {
                 AppDelegate.showError(title: "课程下载时错误", err: err.localizedDescription)
             } else {
-                if let data = snap?.data(){
+                if let data = snap!.data(){
                     self.amount = data["amount"] as! Int
                     self.date = data["date"] as! Date
                     self.note = data["note"] as! String
@@ -154,6 +154,8 @@ class EFCourse: EFData {
                     self.traineeRef = data["traineeRef"] as! [DocumentReference]
                     self.traineeStudentCourseRef = data["traineeStudentCourseRef"] as! [DocumentReference]
                     self.ready = true
+                } else {
+                    
                 }
             }
         }
@@ -162,7 +164,6 @@ class EFCourse: EFData {
         if ready {
             ref.updateData(["type" : enumService.toString(e: self.type),
                             "amount": self.amount,
-                            "date":self.date,
                             "note":self.note,
                             "trainerRef":self.trainerRef!,
                             "traineeRef":self.traineeRef,

@@ -105,7 +105,7 @@ class LocalNextDataTableViewController: DefaultTableViewController {
             switch indexPath.section{
             case 0:
                 let theTrainerFinish = theTrainer.finish[indexPath.row]
-                cell.textLabel?.text = enumService.toDescription(d: (DataServer.courseDic[theTrainerFinish.documentID]?.getTraineesStatus)!)
+                cell.textLabel?.text = enumService.toDescription(e: enumService.toMultiCourseStataus(list: (DataServer.courseDic[theTrainerFinish.documentID]?.getTraineesStatus)!))
                 cell.detailTextLabel?.text = DataServer.courseDic[theTrainerFinish.documentID]?.date.description
             case 1:
                 let theTrainerTrainee = theTrainer.trainee[indexPath.row]

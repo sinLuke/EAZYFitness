@@ -42,6 +42,9 @@ class DataServer: NSObject {
                 if doc.count > 0{
                     let data = doc[0].data()
                     DataServer.createDataServer(data: data, uid: doc[0].documentID)
+                } else {
+                    AppDelegate.showError(title: "邮箱错误", err: "请重新输入邮箱，或与客服联系。您输入的邮箱为: \(email)")
+                    AppDelegate.endLoading()
                 }
             }
         }

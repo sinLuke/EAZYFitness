@@ -46,6 +46,27 @@ extension Date {
         return nil
     }
     
+    var TimeString:String {
+        get {
+            let df = DateFormatter()
+            df.timeStyle = .short
+            df.dateStyle = .none
+            return df.string(from: self)
+        }
+    }
+    
+    var DateString:String {
+        get {
+            let thisComponents = Calendar.current.dateComponents([.day, .month, .year], from: self)
+            let nowComponents = Calendar.current.dateComponents([.day, .month, .year], from: Date())
+            if thisComponents.year != nowComponents.year {
+                return "\(thisComponents.year!)年\(thisComponents.month!)月\(thisComponents.day!)日 \(self.getThisWeekDayLongName())"
+            } else {
+                return "\(thisComponents.month!)月\(thisComponents.day!)日 \(self.getThisWeekDayLongName())"
+            }
+        }
+    }
+    
     func descriptDate() -> String {
         let now = Date()
         let thisComponents = Calendar.current.dateComponents([.day, .month, .year, .weekOfYear], from: self)

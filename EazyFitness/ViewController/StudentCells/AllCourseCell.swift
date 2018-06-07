@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class AllCourseCell: UICollectionViewCell {
+import MaterialComponents
+class AllCourseCell: MDCCardCollectionCell {
     @IBOutlet weak var remainCourseLabel: UILabel!
     @IBOutlet weak var totalCourseLabel: UILabel!
     @IBOutlet weak var title: UILabel!
