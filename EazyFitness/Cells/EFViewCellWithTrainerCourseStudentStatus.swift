@@ -17,6 +17,20 @@ class EFViewCellWithTrainerCourseStudentStatus: UICollectionViewCell {
     @IBOutlet weak var StatusFootNote: UILabel!
     @IBOutlet weak var widthOdCell: NSLayoutConstraint!
     
+    var statusCircleColor: HexColor? {
+        set (color) {
+            if color == nil {
+                StatusView.layer.borderColor = UIColor.black.withAlphaComponent(0.5).cgColor
+                StatusView.backgroundColor = UIColor.white
+            } else {
+                StatusView.layer.borderColor = UIColor.white.withAlphaComponent(0.5).cgColor
+                StatusView.backgroundColor = color!
+            }
+        } get {
+            return HexColor.Blue
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -25,5 +39,9 @@ class EFViewCellWithTrainerCourseStudentStatus: UICollectionViewCell {
         widthOdCell.constant = screenWidth - (2 * 12)
         self.layer.cornerRadius = 10
         self.clipsToBounds = true
+        
+        StatusView.layer.cornerRadius = 8
+        StatusView.layer.borderWidth = 1
+        
     }
 }

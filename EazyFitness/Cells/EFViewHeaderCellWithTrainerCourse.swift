@@ -9,6 +9,11 @@
 import UIKit
 
 class EFViewHeaderCellWithTrainerCourse: EFExtentableHeaderCell {
+    
+    
+    @IBOutlet weak var back: UIView!
+    
+    @IBOutlet weak var BarRightLabel: UILabel!
     @IBOutlet weak var DateLabel: UILabel!
     @IBOutlet weak var TimeLabel: UILabel!
     @IBOutlet weak var TextLabel: UILabel!
@@ -19,6 +24,8 @@ class EFViewHeaderCellWithTrainerCourse: EFExtentableHeaderCell {
         // Initialization code
         self.backgroundView.layer.cornerRadius = 10
         self.backgroundView.clipsToBounds = true
+        self.back.layer.cornerRadius = 10
+        self.back.clipsToBounds = true
     }
     
 }

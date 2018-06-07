@@ -211,7 +211,7 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
         case 0:
             return EFRequest.requestList.count
         case 1:
-            return 3
+            return 4
         case 2:
             return 0
         case 3:
@@ -280,6 +280,11 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFViewHeaderCellWithStudentCourse", for: indexPath) as! EFViewHeaderCellWithStudentCourse
+                
+                
+                cell.DateLabel.text = thisCourse!.date.DateString
+                cell.TimeLabel.text = "\(thisCourse!.date.TimeString) 开始的课程"
+                
                 switch enumService.toMultiCourseStataus(list: thisCourse!.getTraineesStatus) {
                 case .approved:
                     cell.TitleBarColor = HexColor.Blue

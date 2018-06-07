@@ -216,12 +216,12 @@ class enumService: NSObject {
         }
     }
     
-    class func toColor(e:courseStatus) -> UIColor{
+    class func toColor(e:courseStatus) -> HexColor{
         switch e {
         case .decline:
             return HexColor.Red
         case .waitForStudent:
-            return UIColor.gray
+            return HexColor.Gray
         case .approved:
             return HexColor.Blue
         case .scaned:
@@ -237,7 +237,7 @@ class enumService: NSObject {
         case .other:
             return HexColor.Purple
         case .waitForTrainer:
-            return UIColor.gray
+            return HexColor.Gray
         case .noStudentFirst:
             return HexColor.Red
         case .noCardFirst:
@@ -383,12 +383,12 @@ class enumService: NSObject {
         }
     }
     
-    class func toColor(d:multiCourseStatus) -> UIColor{
+    class func toColor(d:multiCourseStatus) -> HexColor{
         switch d {
         case .decline:
             return HexColor.Red
         case .waitForStudent:
-            return UIColor.gray
+            return HexColor.Gray
         case .approved:
             return HexColor.Blue
         case .scaned:
@@ -398,11 +398,11 @@ class enumService: NSObject {
         case .other:
             return HexColor.Purple
         case .waitForTrainer:
-            return UIColor.gray
+            return HexColor.Gray
         case .special:
             return HexColor.Purple
         case .someApproved:
-            return UIColor.gray
+            return HexColor.Gray
         case .ApprovedUncompleted:
             return HexColor.Blue
         }

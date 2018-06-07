@@ -21,6 +21,10 @@ class HexColor: UIColor {
     static let Green = HexColor.init(red: 55, green: 139, blue: 46)
     static let Yellow = HexColor.init(red: 169, green: 170, blue: 57)
     
+    static let White = HexColor.init(red: 255, green: 255, blue: 255)
+    static let Black = HexColor.init(red: 0, green: 0, blue: 0)
+    static let Gray = HexColor.init(red: 128, green: 128, blue: 128)
+    
     static let colorList = [Red, Purple, Orenge, Blue, Green]
     
     
