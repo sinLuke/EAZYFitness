@@ -17,7 +17,17 @@ class EFCollectionViewCellWithButton: EFCollectionViewCell {
     @IBOutlet weak var waitView: UIActivityIndicatorView!
     
     var startTime:Date!
-    var efRequest:EFRequest!
+    var efRequest:EFRequest! {
+        didSet {
+            if efRequest.type == .notification {
+                self.CancelBtn.isHidden = true
+                self.AgreeBtn.setTitle("关闭", for: .normal)
+            } else {
+                self.CancelBtn.isHidden = false
+                self.AgreeBtn.setTitle("同意", for: .normal)
+            }
+        }
+    }
     
     @IBAction func Cancel(_ sender: Any) {
         waitView.isHidden = false
@@ -33,7 +43,8 @@ class EFCollectionViewCellWithButton: EFCollectionViewCell {
     }
     
     func function() {
-        if startTime != nil, startTime < Date(){
+        print("function")
+        if startTime != nil && startTime < Date(){
             let message = MDCSnackbarMessage()
             message.text = "无法同意, 申请已过期"
             MDCSnackbarManager.show(message)
@@ -52,6 +63,7 @@ class EFCollectionViewCellWithButton: EFCollectionViewCell {
                         self.efRequest.approve()
                         self.waitView.isHidden = true
                         self.waitView.stopAnimating()
+                        
                         AppDelegate.refresh()
                     })
                 })
@@ -60,7 +72,13 @@ class EFCollectionViewCellWithButton: EFCollectionViewCell {
     }
     
     @IBAction func Agree(_ sender: Any) {
-        function()
+        print("Agree btn preresed")
+        if self.efRequest.type == .notification {
+            self.efRequest.dismiss()
+            AppDelegate.refresh()
+        } else {
+            self.function()
+        }
     }
     
     override func awakeFromNib() {

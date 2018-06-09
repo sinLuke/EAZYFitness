@@ -121,7 +121,7 @@ class EFTrainer: EFData {
         return newTrainer
     }
     
-    override func upload(){
+    override func upload(handler: (()->())? = nil){
         if ready{
             ref.updateData([
                 "firstName" : self.firstName,

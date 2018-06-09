@@ -19,7 +19,7 @@ class EFData: NSObject {
     func download(){
         
     }
-    func upload(){
+    func upload(handler: (()->())? = nil){
         
     }
 }

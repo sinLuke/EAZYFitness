@@ -14,7 +14,7 @@ class EFStudentCourse: EFData {
     var status:courseStatus = courseStatus.other
     var note:String = ""
     var courseRef:DocumentReference!
-    weak var parent:EFStudent!
+    var parent:String!
     override func download() {
         AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
@@ -30,14 +30,20 @@ class EFStudentCourse: EFData {
                     self.courseRef = data["ref"] as? DocumentReference
                     self.ready = true
                 }
-                AppDelegate.load()
+                AppDelegate.reload()
             }
         }
     }
         
-    override func upload() {
+    override func upload(handler: (()->())? = nil) {
         if ready{
-            ref.updateData(["status" : enumService.toString(e: self.status), "note": self.note])
+            ref.updateData(["status" : enumService.toString(e: self.status), "note": self.note]) { (err) in
+                if let err = err {
+                    AppDelegate.showError(title: "更新课程状态时发生错误", err: err.localizedDescription)
+                } else {
+                    handler?()
+                }
+            }
         }
     }
 }

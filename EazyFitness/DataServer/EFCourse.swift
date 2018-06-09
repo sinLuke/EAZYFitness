@@ -54,59 +54,72 @@ class EFCourse: EFData {
         }
     }
     
-    var getTraineesNames:String{
+    func getTraineesNames() {
+        for thisref in traineeRef{
+            thisref.getDocument { (snap, err) in
+                if let err = err {
+                    AppDelegate.showError(title: "获取课程中学生名字时失败", err: err.localizedDescription)
+                } else {
+                    if let fname = snap!.data()?["firstName"] as? String, let lname = snap!.data()?["lastName"] as? String {
+                        self.traineesNamesList[thisref.documentID] = "\(fname) \(lname)"
+                    }
+                }
+                AppDelegate.reload()
+            }
+        }
+    }
+    
+    var traineesNamesList:[String:String] = [:]
+    
+    var traineesNames:String{
         get{
             //print("traineeRef.count")
             //print(traineeRef.count)
             var _name = ""
-            traineeRef.sort { (a, b) -> Bool in
-                a.documentID > b.documentID
-            }
-            if traineeRef.count == 0{
+            let nameList = traineesNamesList.values.sorted()
+            if nameList.count == 0{
                 return ""
             }
-            for i in 0...traineeRef.count - 1{
-                if let student = DataServer.studentDic[traineeRef[i].documentID]{
-                    if traineeRef.count == 1{
-                        return student.name
-                    } else {
-                        //print("student.name")
-                        //print(name)
-                        if i != traineeRef.count - 1{
-                            _name = "\(_name)\(student.name), "
-                        } else {
-                            _name = "\(_name)\(student.name)"
-                        }
-                    }
+            if nameList.count == 1{
+                return nameList[0]
+            }
+            for i in 0...nameList.count - 1 {
+                if i != nameList.count - 1{
+                    _name = "\(_name)\(nameList[i]), "
+                } else {
+                    _name = "\(_name)\(nameList[i])"
                 }
-                print("name:\(_name)")
             }
             return _name
         }
     }
     
-    var getTraineesStatus:[courseStatus]{
-        get{
-            var list:[courseStatus] = []
-            if traineeRef.count != traineeStudentCourseRef.count{
-                print("traineeRef.count != traineeStudentCourseRef.count")
-            } else {
-                if traineeRef.count == 0{
-                    return []
-                }
-                for i in 0...traineeRef.count - 1{
-                    if let student = DataServer.studentDic[traineeRef[i].documentID]{
-                        if let studentCourse = student.courseDic[traineeStudentCourseRef[i].documentID]{
-                            list.append(studentCourse.status)
-                        } else {
-                            print("getTraineesStatus: 找不到学生的课程")
-                        }
-                    } else {
-                        print("getTraineesStatus: 找不到学生")
+    func getTraineesStatus(){
+        for thisref in traineeRef{
+            thisref.collection("course").document(ref.documentID) .getDocument { (snap, err) in
+                if let err = err {
+                    AppDelegate.showError(title: "获取课程中学生名字时失败", err: err.localizedDescription)
+                } else {
+                    if let status = snap!.data()?["status"] as? String{
+                        self.traineesStatusList[thisref.documentID] = enumService.toCourseStatus(s: status)
                     }
                 }
+                AppDelegate.reload()
             }
-            return list
+        }
+    }
+    
+    var traineesStatusList:[String:courseStatus] = [:]
+    
+    var traineesStatus:[courseStatus]{
+        get{
+            return Array(traineesStatusList.values)
+        }
+    }
+    
+    var traineesMultiStatus:multiCourseStatus {
+        get {
+            return enumService.toMultiCourseStataus(list: traineesStatus)
         }
     }
     
@@ -154,13 +167,16 @@ class EFCourse: EFData {
                     self.traineeRef = data["traineeRef"] as! [DocumentReference]
                     self.traineeStudentCourseRef = data["traineeStudentCourseRef"] as! [DocumentReference]
                     self.ready = true
+                    self.getTraineesNames()
+                    self.getTraineesStatus()
+                    
                 } else {
                     
                 }
             }
         }
     }
-    override func upload(){
+    override func upload(handler: (()->())? = nil){
         if ready {
             ref.updateData(["type" : enumService.toString(e: self.type),
                             "amount": self.amount,

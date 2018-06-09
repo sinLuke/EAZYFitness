@@ -67,7 +67,7 @@ class EFStudent: EFData {
                 self.courseDic = [:]
                 for doc in snap!.documents{
                     let efStudentCourse = EFStudentCourse(with: doc.reference)
-                    efStudentCourse.parent = self
+                    efStudentCourse.parent = self.ref.documentID
                     efStudentCourse.courseRef = doc["ref"] as! DocumentReference
                     efStudentCourse.note = doc["note"] as! String
                     efStudentCourse.status = enumService.toCourseStatus(s: doc["status"] as! String)
@@ -93,10 +93,10 @@ class EFStudent: EFData {
             } else {
                 for doc in snap!.documents{
                     let efStudentRegistered = EFStudentRegistered(with: doc.reference)
-                    efStudentRegistered.amount = doc["amount"] as! Int
-                    efStudentRegistered.approved = doc["approved"] as! Bool
-                    efStudentRegistered.date = doc["date"] as! Date
-                    efStudentRegistered.note = doc["note"] as! String
+                    efStudentRegistered.amount = doc["amount"] as? Int
+                    efStudentRegistered.approved = doc["approved"] as? Bool
+                    efStudentRegistered.date = doc["date"] as? Date
+                    efStudentRegistered.note = doc["note"] as? String
                     self.registeredDic[doc.documentID] = efStudentRegistered
                 }
                 AppDelegate.reload()
@@ -171,6 +171,12 @@ class EFStudent: EFData {
     }
     
     class func addCourse(of studentList:[EFStudent], date:Date, amount:Int, note:String?, trainer:DocumentReference, status:courseStatus){
+        
+        guard let cuid = Auth.auth().currentUser?.uid else {
+            AppDelegate.showError(title: "用户错误", err: "请重新登录", handler: AppDelegate.AP().signout)
+            return
+        }
+        
         for theStudent in studentList{
             if theStudent.uid == nil || theStudent.uid == "" {
                 let message = MDCSnackbarMessage()
@@ -190,12 +196,15 @@ class EFStudent: EFData {
             df.dateStyle = .medium
             df.timeStyle = .medium
             
+            
+            
             let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
             EFRequest.createRequest(
                 bageRef:bageRef,
                 title: "为\(theStudent.name)添加课程",
                 receiver: theStudent.uid!,
-                text: "申请添加\(df.string(from: date))",
+                sander: cuid,
+                text: "申请添加\(date.descriptDate()), 长度为\(AppDelegate.prepareCourseNumber(amount))的课程",
                 requestRef: traineeStudentCourseRef,
                 type: requestType.studentApproveCourse)
             traineeStudentCourse.append(traineeStudentCourseRef)
@@ -207,12 +216,19 @@ class EFStudent: EFData {
     }
     
     func addRegistered(amount:Int, note:String, approved:Bool, sutdentName:String){
+        
+        guard let cuid = Auth.auth().currentUser?.uid else {
+            AppDelegate.showError(title: "用户错误", err: "请重新登录", handler: AppDelegate.AP().signout)
+            return
+        }
+        
         let registerRef = ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()])
         let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
         EFRequest.createRequest(
             bageRef: bageRef,
             title: "小助手为\(sutdentName)购买课时",
             receiver: AppDelegate.AP().superUID,
+            sander: cuid,
             text: note,
             requestRef: registerRef,
             type: requestType.studentAddValue)
@@ -263,7 +279,7 @@ class EFStudent: EFData {
         }
     }
     
-    override func upload(){
+    override func upload(handler: (()->())? = nil){
         if ready{
             ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal, "uid":self.uid ?? ""])
         }

@@ -9,12 +9,11 @@
 import UIKit
 import Firebase
 
-class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLayout, QRCodeReaderViewControllerDelegate {
+class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var thisTrainer:EFTrainer!
     
     let _refreshControl = UIRefreshControl()
-    var db:Firestore!
 
     var myStudentCollectionView:UICollectionView?
     
@@ -22,10 +21,10 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     
     var TotalCourseFinished:Int = 0
     var MonthCourseFinished:Int = 0
-    var nextCourse:EFCourse?
-    var thisCourse:EFCourse?
-    var nextStudentCourse:[EFStudentCourse]!
-    var thisStudentCourse:[EFStudentCourse]!
+    var nextCourse:[String: EFCourse] = [:]
+    var thisCourse:EFCourse? = nil
+    var studentCourseForCourse:[String: [EFStudentCourse]] = [:]
+    
     var goal:Int = 0
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
@@ -34,12 +33,17 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     }
     
     override func refresh() {
+        print("refresh")
         thisTrainer.download()
         
-        
+        //获取申请
+        EFRequest.getRequestForCurrentUser(type: nil)
         
         self.reload()
     }
+    
+    
+    
     
     override func reload() {
         if let _ds = AppDelegate.AP().ds{
@@ -48,11 +52,12 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
         
         
         self.thisCourse = nil
-        self.nextCourse = nil
-        self.thisStudentCourse = []
-        self.nextStudentCourse = []
+        self.nextCourse = [:]
+        self.studentCourseForCourse = [:]
         TotalCourseFinished = 0
         MonthCourseFinished = 0
+        
+        
         
         for theStudentRef in self.thisTrainer.trainee{
             if let thisStudent = DataServer.studentDic[theStudentRef.documentID]{
@@ -60,27 +65,28 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                     //通过课程引用取得课程
                     if let theCourse = DataServer.courseDic[efStudentCourse.courseRef.documentID]{
                         
-                        //获取申请
-                        EFRequest.getRequestForCurrentUser(type: requestType.trainerApproveCourse)
+                        if self.studentCourseForCourse[theCourse.ref.documentID] == nil {
+                            self.studentCourseForCourse[theCourse.ref.documentID] = [efStudentCourse]
+                        } else {
+                            self.studentCourseForCourse[theCourse.ref.documentID]?.append(efStudentCourse)
+                        }
+                        
+                        
                         
                         //如果课程发生在未来
                         if theCourse.date > Date(){
                             
                             //获取下一节课
                             //比较时间并将最接近当前时间的课程放入 self.nextCourse
-                            if enumService.toMultiCourseStataus(list: theCourse.getTraineesStatus) != .decline{
-                                if self.nextCourse == nil{
-                                    self.nextCourse = theCourse
-                                } else if theCourse.date < self.nextCourse!.date {
-                                    self.nextCourse = theCourse
-                                }
+                            if enumService.toMultiCourseStataus(list: theCourse.traineesStatus) != .decline{
+                                self.nextCourse[theCourse.ref.documentID] = theCourse
                             }
                         } else {
                             //获取当前课程
                             //取得 theCourse 结束的时间
                             if let theCourseEndTime = Calendar.current.date(byAdding: .minute, value: 30*theCourse.amount, to: theCourse.date){
                                 //如果当前时间在theCourse开始和结束之间，则放入 self.thisCourse
-                                let statusList = theCourse.getTraineesStatus
+                                let statusList = theCourse.traineesStatus
                                 let multiStatus = enumService.toMultiCourseStataus(list: statusList)
                                 if theCourse.date < Date() && Date() < theCourseEndTime && enumService.ifCourseValid(s: multiStatus) {
                                     self.thisCourse = theCourse
@@ -101,86 +107,28 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             }
         }
         
-        for studentRef in self.thisTrainer.trainee{
-            if let thisStudent = DataServer.studentDic[studentRef.documentID]{
-                if thisCourse != nil {
-                    if let thisStudentCourse = thisStudent.courseDic[thisCourse!.ref.documentID]{
-                        self.thisStudentCourse.append(thisStudentCourse)
-                    }
-                }
-                if nextCourse != nil{
-                    if let nextStudentCourse = thisStudent.courseDic[nextCourse!.ref.documentID]{
-                        self.nextStudentCourse.append(nextStudentCourse)
-                        
-                    }
-                }
-            }
-        }
         
         self.collectionView?.reloadData()
         self.myStudentCollectionView?.reloadData()
     }
     
 
-    func reader(_ reader: QRCodeReaderViewController, didScanResult result: QRCodeReaderResult) {
-        reader.stopScanning()
-        dismiss(animated: true, completion: nil)
+    
+    
+    
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let offset = (thisCourse == nil ? 0 : 1) + (nextCourse.count == 0 ? 0 : 1)
         
-        let charset = CharacterSet(charactersIn: ".#$[]")
-        if result.value.rangeOfCharacter(from: charset) != nil {
-            self.endLoading()
-            AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0101#)", of: self)
-        } else{
-            db.collection("QRCODE").document(result.value).getDocument { (snap, err) in
-                if let err = err{
-                    self.endLoading()
-                    AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
-                } else {
-                    if let doc = snap?.data(){
-                        if let _numberValue = doc["MemberID"] as? Int{
-                            for thisstudentcourse in self.thisStudentCourse{
-                                if let efStduent = thisstudentcourse.parent{
-                                    if efStduent.memberID == "\(_numberValue)"{
-                                        self.recordACourse(thatStudentCourse: thisstudentcourse, thatCourseRef: thisstudentcourse.courseRef)
-                                        self.endLoading()
-                                        AppDelegate.showError(title: "录入成功", err: "已成功录入\(efStduent.name)的课程", of: self)
-                                        self.refresh()
-                                        return
-                                    } else {
-                                        self.endLoading()
-                                        AppDelegate.showError(title: "未知错误", err: "无法找到与之对应的学生1", of: self)
-                                    }
-                                } else {
-                                    self.endLoading()
-                                    AppDelegate.showError(title: "未知错误", err: "无法找到与之对应的学生2", of: self)
-                                }
-                            }
-                        } else {
-                            self.endLoading()
-                            AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0103#)", of: self)
-                        }
-                    }
-                }
+        if indexPath.section == 0 {
+            if indexPath.row < offset {
+                
+                self.performSegue(withIdentifier: "trainerCourseVC", sender: self)
+                
             }
+        } else if indexPath.section == 1 {
+            self.performSegue(withIdentifier: "course", sender: self)
         }
-        
-        
-    }
-    
-    func recordACourse(thatStudentCourse:EFStudentCourse, thatCourseRef:DocumentReference){
-        
-        if thatStudentCourse.ready{
-            thatStudentCourse.status = .scaned
-            thisTrainer.finishACourse(By: thatCourseRef)
-            thatStudentCourse.upload()
-        } else {
-            AppDelegate.showError(title: "数据错误", err: "请稍后再试")
-            self.refresh()
-        }
-    }
-    
-    func readerDidCancel(_ reader: QRCodeReaderViewController) {
-        dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -193,7 +141,6 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             
         }
         
-        db = Firestore.firestore()
         self.refresh()
         
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
@@ -206,13 +153,15 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
         self.collectionView!.refreshControl = self._refreshControl
         self.collectionView!.addSubview(self._refreshControl)
         
-        collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithProgress", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithProgress")
+        
         collectionView?.register(UINib.init(nibName: "EFExtentableHeaderCellWithButton", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "EFExtentableHeaderCellWithButton")
+        collectionView?.register(UINib.init(nibName: "EFExtentableHeaderCellWithLabel", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "EFExtentableHeaderCellWithLabel")
+        
+        collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithProgress", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithProgress")
         collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithLargeNumber", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithLargeNumber")
         collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithNextCourse", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithNextCourse")
-        collectionView?.register(UINib.init(nibName: "EFExtentableHeaderCellWithLabel", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "EFExtentableHeaderCellWithLabel")
-        collectionView?.register(UINib.init(nibName: "EFViewCellWithTrainerCourseStudentStatus", bundle: nil), forCellWithReuseIdentifier: "EFViewCellWithTrainerCourseStudentStatus")
-        collectionView?.register(UINib.init(nibName: "EFViewHeaderCellWithTrainerCourse", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "EFViewHeaderCellWithTrainerCourse")
+        collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithDetailDisclosure", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithDetailDisclosure")
+        collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithButton", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithButton")
         
         if let flowlayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout{
             flowlayout.estimatedItemSize = CGSize(width: (collectionView?.frame.width)! - 2*12 , height: 200)
@@ -228,7 +177,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 4
+        return 2
     }
     
     
@@ -241,34 +190,16 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
          
          }
          */
-        if section == 2 {
-            if thisCourse == nil {
-                return CGSize(width: (collectionView.frame.width) - 2*12 , height: 52)
-            } else {
-                return CGSize(width: (collectionView.frame.width) - 2*12 , height: 222)
-            }
-        } else if  section == 3 {
-            if nextCourse == nil {
-                return CGSize(width: (collectionView.frame.width) - 2*12 , height: 52)
-            } else {
-                return CGSize(width: (collectionView.frame.width) - 2*12 , height: 222)
-            }
-        } else {
-            return CGSize(width: (collectionView.frame.width) - 2*12 , height: 52)
-        }
+        return CGSize(width: (collectionView.frame.width) - 2*12 , height: 52)
         
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return EFRequest.requestList.count
+            return EFRequest.requestList.count + (thisCourse == nil ? 0 : 1) + (nextCourse.count == 0 ? 0 : 1)
         case 1:
             return 3
-        case 2:
-            return thisCourse?.traineeRef.count ?? 0
-        case 3:
-            return nextCourse?.traineeRef.count ?? 0
         default:
             return 0
         }
@@ -284,81 +215,34 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let numberOfNotfication = EFRequest.requestList.count + (thisCourse == nil ? 0 : 1) + (nextCourse.count == 0 ? 0 : 1)
+        let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFExtentableHeaderCellWithLabel", for: indexPath) as! EFExtentableHeaderCellWithLabel
         switch indexPath.section {
         case 0:
-            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFExtentableHeaderCellWithButton", for: indexPath) as! EFExtentableHeaderCellWithButton
-            if EFRequest.requestList.count == 0 {
-                cell.TitleBarColor = HexColor.black.withAlphaComponent(0.2)
-                cell.TitleLabel.textColor = UIColor.black
-                cell.TitleLabel.text = "暂时没有申请记录"
-            } else {
+            if numberOfNotfication > 0{
                 cell.TitleBarColor = HexColor.Red
+                cell.TitleLabel.text = "通知"
                 cell.TitleLabel.textColor = UIColor.white
-                cell.TitleLabel.text = "共有\(EFRequest.requestList.count)则申请"
-            }
-            
-            if EFRequest.requestList.count > 1 {
-                cell.BarButton.isHidden = false
+                cell.BarRightLabel.text = "共有\(numberOfNotfication)条通知"
             } else {
-                cell.BarButton.isHidden = true
+                cell.TitleBarColor = UIColor.black.withAlphaComponent(0.3)
+                cell.TitleLabel.text = "通知"
+                cell.TitleLabel.textColor = UIColor.black
+                cell.BarRightLabel.text = "暂时没有通知"
             }
             
-            cell.BarButtonFunction = { () in
-                for cells in self.collectionView!.visibleCells {
-                    if let cell = cells as? EFCollectionViewCellWithButton {
-                        if !cell.AgreeBtn.isHidden {
-                            cell.function()
-                        }
-                    }
-                }
-            }
             return cell
-        case 1:
-            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFExtentableHeaderCellWithLabel", for: indexPath) as! EFExtentableHeaderCellWithLabel
+            
+        default:
+            
             cell.TitleLabel.textColor = UIColor.white
             cell.TitleBarColor = HexColor.Yellow
             cell.TitleLabel.text = "本月目标已完成"
             let percentageValue:Float = min(Float(MonthCourseFinished)/Float(self.thisTrainer.goal), 1)
             let percentage = String(format: "%.0f", 100 * percentageValue)
             cell.BarRightLabel.text = "\(percentage)%"
+            
             return cell
-        case 2:
-            if thisCourse == nil {
-                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFExtentableHeaderCellWithLabel", for: indexPath) as! EFExtentableHeaderCellWithLabel
-                cell.TitleBarColor = HexColor.black.withAlphaComponent(0.2)
-                cell.TitleLabel.text = "现在没有在上课"
-                cell.BarRightLabel.text = ""
-                cell.TitleLabel.textColor = UIColor.black
-                cell.BarRightLabel.text = ""
-                return cell
-            } else {
-                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFViewHeaderCellWithTrainerCourse", for: indexPath) as! EFViewHeaderCellWithTrainerCourse
-                cell.TitleBarColor = HexColor.Green
-                cell.TitleLabel.text = "当前课程"
-                cell.BarRightLabel.text = enumService.toDescription(e: enumService.toMultiCourseStataus(list: thisCourse!.getTraineesStatus))
-                cell.DateLabel.text = thisCourse!.date.DateString
-                cell.TimeLabel.text = "\(thisCourse!.date.TimeString) 开始的课程"
-                return cell
-            }
-        default:
-            if nextCourse == nil {
-                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFExtentableHeaderCellWithLabel", for: indexPath) as! EFExtentableHeaderCellWithLabel
-                cell.TitleBarColor = HexColor.black.withAlphaComponent(0.2)
-                cell.TitleLabel.text = "之后没有课了"
-                cell.BarRightLabel.text = ""
-                cell.TitleLabel.textColor = UIColor.black
-                cell.BarRightLabel.text = ""
-                return cell
-            } else {
-                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "EFViewHeaderCellWithTrainerCourse", for: indexPath) as! EFViewHeaderCellWithTrainerCourse
-                
-                cell.TitleBarColor = enumService.toColor(d: enumService.toMultiCourseStataus(list: nextCourse!.getTraineesStatus))
-                cell.TitleLabel.text = "下一节课"
-                cell.BarRightLabel.text = enumService.toDescription(e: enumService.toMultiCourseStataus(list: nextCourse!.getTraineesStatus))
-                cell.DateLabel.text = nextCourse!.date.DateString
-                cell.TimeLabel.text = "\(nextCourse!.date.TimeString) 开始的课程"
-                return cell
-            }
         }
     }
 
@@ -366,22 +250,43 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
         
         switch indexPath.section {
         case 0:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFCollectionViewCellWithButton", for: indexPath) as! EFCollectionViewCellWithButton
-            cell.alpha = 1
-            cell.waitView.isHidden = true
-            
-            cell.AgreeBtn.isHidden = false
-            
-            if EFRequest.requestList.count <= indexPath.row{
+            let offset = (thisCourse == nil ? 0 : 1) + (nextCourse.count == 0 ? 0 : 1)
+            if indexPath.row >= offset {
+                //申请部分
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFCollectionViewCellWithButton", for: indexPath) as! EFCollectionViewCellWithButton
+                cell.alpha = 1
+                cell.waitView.isHidden = true
+                
+                cell.AgreeBtn.isHidden = false
+                
+                if EFRequest.requestList.count > indexPath.row - offset{
+                    let efRequest = EFRequest.requestList[indexPath.row - offset]
+                    cell.TitleLabel.text = efRequest.title
+                    cell.ContentLabel.text = efRequest.text
+                    cell.efRequest = efRequest
+                }
                 return cell
             } else {
-                let efRequest = EFRequest.requestList[indexPath.row]
-                cell.TitleLabel.text = efRequest.title
-                
-                cell.efRequest = efRequest
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFCollectionViewCellWithDetailDisclosure", for: indexPath) as! EFCollectionViewCellWithDetailDisclosure
+                if indexPath.row == 0 {
+                    if thisCourse != nil {
+                        //当前课程
+                        cell.TitleLabel.text = "现在正在上课"
+                        cell.detailLabel.text = "查看详情"
+                        cell.bkImg.image = #imageLiteral(resourceName: "thisCourse.jpg")
+                    } else {
+                        cell.TitleLabel.text = "接下来还有\(nextCourse.count)节课"
+                        cell.detailLabel.text = "查看详情"
+                        cell.bkImg.image = #imageLiteral(resourceName: "nextCourse.jpg")
+                    }
+                } else if indexPath.row == 1 {
+                    cell.TitleLabel.text = "接下来还有\(nextCourse.count)节课"
+                    cell.detailLabel.text = "查看详情"
+                    cell.bkImg.image = #imageLiteral(resourceName: "nextCourse.jpg")
+                }
                 return cell
             }
-        case 1:
+        default:
             if indexPath.row == 0 {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFCollectionViewCellWithProgress", for: indexPath) as! EFCollectionViewCellWithProgress
                 
@@ -406,8 +311,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                 }
                 return cell
             }
-        case 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFViewCellWithTrainerCourseStudentStatus", for: indexPath) as! EFViewCellWithTrainerCourseStudentStatus
+
+            /*
             if let thisCourse = thisCourse {
                 let stduentRef = thisCourse.traineeRef[indexPath.row]
                 if let student = DataServer.studentDic[stduentRef.documentID], let studentCourse = student.courseDic[thisCourse.ref.documentID]{
@@ -427,28 +332,8 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                 cell.StatusLabel.text = "课程读取失败"
                 cell.StatusFootNote.text = "课程读取失败"
             }
-            return cell
-        default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFViewCellWithTrainerCourseStudentStatus", for: indexPath) as! EFViewCellWithTrainerCourseStudentStatus
-            if let thisCourse = nextCourse {
-                let stduentRef = thisCourse.traineeRef[indexPath.row]
-                if let student = DataServer.studentDic[stduentRef.documentID], let studentCourse = student.courseDic[thisCourse.ref.documentID]{
-                    cell.StatusLabel.text = student.name
-                    cell.StatusFootNote.text = enumService.toDescription(e: studentCourse.status)
-                    cell.statusCircleColor = enumService.toColor(e: studentCourse.status)
-                    if studentCourse.status == .waitForStudent {
-                        cell.statusCircleColor = nil
-                    }
-                } else {
-                    cell.StatusLabel.text = "学生读取失败"
-                    cell.StatusFootNote.text = "课程状态读取失败"
-                    cell.statusCircleColor = nil
-                }
-            } else {
-                cell.StatusLabel.text = "课程读取失败"
-                cell.StatusFootNote.text = "课程读取失败"
-            }
-            return cell
+ */
+        
         }
         
         /*
@@ -466,7 +351,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
                 cell.backgroundColor = HexColor.Blue.withAlphaComponent(0.3)
                 cell.dateLabel.text = self.thisCourse!.dateOnlyString
                 cell.TimeLabel.text = self.thisCourse!.timeOnlyString
-                if enumService.toMultiCourseStataus(list: thisCourse!.getTraineesStatus) == .noTrainer {
+                if enumService.toMultiCourseStataus(list: thisCourse!.traineesStatus) == .noTrainer {
                     cell.titleLabel.text = "你被学生出卖了"
                     cell.backgroundColor = HexColor.Red.withAlphaComponent(0.3)
                 } else {
@@ -610,6 +495,23 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if let dvc = segue.destination as? trainerCourseVC{
+            if let indexPath = collectionView?.indexPathsForSelectedItems?.first{
+                if indexPath.row == 0 {
+                    if thisCourse != nil {
+                        //当前课程
+                        dvc.thisMode = .thisCourse
+                    } else {
+                        dvc.thisMode = .nextCourse
+                    }
+                } else if indexPath.row == 1 {
+                    dvc.thisMode = .nextCourse
+                }
+            }
+            dvc.thisTrainer = self.thisTrainer
+        }
+        
         if let dvc = segue.destination as? CourseTableViewController{
             dvc.thisStudentOrTrainer = self.thisTrainer
             dvc.title = "我的课程"
@@ -622,7 +524,7 @@ class trainerMyStudentVC: DefaultCollectionViewController, UICollectionViewDeleg
             dvc.title = "本周"
         } else if let dvc = segue.destination as? TrainerFinishedTableViewController{
             if let cmid = AppDelegate.AP().ds?.memberID{
-                dvc.ref = db.collection("trainer").document(cmid).collection("Finished")
+                dvc.ref = Firestore.firestore().collection("trainer").document(cmid).collection("Finished")
                 dvc.name = "我"
             } else {
                 AppDelegate.showError(title: "未知问题", err: "无法获取卡号", handler:AppDelegate.AP().signout)

@@ -87,11 +87,10 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
                                 if allSame {
                                     if let cMEmeberId = AppDelegate.AP().ds?.memberID{
                                         let courseRef:DocumentReference!
-                                        print(doc.data())
                                         if ref.count == 1 {
-                                            courseRef = Firestore.firestore().collection("course").addDocument(data: ["type": enumService.toString(e: courseType.general), "note" : doc.data()["note"], "amount": doc.data()["amount"], "date": (Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["date"] as! Date)))])
+                                            courseRef = Firestore.firestore().collection("course").addDocument(data: ["type": enumService.toString(e: courseType.general), "note" : doc.data()["note"] ?? "无备注", "amount": doc.data()["amount"], "date": (Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["date"] as! Date)))])
                                         } else {
-                                            courseRef = Firestore.firestore().collection("course").addDocument(data: ["type": enumService.toString(e: courseType.multiple), "note" : doc.data()["note"], "amount": doc.data()["amount"], "date": (Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["date"] as! Date)))])
+                                            courseRef = Firestore.firestore().collection("course").addDocument(data: ["type": enumService.toString(e: courseType.multiple), "note" : doc.data()["note"] ?? "无备注", "amount": doc.data()["amount"], "date": (Calendar.current.date(byAdding: .day, value: 7, to: (doc.data()["date"] as! Date)))])
                                         }
                                         for _ref in ref{
                                             let studentRecordRef = _ref.collection("CourseRecorded").addDocument(data: ["ref": courseRef, "status":enumService.toString(e: courseStatus.waitForStudent), "trainer":Firestore.firestore().collection("trainer").document(cMEmeberId)])

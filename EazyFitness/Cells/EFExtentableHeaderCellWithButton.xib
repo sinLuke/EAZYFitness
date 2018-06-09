@@ -20,7 +20,7 @@
                     <rect key="frame" x="12" y="12" width="476" height="40"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dp0-Ti-Ysc">
-                            <rect key="frame" x="36" y="9.5" width="316" height="21"/>
+                            <rect key="frame" x="16" y="9.5" width="336" height="21"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -40,28 +40,15 @@
                                 <action selector="BarButtonTapped:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="ya5-OA-tSR"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FoQ-NW-qhu">
-                            <rect key="frame" x="8" y="10" width="20" height="20"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="20" id="W9q-Ww-OYN"/>
-                                <constraint firstAttribute="height" constant="20" id="frN-QR-mk0"/>
-                            </constraints>
-                            <state key="normal" image="down"/>
-                            <connections>
-                                <action selector="expandFunc:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="AVK-x2-xuz"/>
-                            </connections>
-                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="ArX-p8-fWV" firstAttribute="top" secondItem="yeq-k0-xCZ" secondAttribute="top" constant="8" id="1PV-0U-F7K"/>
                         <constraint firstAttribute="trailing" secondItem="ArX-p8-fWV" secondAttribute="trailing" constant="8" id="9FX-OG-auV"/>
-                        <constraint firstItem="Dp0-Ti-Ysc" firstAttribute="leading" secondItem="FoQ-NW-qhu" secondAttribute="trailing" constant="8" id="CfO-mc-77N"/>
-                        <constraint firstItem="FoQ-NW-qhu" firstAttribute="leading" secondItem="yeq-k0-xCZ" secondAttribute="leading" constant="8" id="ILn-6B-EyQ"/>
+                        <constraint firstItem="Dp0-Ti-Ysc" firstAttribute="leading" secondItem="yeq-k0-xCZ" secondAttribute="leading" constant="16" id="KFP-cB-TYi"/>
                         <constraint firstAttribute="width" constant="476" id="LgV-jI-RE1"/>
                         <constraint firstItem="ArX-p8-fWV" firstAttribute="leading" secondItem="Dp0-Ti-Ysc" secondAttribute="trailing" constant="16" id="PUL-XL-gmh"/>
                         <constraint firstItem="Dp0-Ti-Ysc" firstAttribute="centerY" secondItem="yeq-k0-xCZ" secondAttribute="centerY" id="VEN-tV-30Q"/>
-                        <constraint firstItem="FoQ-NW-qhu" firstAttribute="centerY" secondItem="yeq-k0-xCZ" secondAttribute="centerY" id="YOJ-pN-oUv"/>
                         <constraint firstAttribute="bottom" secondItem="ArX-p8-fWV" secondAttribute="bottom" constant="8" id="kwo-gc-iPL"/>
                     </constraints>
                 </view>
@@ -78,12 +65,8 @@
                 <outlet property="BarItem" destination="ArX-p8-fWV" id="BzV-mm-lBH"/>
                 <outlet property="TitleBar" destination="yeq-k0-xCZ" id="6bK-7Z-zvH"/>
                 <outlet property="TitleLabel" destination="Dp0-Ti-Ysc" id="TuK-lT-GdK"/>
-                <outlet property="expandBtn" destination="FoQ-NW-qhu" id="30V-gq-mjh"/>
                 <outlet property="widthOdCell" destination="LgV-jI-RE1" id="X2w-UV-bgr"/>
             </connections>
         </collectionReusableView>
     </objects>
-    <resources>
-        <image name="down" width="20" height="20"/>
-    </resources>
 </document>

@@ -23,7 +23,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="447" height="40"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gx5-lh-lQA">
-                                    <rect key="frame" x="36" y="9.5" width="279" height="21"/>
+                                    <rect key="frame" x="16" y="9.5" width="299" height="21"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -37,29 +37,16 @@
                                     <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ddz-AZ-ZI2">
-                                    <rect key="frame" x="8" y="10" width="20" height="20"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="20" id="1Yr-OL-vaS"/>
-                                        <constraint firstAttribute="height" constant="20" id="FoV-Gu-JOC"/>
-                                    </constraints>
-                                    <state key="normal" image="down"/>
-                                    <connections>
-                                        <action selector="expandFunc:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="uzS-Oq-1WD"/>
-                                    </connections>
-                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="2Yq-ag-nM1" firstAttribute="top" secondItem="qYU-sm-V8J" secondAttribute="top" constant="8" id="1S5-KS-AIB"/>
                                 <constraint firstAttribute="trailing" secondItem="2Yq-ag-nM1" secondAttribute="trailing" constant="16" id="3S0-tk-WZm"/>
                                 <constraint firstAttribute="bottom" secondItem="2Yq-ag-nM1" secondAttribute="bottom" constant="8" id="4Ue-hH-KxW"/>
-                                <constraint firstItem="Ddz-AZ-ZI2" firstAttribute="leading" secondItem="qYU-sm-V8J" secondAttribute="leading" constant="8" id="7jP-2G-AWk"/>
                                 <constraint firstAttribute="height" constant="40" id="B5T-zP-Max"/>
-                                <constraint firstItem="gx5-lh-lQA" firstAttribute="leading" secondItem="Ddz-AZ-ZI2" secondAttribute="trailing" constant="8" id="S1f-AJ-YeG"/>
                                 <constraint firstItem="2Yq-ag-nM1" firstAttribute="leading" secondItem="gx5-lh-lQA" secondAttribute="trailing" constant="16" id="U45-1r-ekk"/>
-                                <constraint firstItem="Ddz-AZ-ZI2" firstAttribute="centerY" secondItem="qYU-sm-V8J" secondAttribute="centerY" id="a0b-r2-3mZ"/>
                                 <constraint firstItem="gx5-lh-lQA" firstAttribute="centerY" secondItem="qYU-sm-V8J" secondAttribute="centerY" id="n3c-Oa-xDa"/>
+                                <constraint firstItem="gx5-lh-lQA" firstAttribute="leading" secondItem="qYU-sm-V8J" secondAttribute="leading" constant="16" id="zRi-V9-lFG"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6月1日 周三" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IcD-To-O2e">
@@ -164,14 +151,10 @@
                 <outlet property="TitleBar" destination="qYU-sm-V8J" id="blQ-en-qrD"/>
                 <outlet property="TitleLabel" destination="gx5-lh-lQA" id="2Yj-3y-2zJ"/>
                 <outlet property="backgroundView" destination="Ddn-Rq-mcl" id="SPO-WW-x0i"/>
-                <outlet property="expandBtn" destination="Ddz-AZ-ZI2" id="2eh-m0-Do6"/>
                 <outlet property="reportBtn" destination="xQB-w9-EYq" id="z4G-gv-Whl"/>
                 <outlet property="widthOdCell" destination="LiU-gr-hCH" id="Fc5-X3-NYE"/>
             </connections>
             <point key="canvasLocation" x="193.5" y="167"/>
         </collectionReusableView>
     </objects>
-    <resources>
-        <image name="down" width="20" height="20"/>
-    </resources>
 </document>

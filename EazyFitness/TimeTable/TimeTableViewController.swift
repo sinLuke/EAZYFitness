@@ -122,7 +122,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             cell.timeLabel.textColor = UIColor.black
             cell.courseLabel.textColor = UIColor.black
             
-            let statusList = courseObj.getTraineesStatus
+            let statusList = courseObj.traineesStatus
             let multiStatus = enumService.toMultiCourseStataus(list: statusList)
             cell.typeLabel.text = enumService.toDescription(e: multiStatus)
             cell.typeLabel.textColor = enumService.toColor(d: multiStatus)
@@ -159,15 +159,15 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                 }
             }
             
-            if course.date < self.startoftheweek.startOfWeek() || course.date > self.startoftheweek.endOfWeek() {
+            if course.date < self.startoftheweek.startOfWeek() || course.date > self.startoftheweek.endOfWeek() || course.date < Date() {
                 contain = false
             }
             if contain{
                 
-                if timeTableList[course.getTraineesNames] == nil {
-                    timeTableList[course.getTraineesNames] = [course]
+                if timeTableList[course.traineesNames] == nil {
+                    timeTableList[course.traineesNames] = [course]
                 } else {
-                    timeTableList[course.getTraineesNames]?.append(course)
+                    timeTableList[course.traineesNames]?.append(course)
                 }
             }
         }

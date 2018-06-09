@@ -134,6 +134,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         }
     }
     
+    class func prepareCourseNumber(_ int:Int) -> String{
+        let float = Float(int)/2.0
+        if int%2 == 0{
+            return String(format: "%.0f", float)
+        } else {
+            return String(float)
+        }
+    }
+    
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)

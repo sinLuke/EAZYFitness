@@ -907,8 +907,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 3.2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D0F-66-eaQ">
-                                <rect key="frame" x="119" y="255" width="82.5" height="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 3.3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D0F-66-eaQ">
+                                <rect key="frame" x="118.5" y="255" width="83" height="18"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <color key="textColor" red="0.43529412150000002" green="0.4431372583" blue="0.47450980539999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -2726,6 +2726,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <segue destination="W68-8d-acl" kind="show" identifier="course" id="eG3-Vw-ZtS"/>
+                        <segue destination="xsk-7Z-bcY" kind="show" identifier="purchase" id="dG3-UL-NWM"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zcE-zZ-58x" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="qYz-Tn-J1V" userLabel="Exit" sceneMemberID="exit"/>
@@ -2764,12 +2768,54 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="W68-8d-acl" kind="show" identifier="finish" id="cuA-vO-uqg"/>
+                        <segue destination="W68-8d-acl" kind="show" identifier="course" id="cuA-vO-uqg"/>
+                        <segue destination="6Wv-Gg-P41" kind="show" identifier="trainerCourseVC" id="86F-aa-WIC"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3JG-gC-EsB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1809" y="3620"/>
+            <point key="canvasLocation" x="1808" y="3644"/>
+        </scene>
+        <!--Title-->
+        <scene sceneID="9ns-8C-v4J">
+            <objects>
+                <collectionViewController id="6Wv-Gg-P41" customClass="trainerCourseVC" customModule="EazyFitness" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="mCo-7v-obo">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="2Db-W8-Jme">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="50" height="50"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="12" maxX="0.0" maxY="12"/>
+                        </collectionViewFlowLayout>
+                        <cells/>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="57g-FB-wjt">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </collectionReusableView>
+                        <connections>
+                            <outlet property="dataSource" destination="6Wv-Gg-P41" id="x0Z-Zm-T70"/>
+                            <outlet property="delegate" destination="6Wv-Gg-P41" id="xM5-q3-uPm"/>
+                        </connections>
+                    </collectionView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Title" id="zf1-Qx-xOn">
+                        <barButtonItem key="rightBarButtonItem" image="scan" style="plain" id="Yh7-uW-B3U">
+                            <connections>
+                                <action selector="scanBtn:" destination="6Wv-Gg-P41" id="XJb-bf-Zkf"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="scanButton" destination="Yh7-uW-B3U" id="9az-hX-nFp"/>
+                    </connections>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sjg-nQ-c6V" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2531" y="3642"/>
         </scene>
         <!--Title-->
         <scene sceneID="DEL-ZI-cOM">
@@ -3042,7 +3088,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TIF-3t-CR9">
-                                <rect key="frame" x="0.0" y="64" width="320" height="105"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="61"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="11g-Oc-R2Y">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="554"/>
@@ -3078,7 +3124,7 @@
                                 </connections>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="59e-Fo-oNr">
-                                <rect key="frame" x="0.0" y="169" width="320" height="350"/>
+                                <rect key="frame" x="0.0" y="125" width="320" height="350"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="g8U-zD-JFe">
                                         <rect key="frame" x="0.0" y="44" width="320" height="306"/>
@@ -3247,10 +3293,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZAt-78-GKq">
-                                <rect key="frame" x="0.0" y="64" width="320" height="105"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="61"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="下周无课程" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LL8-lb-mNA">
-                                        <rect key="frame" x="60" y="33" width="200" height="39"/>
+                                        <rect key="frame" x="60" y="11" width="200" height="39"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="Kbn-5n-eSi"/>
                                             <constraint firstAttribute="height" constant="39" id="hTD-CB-sPI"/>
@@ -3267,13 +3313,13 @@
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dh-2R-s3A">
-                                <rect key="frame" x="0.0" y="64" width="320" height="105"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="61"/>
                                 <connections>
                                     <outlet property="delegate" destination="aM4-Qv-8IY" id="dX7-Ra-3IZ"/>
                                 </connections>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cxY-Ud-s4F">
-                                <rect key="frame" x="0.0" y="169" width="320" height="350"/>
+                                <rect key="frame" x="0.0" y="125" width="320" height="350"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2018年5月1日星期五12:13" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7hq-fc-8H9">
                                         <rect key="frame" x="8" y="163" width="304" height="21"/>
@@ -3475,7 +3521,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cQd-G6-GAE">
-                                <rect key="frame" x="0.0" y="144" width="320" height="375"/>
+                                <rect key="frame" x="0.0" y="144" width="320" height="331"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="courseCell" id="NaL-UO-Jnu" customClass="CourseTableViewCell" customModule="EazyFitness" customModuleProvider="target">
@@ -4020,6 +4066,7 @@
         <image name="logo" width="128" height="128"/>
         <image name="message" width="30" height="30"/>
         <image name="note" width="30" height="30"/>
+        <image name="scan" width="30" height="30"/>
         <image name="services" width="30" height="30"/>
         <image name="update" width="30" height="30"/>
         <image name="user_group_man_woman" width="30" height="30"/>
@@ -4028,9 +4075,10 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="PNY-GZ-YFM"/>
-        <segue reference="cuA-vO-uqg"/>
+        <segue reference="eG3-Vw-ZtS"/>
         <segue reference="9C1-Qw-4Wt"/>
-        <segue reference="eqb-n4-8fi"/>
+        <segue reference="p9T-hv-49n"/>
+        <segue reference="dG3-UL-NWM"/>
         <segue reference="qWZ-ze-aKF"/>
         <segue reference="5MJ-Sk-8VR"/>
     </inferredMetricsTieBreakers>

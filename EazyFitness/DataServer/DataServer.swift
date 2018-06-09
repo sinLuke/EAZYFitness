@@ -106,7 +106,6 @@ class DataServer: NSObject {
         case .student:
             let _student = EFStudent(with: studentCollection.document(self.memberID))
             _student.download()
-            
             DataServer.studentDic[self.memberID] = _student
             AppDelegate.reload()
             AppDelegate.endLoading()

@@ -105,7 +105,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
             if theCourse.traineeRef.count != 0{
                 if let regionForCourse = DataServer.studentDic[theCourse.traineeRef[0].documentID]?.region{
                     //AppDelegate.showError(title: "regionForCourse", err: enumService.toDescription(d: theCourse.getTraineesStatus))
-                    let multiStatus = enumService.toMultiCourseStataus(list: theCourse.getTraineesStatus)
+                    let multiStatus = enumService.toMultiCourseStataus(list: theCourse.traineesStatus)
                     if enumService.FinishedAmountForAdmin(s: multiStatus) == 1 {
                         if totalCourse[regionForCourse] == nil {
                             totalCourse[regionForCourse] = [theCourse]

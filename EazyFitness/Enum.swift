@@ -27,7 +27,7 @@ enum multiCourseStatus {
     
     case special
     case someApproved
-    case ApprovedUncompleted
+    case uncompleted
 }
 
 enum userRegion{
@@ -67,6 +67,7 @@ enum requestType {
     case studentRemove
     case trainerRemove
     case studentAddValue
+    case notification
     case other
 }
 
@@ -208,10 +209,10 @@ class enumService: NSObject {
         case .waitForTrainer:
             return "等待教练同意"
         case .special:
-            return "已完成并存在特殊情况"
+            return "存在特殊情况"
         case .someApproved:
             return "有些学生尚未同意"
-        case .ApprovedUncompleted:
+        case .uncompleted:
             return "有些学生尚未扫码"
         }
     }
@@ -260,7 +261,7 @@ class enumService: NSObject {
             return 1
         case .special:
             return 1
-        case .ApprovedUncompleted:
+        case .uncompleted:
             return 1
         default:
             return 0
@@ -273,7 +274,7 @@ class enumService: NSObject {
             return 1
         case .special:
             return 1
-        case .ApprovedUncompleted:
+        case .uncompleted:
             return 1
         default:
             return 0
@@ -281,7 +282,7 @@ class enumService: NSObject {
     }
     
     class func ifCourseValid(s:multiCourseStatus) -> Bool {
-        return s == .approved || s == .scaned || s == .someApproved || s == .ApprovedUncompleted || s == .noTrainer
+        return s == .approved || s == .scaned || s == .uncompleted || s == .noTrainer || s == .special
     }
     
     class func toMultiCourseStataus(list:[courseStatus]) -> multiCourseStatus{
@@ -349,7 +350,11 @@ class enumService: NSObject {
             case .decline:
                 return .decline
             case .other:
-                return .other
+                someSpecial = true
+                allWaitForStudent = false
+                allApproved = false
+                allnoTrainer = false
+                someFinished = true
             case .waitForTrainer:
                 return .waitForTrainer
             }
@@ -374,7 +379,7 @@ class enumService: NSObject {
             }
         } else if someApproved{
             if someFinished {
-                return .ApprovedUncompleted
+                return .uncompleted
             } else {
                 return .other // some not approve, no one finished, provided no one waiting
             }
@@ -403,7 +408,7 @@ class enumService: NSObject {
             return HexColor.Purple
         case .someApproved:
             return HexColor.Gray
-        case .ApprovedUncompleted:
+        case .uncompleted:
             return HexColor.Blue
         }
     }
@@ -612,6 +617,8 @@ class enumService: NSObject {
             return .trainerRemove
         case "trainerApproveCourse":
             return .trainerApproveCourse
+        case "notification":
+            return .notification
         default:
             return .other
         }
@@ -629,6 +636,8 @@ class enumService: NSObject {
             return "trainerRemove"
         case .trainerApproveCourse:
             return "trainerApproveCourse"
+        case .notification:
+            return "notification"
         default:
             return "other"
         }
@@ -646,6 +655,8 @@ class enumService: NSObject {
             return "将教练账户删除的申请"
         case .trainerApproveCourse:
             return "为教练添加新课程的申请"
+        case .notification:
+            return "消息"
         default:
             return "other"
         }

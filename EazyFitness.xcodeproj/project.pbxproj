@@ -121,6 +121,9 @@
 		A39FF65920ACEA9B00B54353 /* EFStudentPersonal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FF65720ACEA9B00B54353 /* EFStudentPersonal.swift */; };
 		A39FF65A20ACEA9B00B54353 /* EFStudentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FF65820ACEA9B00B54353 /* EFStudentMessage.swift */; };
 		A39FF65C20AD080400B54353 /* EFRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FF65B20AD080400B54353 /* EFRequest.swift */; };
+		A3A9345820CAF0A50057F3B8 /* trainerCourseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */; };
+		A3A9345B20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A9345920CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift */; };
+		A3A9345C20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3A9345A20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib */; };
 		A3CEFF5C20978FC500B05FC1 /* trainerQRCODE in Resources */ = {isa = PBXBuildFile; fileRef = A3CEFF5B20978FC500B05FC1 /* trainerQRCODE */; };
 		A3CEFF5F2097FB4E00B05FC1 /* trainerMyStudentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF5E2097FB4E00B05FC1 /* trainerMyStudentVC.swift */; };
 		A3CEFF612098097C00B05FC1 /* TrainerScanCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CEFF602098097C00B05FC1 /* TrainerScanCell.swift */; };
@@ -280,6 +283,9 @@
 		A39FF65720ACEA9B00B54353 /* EFStudentPersonal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EFStudentPersonal.swift; sourceTree = "<group>"; };
 		A39FF65820ACEA9B00B54353 /* EFStudentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EFStudentMessage.swift; sourceTree = "<group>"; };
 		A39FF65B20AD080400B54353 /* EFRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EFRequest.swift; sourceTree = "<group>"; };
+		A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = trainerCourseVC.swift; sourceTree = "<group>"; };
+		A3A9345920CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EFCollectionViewCellWithDetailDisclosure.swift; sourceTree = "<group>"; };
+		A3A9345A20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EFCollectionViewCellWithDetailDisclosure.xib; sourceTree = "<group>"; };
 		A3BD22A02064184D00E192EB /* EazyFitness.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EazyFitness.entitlements; sourceTree = "<group>"; };
 		A3CEFF5B20978FC500B05FC1 /* trainerQRCODE */ = {isa = PBXFileReference; lastKnownFileType = text; path = trainerQRCODE; sourceTree = "<group>"; };
 		A3CEFF5E2097FB4E00B05FC1 /* trainerMyStudentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = trainerMyStudentVC.swift; sourceTree = "<group>"; };
@@ -507,6 +513,8 @@
 				A32EBB7820C5A65A003B5D54 /* EFCollectionViewCellWithLargeNumber.xib */,
 				A32EBB8720C5B3BC003B5D54 /* EFCollectionViewCellWithNextCourse.swift */,
 				A32EBB8820C5B3BC003B5D54 /* EFCollectionViewCellWithNextCourse.xib */,
+				A3A9345920CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift */,
+				A3A9345A20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib */,
 				A32EBB6720C5A5DB003B5D54 /* EFViewHeaderCellWithStudentCourse.swift */,
 				A32EBB6820C5A5DB003B5D54 /* EFViewHeaderCellWithStudentCourse.xib */,
 				A32EBB6B20C5A5F2003B5D54 /* EFViewHeaderCellWithTrainerCourse.swift */,
@@ -626,6 +634,7 @@
 				A39C5D882092B2A600D46739 /* LoginViewController.swift */,
 				A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */,
 				A3CEFF5E2097FB4E00B05FC1 /* trainerMyStudentVC.swift */,
+				A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */,
 				A31E2FE2209E91E400677D86 /* AdminViewController.swift */,
 				A35F26AD20A0DF7A00697BB3 /* tableStudentSelectionTableViewController.swift */,
 				A35F26AF20A0E2E500697BB3 /* selectionTableViewCell.swift */,
@@ -828,6 +837,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A32EBB8620C5AFBC003B5D54 /* EFExtentableHeaderCellWithLabel.xib in Resources */,
+				A3A9345C20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib in Resources */,
 				A3281BD9205A315C001965F7 /* LaunchScreen.storyboard in Resources */,
 				A32EBB7A20C5A65A003B5D54 /* EFCollectionViewCellWithLargeNumber.xib in Resources */,
 				A32EBB6620C5A5AF003B5D54 /* EFCollectionViewCellWithProgress.xib in Resources */,
@@ -1041,6 +1051,7 @@
 				A345101620B2B527007E1267 /* loadingViewController.swift in Sources */,
 				A39FE311209929D600A16619 /* StudentFinishedTableViewController.swift in Sources */,
 				A39C5D8B2092B4DA00D46739 /* LoginPasswordViewController.swift in Sources */,
+				A3A9345B20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift in Sources */,
 				A303D8BF20AE819300623218 /* CourseTableViewCell.swift in Sources */,
 				A35B183F2090315E0058EA7B /* WelcomeViewController.swift in Sources */,
 				A316E2E020BA283B007F2BC3 /* adminSelector.swift in Sources */,
@@ -1064,6 +1075,7 @@
 				A33E418920B7C23800E79A1D /* MessageListTableViewCell.swift in Sources */,
 				A307796A205B750800512378 /* QRCodeReaderViewContainer.swift in Sources */,
 				A32EBB7920C5A65A003B5D54 /* EFCollectionViewCellWithLargeNumber.swift in Sources */,
+				A3A9345820CAF0A50057F3B8 /* trainerCourseVC.swift in Sources */,
 				A39FF65A20ACEA9B00B54353 /* EFStudentMessage.swift in Sources */,
 				A32EBB7520C5A644003B5D54 /* EFCollectionViewCellWithButton.swift in Sources */,
 				A34923662090EAB7004C5455 /* HexColor.swift in Sources */,

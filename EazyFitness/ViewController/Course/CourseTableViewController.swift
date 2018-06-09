@@ -109,12 +109,12 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
     
     func appendCourse(efCourse:EFCourse){
         if (thisStudentOrTrainer as? EFTrainer) != nil{
-            if self.listedCourse[efCourse.getTraineesNames] == nil {
-                self.listedCourse[efCourse.getTraineesNames] = [efCourse]
+            if self.listedCourse[efCourse.traineesNames] == nil {
+                self.listedCourse[efCourse.traineesNames] = [efCourse]
 
             } else {
-                self.listedCourse[efCourse.getTraineesNames]?.append(efCourse)
-                self.listedCourse[efCourse.getTraineesNames]?.sort(by: { (a, b) -> Bool in
+                self.listedCourse[efCourse.traineesNames]?.append(efCourse)
+                self.listedCourse[efCourse.traineesNames]?.sort(by: { (a, b) -> Bool in
                     a.date < b.date
                 })
 
@@ -166,7 +166,7 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
     }
     
     func loadInfo(efCourse:EFCourse){
-        let statusList:[courseStatus] = efCourse.getTraineesStatus
+        let statusList:[courseStatus] = efCourse.traineesStatus
         let multiStatus = enumService.toMultiCourseStataus(list: statusList)
         switch self.typerSelector.selectedSegmentIndex {
         case 0: //全部
@@ -223,7 +223,7 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
         let studentName = Array(self.listedCourse.keys.sorted())[indexPath.section]
         let efCourse = self.listedCourse[studentName]![indexPath.row]
         cell.note.text = efCourse.note
-        cell.date.text = efCourse.dateString
+        cell.date.text = efCourse.date.descriptDate()
         cell.amount.text = efCourse.amountString
         if let status = self.listedCourseStatus[efCourse.ref.documentID]{
             let multiStatus = enumService.toMultiCourseStataus(list: status)

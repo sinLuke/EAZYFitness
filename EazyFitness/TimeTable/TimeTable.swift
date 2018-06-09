@@ -46,7 +46,8 @@ class TimeTable: NSObject {
         var timetableDicWithName: [String: [String:[[Any]]]] = [:]
         for name in classObjs.keys{
             for courseObj in classObjs[name]!{
-                if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek(){
+                let status = enumService.toMultiCourseStataus(list: courseObj.traineesStatus)
+                if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek() && status != .decline && status != .someApproved && status != .waitForStudent{
                     let numberHour:Int = Calendar.current.component(.hour, from: courseObj.date)*100 + Calendar.current.component(.minute, from: courseObj.date)
                     let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: courseObj.date)]
                     
@@ -73,8 +74,12 @@ class TimeTable: NSObject {
         view.backgroundColor = UIColor.white
         var timetableDicWithName: [String: [String:[[Any]]]] = [:]
         for courseObj in classObjs{
-            if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek(){
-                let displayName = courseObj.getTraineesNames
+            let status = enumService.toMultiCourseStataus(list: courseObj.traineesStatus)
+            print("=======================")
+            print(status)
+            if courseObj.date > startoftheweek.startOfWeek() && courseObj.date < startoftheweek.endOfWeek() && status != .decline && status != .uncompleted && status != .waitForStudent{
+                print("=======================")
+                let displayName = courseObj.traineesNames
                 let numberHour:Int = Calendar.current.component(.hour, from: courseObj.date)*100 + Calendar.current.component(.minute, from: courseObj.date)
                 let weekDayName = Date.weekName[Calendar.current.component(.weekday, from: courseObj.date)]
                 if timetableDicWithName[displayName] != nil && timetableDicWithName[displayName]![weekDayName] != nil{
