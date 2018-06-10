@@ -73,6 +73,9 @@ class EFRequest: EFData {
     }
     
     class func createRequest(bageRef:DocumentReference, title:String, receiver:String, sander:String, text:String, requestRef:DocumentReference, type:requestType){
+        
+        AppDelegate.SandNotification(to: receiver, with: text, and: title)
+        
         Firestore.firestore().collection("request").addDocument(data:[
             "title" : title,
             "receiver" : receiver,

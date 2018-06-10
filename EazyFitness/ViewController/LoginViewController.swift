@@ -8,12 +8,14 @@
 
 import UIKit
 import Firebase
-
+import MaterialComponents
 class LoginViewController: DefaultViewController, UITextFieldDelegate {
     var db: Firestore!
-    @IBOutlet weak var emailField: UITextField!
+    @IBOutlet weak var emailField: MDCTextField!
     @IBOutlet weak var nextButton: UIButton!
     var userInfo:NSDictionary?
+    var callBackVC:credentialReciever!
+    var singleUse:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,11 +57,22 @@ class LoginViewController: DefaultViewController, UITextFieldDelegate {
                 AppDelegate.showError(title: "邮箱错误", err: "这不是有效的邮箱")
             } else {
                 self.startLoading()
-                DataServer.initfunc(email: email)
+                if singleUse {
+                    self.performSegue(withIdentifier: "loginPassword", sender: self)
+                } else {
+                    DataServer.initfunc(email: email)
+                }
             }
         } else {
             print("3")
             AppDelegate.showError(title: "邮箱错误", err: "请输入有效的邮箱")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let dvc = segue.destination as? LoginPasswordViewController {
+            dvc.singleUse = self.singleUse
+            dvc.callBackVC = self.callBackVC
         }
     }
 }

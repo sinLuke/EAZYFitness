@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14111" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -22,20 +22,17 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KxL-i7-0Gx">
                         <rect key="frame" x="0.0" y="0.0" width="500" height="100"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wan-Sf-8Z8">
-                                <rect key="frame" x="8" y="84" width="484" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="16" id="yOS-43-yqK"/>
-                                </constraints>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wan-Sf-8Z8">
+                                <rect key="frame" x="14" y="82" width="33" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vok-FR-ldN">
-                                <rect key="frame" x="8" y="8" width="66" height="76"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vok-FR-ldN">
+                                <rect key="frame" x="8" y="0.0" width="66" height="80"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="snm-On-bAo">
-                                        <rect key="frame" x="12" y="8" width="42" height="60"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="snm-On-bAo">
+                                        <rect key="frame" x="12" y="8" width="42" height="64"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -51,14 +48,13 @@
                             </view>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="wan-Sf-8Z8" secondAttribute="trailing" constant="8" id="ETi-qm-aR4"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vok-FR-ldN" secondAttribute="trailing" constant="64" id="GWj-27-WXk"/>
-                            <constraint firstItem="wan-Sf-8Z8" firstAttribute="top" secondItem="vok-FR-ldN" secondAttribute="bottom" id="LFO-X8-ZKv"/>
-                            <constraint firstItem="wan-Sf-8Z8" firstAttribute="leading" secondItem="KxL-i7-0Gx" secondAttribute="leading" constant="8" id="Op1-dd-BFe"/>
-                            <constraint firstAttribute="bottom" secondItem="wan-Sf-8Z8" secondAttribute="bottom" id="Q93-LX-GsH"/>
+                            <constraint firstItem="wan-Sf-8Z8" firstAttribute="top" secondItem="vok-FR-ldN" secondAttribute="bottom" constant="2" id="LFO-X8-ZKv"/>
+                            <constraint firstItem="wan-Sf-8Z8" firstAttribute="leading" secondItem="KxL-i7-0Gx" secondAttribute="leading" constant="14" id="Op1-dd-BFe"/>
+                            <constraint firstAttribute="bottom" secondItem="wan-Sf-8Z8" secondAttribute="bottom" constant="2" id="Q93-LX-GsH"/>
                             <constraint firstItem="vok-FR-ldN" firstAttribute="leading" secondItem="KxL-i7-0Gx" secondAttribute="leading" constant="8" id="jLR-D0-9Ei"/>
                             <constraint firstAttribute="width" constant="500" id="lFx-VA-yoX"/>
-                            <constraint firstItem="vok-FR-ldN" firstAttribute="top" secondItem="KxL-i7-0Gx" secondAttribute="top" constant="8" id="u7N-RH-jBW"/>
+                            <constraint firstItem="vok-FR-ldN" firstAttribute="top" secondItem="KxL-i7-0Gx" secondAttribute="top" id="u7N-RH-jBW"/>
                         </constraints>
                     </view>
                 </subviews>

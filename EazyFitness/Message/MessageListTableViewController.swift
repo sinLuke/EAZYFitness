@@ -23,6 +23,8 @@ class MessageListTableViewController: DefaultTableViewController {
     var receiverUID:String!
     var db:Firestore!
     
+    var prepareTitle:String? = ""
+    
     override func refresh() {
         if let thisStudnet = thisUser as? EFStudent{
             Firestore.firestore().collection("student").document(thisStudnet.memberID).collection("Message").document("Last").getDocument { (snap, err) in
@@ -30,19 +32,20 @@ class MessageListTableViewController: DefaultTableViewController {
                     AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
                 } else {
                     if let snapData = snap!.data(){
-                        let lastMessageRef = snapData["ref"] as! DocumentReference
-                        lastMessageRef.getDocument(completion: { (snap, err) in
-                            if let err = err {
-                                AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
-                            } else {
-                                if let data = snap!.data(){
-                                    self.lastMessageForStudent[0] = data
-                                    self.reload()
+                        if let lastMessageRef = snapData["ref"] as? DocumentReference {
+                            lastMessageRef.getDocument(completion: { (snap, err) in
+                                if let err = err {
+                                    AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
                                 } else {
-                                    AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
+                                    if let data = snap!.data(){
+                                        self.lastMessageForStudent[0] = data
+                                        self.reload()
+                                    } else {
+                                        AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     }
                 }
             }
@@ -75,19 +78,20 @@ class MessageListTableViewController: DefaultTableViewController {
                         AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
                     } else {
                         if let snapData = snap!.data(){
-                            let lastMessageRef = snapData["ref"] as! DocumentReference
-                            lastMessageRef.getDocument(completion: { (snap, err) in
-                                if let err = err {
-                                    AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
-                                } else {
-                                    if let data = snap!.data(){
-                                        self.lastMessageForTrainer[studentRef.documentID] = data
-                                        self.reload()
+                            if let lastMessageRef = snapData["ref"] as? DocumentReference {
+                                lastMessageRef.getDocument(completion: { (snap, err) in
+                                    if let err = err {
+                                        AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
                                     } else {
-                                        AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
+                                        if let data = snap!.data(){
+                                            self.lastMessageForTrainer[studentRef.documentID] = data
+                                            self.reload()
+                                        } else {
+                                            AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
+                                        }
                                     }
-                                }
-                            })
+                                })
+                            }
                         }
                     }
                 }
@@ -219,12 +223,14 @@ class MessageListTableViewController: DefaultTableViewController {
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.prepareTitle = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageTitle.text
         if let theStudent = thisUser as? EFStudent{
             switch indexPath.row{
             case 0:
                 if let theTrainerExist = theStudent.trainer{
                     self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("Message")
                     self.receiverUID = theStudent.trainerUID ?? "null"
+                    
                     performSegue(withIdentifier: "message", sender: self)
                 } else {
                     AppDelegate.showError(title: "请稍后", err: "数据尚未完全载入")
@@ -302,6 +308,8 @@ class MessageListTableViewController: DefaultTableViewController {
                 dvc.receiver = self.receiverUID
                 dvc.colRef = self.prepareRef
                 dvc.thisTrainerStudent = self.thisUser
+                dvc.nameTitle = self.prepareTitle
+                dvc.title = self.prepareTitle
             }
         }
     }

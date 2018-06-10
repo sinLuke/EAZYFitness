@@ -25,6 +25,8 @@
 		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
 		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
 		A316E2E020BA283B007F2BC3 /* adminSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A316E2DF20BA283B007F2BC3 /* adminSelector.swift */; };
+		A31A951020CD159D0011DCD3 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */; };
+		A31A951220CD15C10011DCD3 /* ResetEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */; };
 		A31E2FE3209E91E400677D86 /* AdminViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE2209E91E400677D86 /* AdminViewController.swift */; };
 		A31E2FE6209EC7AD00677D86 /* AdminStudentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */; };
 		A31E2FE8209EC7B900677D86 /* AdminTrainerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */; };
@@ -179,6 +181,8 @@
 		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
 		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
 		A316E2DF20BA283B007F2BC3 /* adminSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adminSelector.swift; sourceTree = "<group>"; };
+		A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEmailViewController.swift; sourceTree = "<group>"; };
 		A31E2FE2209E91E400677D86 /* AdminViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminViewController.swift; sourceTree = "<group>"; };
 		A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminStudentViewCell.swift; sourceTree = "<group>"; };
 		A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTrainerViewCell.swift; sourceTree = "<group>"; };
@@ -660,6 +664,8 @@
 				A349235F2090E38F004C5455 /* SettingVC.swift */,
 				A3EDEBE520B3A3FC005DDE45 /* LocalDataTableViewController.swift */,
 				A3EDEBE720B3A5A0005DDE45 /* LocalNextDataTableViewController.swift */,
+				A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */,
+				A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1066,6 +1072,7 @@
 				A35735932096502500995346 /* TimeTabelCell.swift in Sources */,
 				A32EBB7120C5A616003B5D54 /* EFViewCellWithTrainerCourseStudentStatus.swift in Sources */,
 				A349236D2090EBC7004C5455 /* SigninPasswordViewController.swift in Sources */,
+				A31A951020CD159D0011DCD3 /* ResetPasswordViewController.swift in Sources */,
 				A32EBB6D20C5A5F2003B5D54 /* EFViewHeaderCellWithTrainerCourse.swift in Sources */,
 				A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */,
 				A367993D20B60FE500A582D7 /* DataItemCollectionViewCell.swift in Sources */,
@@ -1136,6 +1143,7 @@
 				A3F3E647209EE8130054AEF0 /* AllTrainerTableViewController.swift in Sources */,
 				A32EEE57209D6EFE0018FBB5 /* TimeTableViewTableCell.swift in Sources */,
 				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,
+				A31A951220CD15C10011DCD3 /* ResetEmailViewController.swift in Sources */,
 				A349236B2090EBAF004C5455 /* SigninScanViewController.swift in Sources */,
 				A32EEE35209CEADF0018FBB5 /* MessageCollectionViewController.swift in Sources */,
 				A3252A9D2094F42B00FD5EC3 /* TimeTable.swift in Sources */,

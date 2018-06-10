@@ -8,17 +8,17 @@
 
 import UIKit
 import Firebase
-
+import MaterialComponents
 class specialUserSigninViewController: DefaultViewController, UITextFieldDelegate{
     
     var db: Firestore!
     
-    @IBOutlet weak var emailField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
-    @IBOutlet weak var password2Field: UITextField!
+    @IBOutlet weak var emailField: MDCTextField!
+    @IBOutlet weak var passwordField: MDCTextField!
+    @IBOutlet weak var password2Field: MDCTextField!
     
-    @IBOutlet weak var fnameField: UITextField!
-    @IBOutlet weak var lnameField: UITextField!
+    @IBOutlet weak var fnameField: MDCTextField!
+    @IBOutlet weak var lnameField: MDCTextField!
     @IBOutlet weak var usergroupLabel: UILabel!
     @IBOutlet weak var regionLabel: UILabel!
     

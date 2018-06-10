@@ -249,6 +249,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.refresh()
     }
 

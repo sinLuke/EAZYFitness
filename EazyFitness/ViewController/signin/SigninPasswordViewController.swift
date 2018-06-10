@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-
+import MaterialComponents
 //#02
 
 class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
@@ -25,9 +25,9 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     
     @IBOutlet weak var nameLabel: UILabel!
     
-    @IBOutlet weak var emailField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
-    @IBOutlet weak var password2Field: UITextField!
+    @IBOutlet weak var emailField: MDCTextField!
+    @IBOutlet weak var passwordField: MDCTextField!
+    @IBOutlet weak var password2Field: MDCTextField!
     
     override func viewDidLoad() {
         

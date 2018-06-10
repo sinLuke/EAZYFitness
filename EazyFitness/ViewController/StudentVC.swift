@@ -361,7 +361,6 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                 cell.TitleLabel.text = "之后的课程"
                 cell.BarRightLabel.text = "共\(nextCourse.count)项记录"
             }
-            
             return cell
         }
     }

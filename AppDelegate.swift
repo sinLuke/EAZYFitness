@@ -38,6 +38,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     var listener:ListenerRegistration?
 
     var window: UIWindow?
+    
+    static var cvc: UIViewController?
+    
+    static var token:String?
     /*
     func Special(){
         print("***special**")
@@ -204,8 +208,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         
         //云消息
         Messaging.messaging().delegate = self
-        let token = Messaging.messaging().fcmToken
-        print("FCM token: \(token ?? "")")
+        AppDelegate.token = Messaging.messaging().fcmToken
         
         self.authUI = FUIAuth.defaultAuthUI()
         self.authUI?.delegate = self
@@ -220,8 +223,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         return true
     }
     
+    class func SandNotification(to recieverUID:String, with message:String, and title:String?){
+        if let currentUser = Auth.auth().currentUser{
+            Database.database().reference().child("notification/\(recieverUID)/\(currentUser.uid)").setValue(["message": message, "title":title ?? "", "Date":Date().description])
+        }
+    }
+    
     func applicationDidStart(){
         if let currentUser = Auth.auth().currentUser{
+            Auth.auth().languageCode = "cn"
+            if let token = AppDelegate.token{
+                
+                //设置云消息token
+                Database.database().reference().child("users/\(currentUser.uid)/notificationTokens").setValue(token)
+                
+                //读取新的用户名等信息
+                Firestore.firestore().collection("users").document(currentUser.uid).getDocument { (snap, err) in
+                    if let snap = snap {
+                        if let data = snap.data(){
+                            if let firstName = data["firstName"] as? String,
+                                let lastName = data["lastName"] as? String{
+                                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                                changeRequest?.displayName = "\(firstName) \(lastName)"
+                                changeRequest?.commitChanges(completion: nil)
+                            }
+                        }
+                    }
+                }
+                
+                
+            }
             DataServer.initfunc(uid: currentUser.uid)
         } else {
             AppDelegate.resetMainVC(with: "login")
@@ -234,7 +265,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         }
         let firebaseAuth = Auth.auth()
         do {
-            try firebaseAuth.signOut()
+            if let currentUser = Auth.auth().currentUser{
+                try firebaseAuth.signOut()
+                Database.database().reference().child("users/\(currentUser.uid)/notificationTokens").removeValue()
+            }
         } catch let signOutError as NSError {
             AppDelegate.showError(title: "sign out error", err: signOutError.localizedDescription)
         }
@@ -351,12 +385,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     class func getCurrentVC() -> UIViewController?{
+        /*
         let rootViewController = UIApplication.shared.keyWindow?.rootViewController
         let currentViewController = AppDelegate.getCurrentVCFrom(_rootViewController: rootViewController)
         return currentViewController
+ */
+        return AppDelegate.cvc
     }
     
     class func getCurrentVCFrom(_rootViewController:UIViewController?) -> UIViewController?{
+        /*
         var currentViewController:UIViewController
         if var rootViewController = _rootViewController{
             if (rootViewController.presentedViewController != nil) {
@@ -375,7 +413,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         } else {
             return nil
         }
-        
+        */
+        return AppDelegate.cvc
     }
     
     

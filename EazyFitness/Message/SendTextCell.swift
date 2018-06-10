@@ -14,6 +14,7 @@ class SendTextCell: UICollectionViewCell {
     @IBOutlet weak var Messagetext: UILabel!
     @IBOutlet weak var Messagetime: UILabel!
     @IBOutlet weak var msgView: UIView!
+    @IBOutlet weak var readLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -21,6 +22,7 @@ class SendTextCell: UICollectionViewCell {
         self.contentView.translatesAutoresizingMaskIntoConstraints = false
         let screenWidth = UIScreen.main.bounds.size.width
         widthOfCell.constant = screenWidth - (2 * 12)
+        readLabel.textColor = HexColor.Pirmary
     }
 
 }

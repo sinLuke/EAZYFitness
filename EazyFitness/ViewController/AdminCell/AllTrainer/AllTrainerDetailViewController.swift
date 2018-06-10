@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import MaterialComponents
 
 class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -137,9 +138,9 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
 }
 
 class AllTrainerDetailViewCell: UICollectionViewCell {
-    @IBOutlet weak var fname: UITextField!
-    @IBOutlet weak var lname: UITextField!
-    @IBOutlet weak var goalField: UITextField!
+    @IBOutlet weak var fname: MDCTextField!
+    @IBOutlet weak var lname: MDCTextField!
+    @IBOutlet weak var goalField: MDCTextField!
     
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var registered: UISegmentedControl!

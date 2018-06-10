@@ -9,16 +9,18 @@
 import UIKit
 import FirebaseAuth
 import Firebase
-
+import MaterialComponents
 class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
-    
+    var singleUse:Bool = false
+    var callBackVC:credentialReciever!
+    @IBOutlet weak var welcomeLabel: UILabel!
     var fname = "Name"
     var lname = "Undefine"
     var email = "email"
     var userInfo:NSDictionary!
     var db: Firestore!
     @IBOutlet weak var emailLabel: UILabel!
-    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var passwordField: MDCTextField!
     
     override func viewDidLoad() {
         db = Firestore.firestore()
@@ -60,20 +62,34 @@ class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if singleUse {
+            self.welcomeLabel.text = "正在验证"
+        } else {
+            self.welcomeLabel.text = "欢迎"
+        }
+        
+    }
     @IBAction func login(_ sender: Any) {
         if let password = self.passwordField.text{
             startLoading()
-            Auth.auth().signIn(withEmail: self.email, password: password, completion: { (user, error) in
-                if let error = error{
-                    self.endLoading()
-                    AppDelegate.showError(title: "登陆错误", err: error.localizedDescription)
-                } else {
-                    let uuid = UIDevice.current.identifierForVendor!.uuidString
-                    Firestore.firestore().collection("users").document(user!.uid).updateData(["loginDevice" : uuid])
-                    self.endLoading()
-                    AppDelegate.AP().applicationDidStart()
-                }
-            })
+            if self.singleUse {
+                self.callBackVC.callBack(authCredential: EmailAuthProvider.credential(withEmail: self.email, password: password))
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                Auth.auth().signIn(withEmail: self.email, password: password, completion: { (user, error) in
+                    if let error = error{
+                        self.endLoading()
+                        AppDelegate.showError(title: "登陆错误", err: error.localizedDescription)
+                    } else {
+                        let uuid = UIDevice.current.identifierForVendor!.uuidString
+                        Firestore.firestore().collection("users").document(user!.uid).updateData(["loginDevice" : uuid])
+                        self.endLoading()
+                        AppDelegate.AP().applicationDidStart()
+                    }
+                })
+            }
         } else {
             AppDelegate.showError(title: "请输入密码", err: "密码不能为空")
         }

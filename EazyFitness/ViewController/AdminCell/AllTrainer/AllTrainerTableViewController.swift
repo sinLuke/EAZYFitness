@@ -33,7 +33,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         self.tableView.reloadData()
         FtrainerEmptyList = []
         trainerEmptyList = []
-        print("reload")
+        
         for i in 1...999{
             if let thisTrainer = DataServer.trainerDic["\(i)"]{
                 trainerList[i] = "\(i)"
@@ -245,6 +245,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.refresh()
     }
     

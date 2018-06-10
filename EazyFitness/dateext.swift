@@ -81,7 +81,7 @@ extension Date {
             let components = Calendar.current.dateComponents([.minute, .hour, .day, .year], from: now, to: self)
             
             if thisComponents.year! - nowComponents.year! > 0 && self.timeIntervalSinceNow >= day*6 {
-                return "\(thisComponents.year!)年\(thisComponents.month!)月\(thisComponents.day!)日"
+                return "\(thisComponents.year!)年\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
             } else if thisComponents.weekOfYear! - nowComponents.weekOfYear! > 1  && self.timeIntervalSinceNow >= day*6{
                 return "\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
             } else if thisComponents.weekOfYear! - nowComponents.weekOfYear! == 1 {
@@ -102,13 +102,13 @@ extension Date {
         } else if self < now {
             let components = Calendar.current.dateComponents([.minute, .hour, .day, .year], from: self, to: now)
             if nowComponents.year! - thisComponents.year! > 0 && Date().timeIntervalSince(self) >= day*6 {
-                return "\(thisComponents.year!)年\(thisComponents.month!)月"
+                return "\(thisComponents.year!)年\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
             } else if nowComponents.weekOfYear! - thisComponents.weekOfYear! > 1 && Date().timeIntervalSince(self) >= day*6{
-                return "\(thisComponents.month!)月\(thisComponents.day!)日"
+                return "\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
             } else if nowComponents.weekOfYear! - thisComponents.weekOfYear! == 1 {
-                return "上\(self.getThisWeekDayLongName())"
+                return "上\(self.getThisWeekDayLongName()) \(df.string(from: self))"
             } else if nowComponents.day! - thisComponents.day! > 1{
-                return "\(self.getThisWeekDayLongName())"
+                return "\(self.getThisWeekDayLongName()) \(df.string(from: self))"
             } else if nowComponents.day! - thisComponents.day! == 1 && Date().timeIntervalSince(self) >= hour*3 {
                 return "昨天 \(df.string(from: self))"
             } else if components.hour! > 3{

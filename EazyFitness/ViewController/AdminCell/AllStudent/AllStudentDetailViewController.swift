@@ -8,14 +8,14 @@
 
 import UIKit
 import Firebase
-
+import MaterialComponents
 class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate {
 
     var thisStudent:EFStudent!
     var titleName:String!
     
-    @IBOutlet weak var fname: UITextField!
-    @IBOutlet weak var lname: UITextField!
+    @IBOutlet weak var fname: MDCTextField!
+    @IBOutlet weak var lname: MDCTextField!
     
     var new = false
     var back = false
@@ -24,7 +24,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     @IBOutlet weak var registered: UISegmentedControl!
     @IBOutlet weak var region: UISegmentedControl!
     
-    @IBOutlet weak var goalField: UITextField!
+    @IBOutlet weak var goalField: MDCTextField!
     
     @IBOutlet weak var purchaseBtn: UIButton!
     @IBOutlet weak var courseBtn: UIButton!

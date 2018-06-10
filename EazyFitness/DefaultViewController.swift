@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import MaterialComponents
 extension UIView{
     var isVisible:Bool {
         set {
@@ -39,6 +39,9 @@ class DefaultViewController: UIViewController, refreshableVC {
         loadingIndicator.frame = CGRect(x: self.view.frame.width/2-20, y: self.view.frame.height/2-20, width: 40, height: 40)
         loadingView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.5)
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.endLoading))
+        loadingView.addGestureRecognizer(gesture)
+        
         loadingView.layer.cornerRadius = 10
         loadingView.clipsToBounds = true
         loadingView.isHidden = true
@@ -59,7 +62,7 @@ class DefaultViewController: UIViewController, refreshableVC {
         }
     }
     
-    func endLoading() -> (){
+    @objc func endLoading() -> (){
         if let loadingView = loadingView {
             loadingView.isHidden = true
             loadingIndicator.isHidden = true
@@ -90,7 +93,9 @@ class DefaultViewController: UIViewController, refreshableVC {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         super.viewDidAppear(animated)
+        AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }
@@ -182,6 +187,7 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
     override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
+        AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }
@@ -275,7 +281,11 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     
     
     override func viewDidAppear(_ animated: Bool) {
+        let message = MDCSnackbarMessage()
+        message.text = "viewdidAppear"
+        MDCSnackbarManager.show(message)
         super.viewDidAppear(animated)
+        AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }
