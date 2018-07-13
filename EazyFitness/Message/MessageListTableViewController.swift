@@ -9,6 +9,14 @@
 import UIKit
 import Firebase
 
+struct MessageListItem {
+    var name: String
+    var usergroup: userGroup
+    var lastMessage: String
+    var read: Bool
+    var time: Date?
+}
+
 class MessageListTableViewController: DefaultTableViewController {
     
     var thisUser:EFData!
@@ -16,88 +24,167 @@ class MessageListTableViewController: DefaultTableViewController {
     var thisRegion:userRegion!
     var isAdmin:Bool!
     
-    var lastMessageForStudent:[[String:Any]?] = [nil,nil]
-    var lastMessageForTrainer:[String:[String:Any]] = [:]
+    var messageList: [userGroup:[MessageListItem]] = [:]
+    let _refreshControl = UIRefreshControl()
     
     var prepareRef:CollectionReference?
     var receiverUID:String!
     var db:Firestore!
     
+    var usergroup: userGroup = .student
+    
     var prepareTitle:String? = ""
     
-    override func refresh() {
-        if let thisStudnet = thisUser as? EFStudent{
-            Firestore.firestore().collection("student").document(thisStudnet.memberID).collection("Message").document("Last").getDocument { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
-                } else {
-                    if let snapData = snap!.data(){
-                        if let lastMessageRef = snapData["ref"] as? DocumentReference {
-                            lastMessageRef.getDocument(completion: { (snap, err) in
-                                if let err = err {
-                                    AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
-                                } else {
-                                    if let data = snap!.data(){
-                                        self.lastMessageForStudent[0] = data
-                                        self.reload()
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl){
+        refreshControl.endRefreshing()
+        self.refresh()
+    }
+    
+    func getLastMessageFromCollection(ref: DocumentReference, collection: CollectionReference, usergoup: userGroup) {
+        ref.getDocument { (snap2, err2) in
+            if let err = err2 {
+                AppDelegate.showError(title: "读取\(enumService.toDescription(e: usergoup))(\(ref.documentID))信息时发生错误", err: err.localizedDescription)
+            } else {
+                var name = "(\(ref.documentID), \(enumService.toDescription(e: usergoup))"
+                if let firstName = snap2!.data()?["firstName"] as? String,
+                    let lastName = snap2!.data()?["lastName"] as? String{
+                    name = "\(firstName) \(lastName)"
+                }
+                if let cusergroup = AppDelegate.AP().ds?.usergroup, let cregion = AppDelegate.AP().ds?.region{
+                    if usergoup == .trainer && cusergroup == .student {
+                        name = "我的教练"
+                    }
+                    if usergoup == .admin {
+                        name = "\(enumService.toDescription(e: cregion))小助手"
+                    }
+                }
+                
+                collection.document("Last").getDocument { (snap, err) in
+                    if let err = err {
+                        AppDelegate.showError(title: "读取\(enumService.toDescription(e: usergoup))\(name)最近消息时发生错误", err: err.localizedDescription)
+                    } else {
+                        
+                        if let lastMessage = snap!.data()?["Text"] as? String,
+                            let ref = snap!.data()?["ref"] as? DocumentReference,
+                            let time = snap!.data()?["Time"] as? Date {
+                            ref.getDocument(completion: { (snap, _) in
+                                if let snap = snap {
+                                    let read = snap.data()?["Read"] as? Bool ?? true
+                                    let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: lastMessage, read: read, time: time)
+                                    if self.messageList[usergoup] == nil {
+                                        self.messageList[usergoup] = [thisMessgae]
                                     } else {
-                                        AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
+                                        self.messageList[usergoup]?.append(thisMessgae)
                                     }
+                                    self.reload()
                                 }
                             })
-                        }
-                    }
-                }
-            }
-            Firestore.firestore().collection("student").document(thisStudnet.memberID).collection("AdminMessage").document("Last").getDocument { (snap, err) in
-                if let err = err{
-                    AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
-                } else {
-                    if let snapData = snap!.data(){
-                        let lastMessageRef = snapData["ref"] as! DocumentReference
-                        lastMessageRef.getDocument(completion: { (snap, err) in
-                            if let err = err {
-                                AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
+                        } else {
+                            let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: "[无聊天记录]", read: true, time: nil)
+                            if self.messageList[usergoup] == nil {
+                                self.messageList[usergoup] = [thisMessgae]
                             } else {
-                                if let data = snap!.data(){
-                                    self.lastMessageForStudent[1] = data
-                                    self.reload()
-                                } else {
-                                    AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
-                                }
+                                self.messageList[usergoup]!.append(thisMessgae)
                             }
-                        })
-                    }
-                }
-            }
-            thisStudnet.getTrainer()
-        } else if let thisTranier = thisUser as? EFTrainer{
-            for studentRef in thisTranier.trainee{
-                studentRef.collection("Message").document("Last").getDocument { (snap, err) in
-                    if let err = err{
-                        AppDelegate.showError(title: "获取最新消息时发生错误", err: err.localizedDescription)
-                    } else {
-                        if let snapData = snap!.data(){
-                            if let lastMessageRef = snapData["ref"] as? DocumentReference {
-                                lastMessageRef.getDocument(completion: { (snap, err) in
-                                    if let err = err {
-                                        AppDelegate.showError(title: "获取信息时出现错误", err: err.localizedDescription)
-                                    } else {
-                                        if let data = snap!.data(){
-                                            self.lastMessageForTrainer[studentRef.documentID] = data
-                                            self.reload()
-                                        } else {
-                                            AppDelegate.showError(title: "获取信息时出现错误", err: "消息对象为空")
-                                        }
-                                    }
-                                })
-                            }
+                            self.reload()
                         }
                     }
                 }
             }
         }
-        reload()
+    }
+    
+    override func refresh() {
+        
+        print(AppDelegate.AP().ds?.usergroup)
+
+        self.messageList = [:]
+        
+        if let currentUserGroup = AppDelegate.AP().ds?.usergroup {
+            self.usergroup = currentUserGroup
+            switch currentUserGroup {
+            case .trainer:
+                
+                if let currentID = AppDelegate.AP().ds?.memberID {
+                    let trainerRef = Firestore.firestore().collection("trainer").document(currentID)
+                    trainerRef.getDocument { (snap, err) in
+                        if let err = err {
+                            AppDelegate.showError(title: "读取学生列表时错误，请稍后重试", err: err.localizedDescription)
+                        } else {
+                            if let studentRefList = snap!.data()!["trainee"] as? [DocumentReference] {
+                                for studentRef in studentRefList {
+                                    self.getLastMessageFromCollection(ref: studentRef, collection: studentRef.collection("Message"), usergoup: .student)
+                                }
+                            }
+                        }
+                    }
+                    self.getLastMessageFromCollection(ref: trainerRef, collection: trainerRef.collection("AdminMessage"), usergoup: .admin)
+                }
+                
+            case .admin:
+                if let currentRegion = AppDelegate.AP().ds?.region {
+                    Firestore.firestore().collection("trainer").getDocuments { (snaps, err) in
+                        if let err = err {
+                            AppDelegate.showError(title: "读取教练列表时错误，请稍后重试", err: err.localizedDescription)
+                        } else {
+                            let documents = snaps!.documents
+                            for trainerDoc in documents{
+                                if currentRegion != userRegion.All{
+                                    if let region = trainerDoc.data()["region"] as? String {
+                                        let regionValue = enumService.toRegion(s: region)
+                                        if currentRegion == regionValue {
+                                            self.getLastMessageFromCollection(ref: trainerDoc.reference, collection: trainerDoc.reference.collection("AdminMessage"), usergoup: .trainer)
+                                        }
+                                    }
+                                } else {
+                                    self.getLastMessageFromCollection(ref: trainerDoc.reference, collection: trainerDoc.reference.collection("AdminMessage"), usergoup: .trainer)
+                                }
+                            }
+                        }
+                    }
+                    
+                    Firestore.firestore().collection("student").getDocuments { (snaps, err) in
+                        if let err = err {
+                            AppDelegate.showError(title: "读取学生列表时错误，请稍后重试", err: err.localizedDescription)
+                        } else {
+                            let documents = snaps!.documents
+                            for studentDoc in documents{
+                                if currentRegion != userRegion.All{
+                                    if let region = studentDoc.data()["region"] as? String {
+                                        let regionValue = enumService.toRegion(s: region)
+                                        if currentRegion == regionValue {
+                                            self.getLastMessageFromCollection(ref: studentDoc.reference, collection: studentDoc.reference.collection("AdminMessage"), usergoup: .student)
+                                        }
+                                    }
+                                } else {
+                                    self.getLastMessageFromCollection(ref: studentDoc.reference, collection: studentDoc.reference.collection("AdminMessage"), usergoup: .student)
+                                }
+                            }
+                        }
+                    }
+                }
+            case .student:
+                print(AppDelegate.AP().ds?.memberID)
+                if let currentID = AppDelegate.AP().ds?.memberID {
+                    let studentRef = Firestore.firestore().collection("student").document(currentID)
+                    self.getLastMessageFromCollection(ref: studentRef, collection: studentRef.collection("AdminMessage"), usergoup: .admin)
+                    self.getLastMessageFromCollection(ref: studentRef, collection: studentRef.collection("Message"), usergoup: .trainer)
+                }
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let currentUserGroup = AppDelegate.AP().ds?.usergroup {
+            if currentUserGroup == .student {
+                return nil
+            } else {
+                let currentKey = Array(self.messageList.keys)[section]
+                return enumService.toDescription(e: currentKey)
+            }
+        } else {
+            return nil
+        }
     }
     
     override func reload() {
@@ -111,21 +198,18 @@ class MessageListTableViewController: DefaultTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         db = Firestore.firestore()
-        if let tbc = self.tabBarController as? StudentTabBarController{
-            thisUser = tbc.thisStudent
-            thisUsergroup = .student
-            thisRegion = tbc.thisStudent.region
-            isAdmin = true
-        } else if let tbc = self.tabBarController as? TrainerTabBarController{
-            thisUser = tbc.thisTrainer
-            thisUsergroup = .trainer
-            thisRegion = tbc.thisTrainer.region
-            isAdmin = true
-        } else if let tbc = self.tabBarController as? AdminTabBarController{
-            thisRegion = AppDelegate.AP().ds?.region
-            isAdmin = true
-        }
-        self.refresh()
+        
+        let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
+        _refreshControl.attributedTitle = NSAttributedString(string: title)
+        _refreshControl.addTarget(self, action:
+            #selector(handleRefresh(_:)),
+                                  for: UIControlEvents.valueChanged)
+        _refreshControl.tintColor = HexColor.Pirmary
+        
+        self.tableView!.refreshControl = self._refreshControl
+        self.tableView!.addSubview(self._refreshControl)
+        
+        //self.refresh()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -144,126 +228,34 @@ class MessageListTableViewController: DefaultTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         
-        return 1
+        return self.messageList.keys.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if AppDelegate.AP().ds?.usergroup == userGroup.student{
-            return 2
-        } else if let thisTrainer = thisUser as? EFTrainer{
-            return thisTrainer.trainee.count
-        } else {
-            return AppDelegate.AP().studentList.count
-        }
+        
+        let currentKey = Array(self.messageList.keys)[section]
+        return self.messageList[currentKey]?.count ?? 0
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "message", for: indexPath) as! MessageListTableViewCell
         cell.Read = true
-        if let thisStudent = thisUser as? EFStudent{
-            switch indexPath.row{
-            case 0:
-                if thisStudent.trainer == nil{
-                    cell.messageTitle.text = "暂无教练"
-                    cell.messageText.text = ""
-                    cell.timeLabel.text = ""
-                    cell.Read = true
-                } else if let lastMessage = lastMessageForStudent[0]{
-                    cell.messageTitle.text = "我的教练"
-                    cell.messageText.text = lastMessage["Text"] as? String
-                    cell.timeLabel.text = (lastMessage["Time"] as? Date)?.descriptDate()
-                    if !(lastMessage["byStudent"] as! Bool){
-                        cell.Read = lastMessage["Read"] as! Bool
-                    } else {
-                        cell.Read = true
-                    }
-                }
-            default:
-                if let lastMessage = lastMessageForStudent[1]{
-                    cell.messageTitle.text = "小助手"
-                    cell.messageText.text = lastMessage["Text"] as? String
-                    cell.timeLabel.text = (lastMessage["Time"] as? Date)?.descriptDate()
-                    if !(lastMessage["byStudent"] as! Bool){
-                        cell.Read = lastMessage["Read"] as! Bool
-                    } else {
-                        cell.Read = true
-                    }
-                } else {
-                    cell.messageTitle.text = "小助手"
-                    cell.messageText.text = ""
-                    cell.Read = true
-                    cell.timeLabel.text = ""
-                }
-            }
-        } else if let thisTrainer = thisUser as? EFTrainer{
-            if thisTrainer.trainee.count != 0{
-                let studentRef = thisTrainer.trainee[indexPath.row]
-                if let student = DataServer.studentDic[studentRef.documentID]{
-                    cell.messageTitle.text = student.name
-                    if let lastMessage = lastMessageForTrainer[student.memberID]{
-                        cell.messageText.text = lastMessage["Text"] as? String
-                        cell.timeLabel.text = (lastMessage["Time"] as? Date)?.descriptDate()
-                        if (lastMessage["byStudent"] as! Bool){
-                            cell.Read = lastMessage["Read"] as! Bool
-                        } else {
-                            cell.Read = true
-                        }
-                    }
-                    
-                }
+        let currentKey = Array(self.messageList.keys)[indexPath.section]
+        cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
+            if let atime = a.time, let btime = b.time {
+                return atime > btime
             } else {
-                cell.messageTitle.text = "正在载入……"
-                cell.messageText.text = ""
+                return a.name > b.name
             }
-        }
+        })[indexPath.row]
         return cell
     }
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.prepareTitle = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageTitle.text
-        if let theStudent = thisUser as? EFStudent{
-            switch indexPath.row{
-            case 0:
-                if let theTrainerExist = theStudent.trainer{
-                    self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("Message")
-                    self.receiverUID = theStudent.trainerUID ?? "null"
-                    
-                    performSegue(withIdentifier: "message", sender: self)
-                } else {
-                    AppDelegate.showError(title: "请稍后", err: "数据尚未完全载入")
-                }
-            default:
-                Firestore.firestore().collection("users").whereField("region", isEqualTo: enumService.toString(e: theStudent.region)).whereField("usergroup", isEqualTo: "admin").getDocuments { (snaps, err) in
-                    if let err = err {
-                        AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
-                    } else {
-                        if snaps!.count == 0 {
-                            AppDelegate.showError(title: "未知错误", err: "未找到管理员")
-                        } else {
-                            for doc in snaps!.documents{
-                                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("AdminMessage")
-                                self.receiverUID = doc.documentID
-                                self.performSegue(withIdentifier: "message", sender: self)
-                                break
-                            }
-                        }
-                    }
-                }
-                
-            }
-        } else if let thisTrainer = thisUser as? EFTrainer{
-            if thisTrainer.trainee.count != 0{
-                let studentRef = thisTrainer.trainee[indexPath.row]
-                if let student = DataServer.studentDic[studentRef.documentID]{
-                    self.prepareRef = Firestore.firestore().collection("student").document(student.memberID).collection("Message")
-                    self.receiverUID = student.uid
-                    performSegue(withIdentifier: "message", sender: self)
-                }
-            }
-        }
+        
     }
     
     

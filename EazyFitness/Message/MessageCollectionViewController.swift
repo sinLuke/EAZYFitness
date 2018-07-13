@@ -11,26 +11,18 @@ import Firebase
 import MaterialComponents
 private let reuseIdentifier = "Cell"
 
-class EFMessage {
+struct EFMessage {
     var time:Date
     var text:String
-    var byStudent:Bool
+    var usergroup:String
     var read:Bool
     var keyMessage:Bool = false
     var readLabel:Bool = false
-    
-    
-    init(time: Date, text: String, byStudent: Bool, read: Bool, keyMessage: Bool, readLabel: Bool){
-        self.time = time
-        self.text = text
-        self.byStudent = byStudent
-        self.read = read
-        self.keyMessage = keyMessage
-        self.readLabel = readLabel
-    }
 }
 
 class MessageCollectionViewController: DefaultViewController, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate {
+    
+    var _selfUsergroup: userGroup!
 
     var receiver:String!
     var nameTitle:String? = ""
@@ -43,16 +35,14 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     var colRef:CollectionReference!
     var MessageList:[EFMessage] = []
     var LastMessage:EFMessage?
-    var LastMessageByStudent:EFMessage?
-    var LastMessageByTrainer:EFMessage?
+    var LastMessageBySelf:EFMessage?
+    var LastMessageByTarget:EFMessage?
     @IBOutlet weak var messageField: UITextView!
     @IBOutlet weak var sendMessage: UIButton!
     var gesture:UIGestureRecognizer!
     var listener:ListenerRegistration!
     
     var postView_y:CGFloat = 0
-    
-    var thisTrainerStudent:EFData!
     
     override func refresh() {
         
@@ -64,41 +54,35 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
             } else {
                 self.MessageList = []
                 self.LastMessage = nil
-                self.LastMessageByTrainer = nil
-                self.LastMessageByStudent = nil
+                self.LastMessageBySelf = nil
+                self.LastMessageByTarget = nil
                 if let doctList = snaps?.documents{
                     for docs in doctList{
                         if docs.documentID != "Last"{
-                            if let time = docs.data()["Time"] as? Date, let text = docs.data()["Text"] as? String, let read = docs.data()["Read"] as? Bool, let byStudent = docs.data()["byStudent"] as? Bool {
-                                var thisMessage = EFMessage(time: time, text: text, byStudent: byStudent, read: read, keyMessage: false, readLabel: false)
-                                print(thisMessage)
+                            if let time = docs.data()["Time"] as? Date, let text = docs.data()["Text"] as? String, let read = docs.data()["Read"] as? Bool, let usergroup = docs.data()["usergroup"] as? String {
+                                
+                                var thisMessage = EFMessage(time: time, text: text, usergroup: usergroup, read: read, keyMessage: false, readLabel: false)
+                                
                                 if self.LastMessage != nil {
                                     if Calendar.current.date(byAdding: .minute, value: 5, to: self.LastMessage!.time)! < thisMessage.time{
                                         self.LastMessage!.keyMessage = true
                                     }
-                                    if self.LastMessageByStudent?.read != thisMessage.read && AppDelegate.AP().ds?.usergroup == userGroup.student && thisMessage.byStudent{
-                                        self.LastMessageByStudent?.readLabel = true
-                                        print("======")
-                                    } else if self.LastMessageByTrainer?.read != thisMessage.read && AppDelegate.AP().ds?.usergroup != userGroup.student && !thisMessage.byStudent{
-                                        self.LastMessageByTrainer?.readLabel = true
-                                        print("======!")
-                                    }
-                                    self.MessageList.append(self.LastMessage!)
                                     
-                                }
-                                if thisMessage.byStudent && AppDelegate.AP().ds?.usergroup != userGroup.student{
-                                    docs.reference.updateData(["Read" : true])
-                                    (docs.data()["bage"] as! DocumentReference).delete()
-                                } else if !thisMessage.byStudent && AppDelegate.AP().ds?.usergroup == userGroup.student{
-                                    docs.reference.updateData(["Read" : true])
-                                    (docs.data()["bage"] as! DocumentReference).delete()
+                                    if self.LastMessageByTarget?.read != thisMessage.read {
+                                        self.LastMessageByTarget?.readLabel = true
+                                    }
+                                    
+                                    self.MessageList.append(self.LastMessage!)
                                 }
                                 
                                 self.LastMessage = thisMessage
-                                if thisMessage.byStudent {
-                                    self.LastMessageByStudent = self.LastMessage
+                                
+                                if thisMessage.usergroup == enumService.toString(e: self._selfUsergroup){
+                                    self.LastMessageBySelf = self.LastMessage
                                 } else {
-                                    self.LastMessageByTrainer = self.LastMessage
+                                    docs.reference.updateData(["Read" : true])
+                                    (docs.data()["bage"] as! DocumentReference).delete()
+                                    self.LastMessageByTarget = self.LastMessage
                                 }
                             }
                         } else {
@@ -123,10 +107,10 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
                         self.LastMessage!.readLabel = true
                         self.MessageList.append(self.LastMessage!)
                     }
-                    self.LastMessageByStudent?.readLabel = true
-                    self.LastMessageByTrainer?.readLabel = true
+                    self.LastMessageBySelf?.readLabel = true
+                    self.LastMessageByTarget?.readLabel = true
                 } else {
-                    
+                    AppDelegate.showError(title: "无法获取聊天记录", err: "请稍后再试")
                 }
                 self.reload()
             }
@@ -136,7 +120,6 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     override func reload() {
         self.collectionView?.reloadData()
         self.scrollToBtm()
-        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -190,6 +173,11 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.listener.remove()
+        if AppDelegate.AP().ds?.usergroup == userGroup.student {
+            colRef.document("Last").updateData(["TypingByStudent":false, "Time":Date()])
+        } else {
+            colRef.document("Last").updateData(["TypingByTrainer":false, "Time":Date()])
+        }
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -202,14 +190,16 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
                                                     "byStudent":(AppDelegate.AP().ds?.usergroup == userGroup.student),
                                                     "bage" : bageRef])
             AppDelegate.SandNotification(to: receiverUID, with: self.messageField.text, and: "")
-            colRef.document("Last").updateData(["Text" : self.messageField.text, "ref":lastRef, "Time":Date()])
+            colRef.document("Last").setData(["Text" : self.messageField.text, "ref":lastRef, "Time":Date(), "TypingByStudent": false])
         }
         fieldHeight.constant = 34
         self.messageField.text = ""
     }
     
     @objc func dismissKeyboard(){
-        self.messageField.endEditing(true)
+        if self.messageField.isFirstResponder{
+            self.messageField.resignFirstResponder()
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -230,9 +220,10 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
         
         let navHeight = self.tabBarController?.tabBar.frame.height
         bottomSpace.constant = keyboardHeight - (navHeight ?? 0)
-        topSpace.constant = -(keyboardHeight - (navHeight ?? 0))
-        UIView.animate(withDuration: 0.3) {
+        topSpace.constant = 0//-(keyboardHeight - (navHeight ?? 0))
+        UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
+        }) { (_) in
             self.scrollToBtm()
         }
         if AppDelegate.AP().ds?.usergroup == userGroup.student {
@@ -245,9 +236,9 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     
     @objc func keyboardWillHide(notification: NSNotification) {
         bottomSpace.constant = 0
-        topSpace.constant = 0
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
+        }) { (_) in
             self.scrollToBtm()
         }
         if AppDelegate.AP().ds?.usergroup == userGroup.student {
@@ -260,10 +251,10 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     
     
     func scrollToBtm(){
-        let section = collectionView.numberOfSections - 1
-        let row = collectionView.numberOfItems(inSection: section) - 1
-        if section >= 0 && row >= 0 {
-            let lastIndexPath = IndexPath(row: row, section: section)
+        
+        let row = collectionView.numberOfItems(inSection: 0) - 1
+        if row >= 0 {
+            let lastIndexPath = IndexPath(row: row, section: 0)
             collectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
         }
         
@@ -314,7 +305,7 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let theMsg = self.MessageList[indexPath.row]
         
-        if (theMsg.byStudent && AppDelegate.AP().ds?.usergroup == userGroup.student) || (theMsg.byStudent == false && AppDelegate.AP().ds?.usergroup == userGroup.trainer){
+        if theMsg.usergroup == enumService.toString(e: self._selfUsergroup){
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "send", for: indexPath) as! SendTextCell
             if theMsg.readLabel {
                 if theMsg.read {

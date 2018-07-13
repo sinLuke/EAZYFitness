@@ -13,6 +13,7 @@ class EFExtentableHeaderCell: UICollectionReusableView {
     @IBOutlet weak var expandBtn: UIButton!
     @IBOutlet weak var TitleBar: UIView!
     @IBOutlet weak var widthOdCell: NSLayoutConstraint!
+    
     var TitleBarColor:UIColor {
         set (value){
             TitleBar.backgroundColor = value

@@ -114,7 +114,7 @@ class trainerCourseVC: DefaultCollectionViewController, UICollectionViewDelegate
         collectionView?.register(UINib.init(nibName: "EFViewCellWithTrainerCourseStudentStatus", bundle: nil), forCellWithReuseIdentifier: "EFViewCellWithTrainerCourseStudentStatus")
         
         if let flowlayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout{
-            flowlayout.estimatedItemSize = CGSize(width: (collectionView?.frame.width)! - 2*12 , height: 200)
+            flowlayout.estimatedItemSize = CGSize(width: (collectionView?.frame.width)! - 2*12 , height: 300)
             flowlayout.sectionHeadersPinToVisibleBounds = true
         }
 

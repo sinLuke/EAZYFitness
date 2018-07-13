@@ -14,6 +14,14 @@ class MessageListTableViewCell: UITableViewCell {
     @IBOutlet weak var messageText: UILabel!
     @IBOutlet weak var newMessageBar: UIView!
     
+    var messageData: MessageListItem! {
+        didSet {
+            self.messageTitle.text = messageData.name
+            self.messageText.text = messageData.lastMessage
+            self.Read = messageData.read
+            self.timeLabel.text = messageData.time?.descriptDate() ?? ""
+        }
+    }
     private var read:Bool = true
     
     @IBOutlet weak var timeLabel: UILabel!

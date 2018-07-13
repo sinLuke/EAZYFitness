@@ -169,7 +169,7 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
         collectionView?.register(UINib.init(nibName: "EFViewHeaderCellWithStudentCourse", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "EFViewHeaderCellWithStudentCourse")
 
         if let flowlayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout{
-            flowlayout.estimatedItemSize = CGSize(width: (collectionView?.frame.width)! - 2*12 , height: 200)
+            flowlayout.estimatedItemSize = CGSize(width: (collectionView?.frame.width)! - 2*12 , height: 300)
             flowlayout.sectionHeadersPinToVisibleBounds = true
         }
         
@@ -464,6 +464,16 @@ class StudentVC: DefaultCollectionViewController, UICollectionViewDelegateFlowLa
                 self.performSegue(withIdentifier: "course", sender: self)
             default:
                 self.performSegue(withIdentifier: "purchase", sender: self)
+            }
+        } else if indexPath.section == 3 {
+            let courseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CourseDetailInfoViewController") as! CourseDetailInfoViewController
+            let listOfCourse = nextCourse.values.sorted { (a, b) -> Bool in
+                return a.date < b.date
+            }
+            if indexPath.row < listOfCourse.count {
+                let theCourse = listOfCourse[indexPath.row]
+                courseVC.thisCourse = theCourse
+                self.present(courseVC, animated: true, completion: nil)
             }
         }
     }
