@@ -11,8 +11,8 @@ import Firebase
 
 class AdminViewController: DefaultCollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    let 刷新菊花 = UIRefreshControl()
-    var 数据库:Firestore!
+    let refreshView = UIRefreshControl()
+    var db:Firestore!
     
     var 教练ref列表:[[String:DocumentReference]] = []
     var 学生ref列表:[[String:DocumentReference]] = []
@@ -38,6 +38,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         AppDelegate.AP().ds?.download()
         EFRequest.getRequestForCurrentUser(type: .studentAddValue)
         self.reload()
+        
     }
     
     override func reload() {
@@ -195,7 +196,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         
     }
     
-    @objc func 用户刷新(_ refreshControl: UIRefreshControl){
+    @objc func userRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
     }
@@ -220,19 +221,21 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         } else {
             
         }
-        数据库 = Firestore.firestore()
+        db = Firestore.firestore()
 
         self.refresh()
         
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
-        刷新菊花.attributedTitle = NSAttributedString(string: title)
-        刷新菊花.addTarget(self, action:
-            #selector(用户刷新(_:)),
+        refreshView.attributedTitle = NSAttributedString(string: title)
+        refreshView.addTarget(self, action:
+            #selector(userRefresh(_:)),
                                   for: UIControlEvents.valueChanged)
-        刷新菊花.tintColor = HexColor.Pirmary
+        refreshView.tintColor = HexColor.Pirmary
         
-        self.collectionView!.refreshControl = self.刷新菊花
-        self.collectionView!.addSubview(self.刷新菊花)
+        self.collectionView!.refreshControl = self.refreshView
+        self.collectionView!.addSubview(self.refreshView)
+        
+        collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithButton", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithButton")
 
         // Do any additional setup after loading the view.
     }
@@ -256,18 +259,20 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 3
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        if section == 0 {
+        if section == 1 {
             if AppDelegate.AP().ds?.region == userRegion.All{
                 return 2 + EFRequest.requestList.count//request数
             } else {
                 return 2 + EFRequest.requestList.count//request数
             }
+        } else if section == 0 {
+            return EFRequest.requestList.count
         } else {
             if AppDelegate.AP().ds?.region == userRegion.All{
                 return 1 //总课程统计
@@ -294,7 +299,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
+        if indexPath.section == 1 {
             switch indexPath.row {
             case EFRequest.requestList.count + 1:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "allStudent", for: indexPath) as! AdminStudentViewCell
@@ -322,6 +327,22 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                     cell.efRequest = efRequest
                     return cell
                 }
+            }
+        } else if indexPath.section == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFCollectionViewCellWithButton", for: indexPath) as! EFCollectionViewCellWithButton
+            cell.alpha = 1
+            cell.waitView.isHidden = true
+            cell.AgreeBtn.isHidden = false
+            
+            if EFRequest.requestList.count <= indexPath.row{
+                return cell
+            } else {
+                let efRequest = EFRequest.requestList[indexPath.row]
+                cell.TitleLabel.text = efRequest.title
+                cell.ContentLabel.text = efRequest.text
+                
+                cell.efRequest = efRequest
+                return cell
             }
         } else {
             if AppDelegate.AP().ds?.region == userRegion.All{
