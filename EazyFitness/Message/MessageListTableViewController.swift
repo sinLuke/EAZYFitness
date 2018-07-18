@@ -11,10 +11,12 @@ import Firebase
 
 struct MessageListItem {
     var name: String
+    var uid:String
     var usergroup: userGroup
     var lastMessage: String
     var read: Bool
     var time: Date?
+    var ref: CollectionReference
 }
 
 class MessageListTableViewController: DefaultTableViewController {
@@ -42,6 +44,7 @@ class MessageListTableViewController: DefaultTableViewController {
     
     func getLastMessageFromCollection(ref: DocumentReference, collection: CollectionReference, usergoup: userGroup) {
         ref.getDocument { (snap2, err2) in
+            self.endLoading()
             if let err = err2 {
                 AppDelegate.showError(title: "读取\(enumService.toDescription(e: usergoup))(\(ref.documentID))信息时发生错误", err: err.localizedDescription)
             } else {
@@ -50,6 +53,8 @@ class MessageListTableViewController: DefaultTableViewController {
                     let lastName = snap2!.data()?["lastName"] as? String{
                     name = "\(firstName) \(lastName)"
                 }
+                if usergoup == .student
+                let thisUID = snap2!.data()?["uid"] as? String ?? "nil"
                 if let cusergroup = AppDelegate.AP().ds?.usergroup, let cregion = AppDelegate.AP().ds?.region{
                     if usergoup == .trainer && cusergroup == .student {
                         name = "我的教练"
@@ -65,12 +70,12 @@ class MessageListTableViewController: DefaultTableViewController {
                     } else {
                         
                         if let lastMessage = snap!.data()?["Text"] as? String,
-                            let ref = snap!.data()?["ref"] as? DocumentReference,
+                            let ref2 = snap!.data()?["ref"] as? DocumentReference,
                             let time = snap!.data()?["Time"] as? Date {
-                            ref.getDocument(completion: { (snap, _) in
+                            ref2.getDocument(completion: { (snap, _) in
                                 if let snap = snap {
                                     let read = snap.data()?["Read"] as? Bool ?? true
-                                    let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: lastMessage, read: read, time: time)
+                                    let thisMessgae = MessageListItem(name: name, uid: thisUID, usergroup: usergoup, lastMessage: lastMessage, read: read, time: time, ref: collection)
                                     if self.messageList[usergoup] == nil {
                                         self.messageList[usergoup] = [thisMessgae]
                                     } else {
@@ -80,7 +85,7 @@ class MessageListTableViewController: DefaultTableViewController {
                                 }
                             })
                         } else {
-                            let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: "[无聊天记录]", read: true, time: nil)
+                            let thisMessgae = MessageListItem(name: name, uid: thisUID, usergroup: usergoup, lastMessage: "[无聊天记录]", read: true, time: nil, ref: collection)
                             if self.messageList[usergoup] == nil {
                                 self.messageList[usergoup] = [thisMessgae]
                             } else {
@@ -95,11 +100,11 @@ class MessageListTableViewController: DefaultTableViewController {
     }
     
     override func refresh() {
-        
-        print(AppDelegate.AP().ds?.usergroup)
+        self.startLoading()
+        //print(AppDelegate.AP().ds?.usergroup)
 
         self.messageList = [:]
-        
+        self.reload()
         if let currentUserGroup = AppDelegate.AP().ds?.usergroup {
             self.usergroup = currentUserGroup
             switch currentUserGroup {
@@ -242,20 +247,41 @@ class MessageListTableViewController: DefaultTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "message", for: indexPath) as! MessageListTableViewCell
         cell.Read = true
-        let currentKey = Array(self.messageList.keys)[indexPath.section]
-        cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
-            if let atime = a.time, let btime = b.time {
-                return atime > btime
-            } else {
-                return a.name > b.name
-            }
-        })[indexPath.row]
+        if indexPath.section >= self.messageList.keys.count{
+            self.reload()
+        } else {
+            let currentKey = Array(self.messageList.keys)[indexPath.section]
+            cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
+                if let atime = a.time, let btime = b.time {
+                    return atime > btime
+                } else {
+                    return a.name > b.name
+                }
+            })[indexPath.row]
+        }
         return cell
     }
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        if indexPath.section >= self.messageList.keys.count{
+            self.reload()
+        } else {
+            let currentKey = Array(self.messageList.keys)[indexPath.section]
+            let messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
+                if let atime = a.time, let btime = b.time {
+                    return atime > btime
+                } else {
+                    return a.name > b.name
+                }
+            })[indexPath.row]
+            if let name = messageData?.name, let ref = messageData?.ref, let uid = messageData?.uid{
+                self.prepareTitle = name
+                self.prepareRef = ref
+                self.receiverUID = uid
+                self.performSegue(withIdentifier: "message", sender: self)
+            }
+        }
     }
     
     
@@ -296,12 +322,13 @@ class MessageListTableViewController: DefaultTableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? MessageCollectionViewController{
-            if let currentMemberID = AppDelegate.AP().ds?.memberID{
+            if let currentMemberID = AppDelegate.AP().ds?.memberID, let usgp = AppDelegate.AP().ds?.usergroup {
                 dvc.receiver = self.receiverUID
                 dvc.colRef = self.prepareRef
-                dvc.thisTrainerStudent = self.thisUser
+                //dvc.thisTrainerStudent = self.thisUser
                 dvc.nameTitle = self.prepareTitle
                 dvc.title = self.prepareTitle
+                dvc._selfUsergroup = usgp
             }
         }
     }
