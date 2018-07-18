@@ -79,6 +79,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         }
         definesPresentationContext = true
         
+        self.refresh()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -246,7 +247,8 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.refresh()
+        self.tableView.reloadData()
+        //self.refresh()
     }
     
 }

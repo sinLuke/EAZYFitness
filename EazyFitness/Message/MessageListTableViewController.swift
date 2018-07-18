@@ -178,9 +178,11 @@ class MessageListTableViewController: DefaultTableViewController {
         if let currentUserGroup = AppDelegate.AP().ds?.usergroup {
             if currentUserGroup == .student {
                 return nil
-            } else {
+            } else if self.messageList.keys.count > section{
                 let currentKey = Array(self.messageList.keys)[section]
                 return enumService.toDescription(e: currentKey)
+            } else {
+                return nil
             }
         } else {
             return nil
@@ -242,14 +244,18 @@ class MessageListTableViewController: DefaultTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "message", for: indexPath) as! MessageListTableViewCell
         cell.Read = true
-        let currentKey = Array(self.messageList.keys)[indexPath.section]
-        cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
-            if let atime = a.time, let btime = b.time {
-                return atime > btime
-            } else {
-                return a.name > b.name
-            }
-        })[indexPath.row]
+        if self.messageList.keys.count <= indexPath.section {
+            self.reload()
+        } else {
+            let currentKey = Array(self.messageList.keys)[indexPath.section]
+            cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
+                if let atime = a.time, let btime = b.time {
+                    return atime > btime
+                } else {
+                    return a.name > b.name
+                }
+            })[indexPath.row]
+        }
         return cell
     }
  
