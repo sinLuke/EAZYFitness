@@ -59,6 +59,9 @@ class DefaultViewController: UIViewController, refreshableVC {
             
             self.view.addSubview(loadingView)
             self.view.addSubview(loadingIndicator)
+            
+            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(endLoading), userInfo: nil, repeats: false)
+            timer.fire()
         }
     }
     
@@ -152,10 +155,12 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
             
             self.view.addSubview(loadingView)
             self.view.addSubview(loadingIndicator)
+            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(endLoading), userInfo: nil, repeats: false)
+            timer.fire()
         }
     }
     
-    func endLoading() -> (){
+    @objc func endLoading() -> (){
         if let loadingView = loadingView {
             loadingView.isHidden = true
             loadingIndicator.isHidden = true
@@ -246,10 +251,13 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
             
             self.view.addSubview(loadingView)
             self.view.addSubview(loadingIndicator)
+            
+            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(endLoading), userInfo: nil, repeats: false)
+            timer.fire()
         }
     }
     
-    func endLoading() -> (){
+    @objc func endLoading() -> (){
         if let loadingView = loadingView {
             loadingView.isHidden = true
             loadingIndicator.isHidden = true
@@ -282,9 +290,6 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     
     override func viewDidAppear(_ animated: Bool) {
         let message = MDCSnackbarMessage()
-        message.text = "viewdidAppear"
-        MDCSnackbarManager.show(message)
-        super.viewDidAppear(animated)
         AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true

@@ -3503,6 +3503,66 @@
             </objects>
             <point key="canvasLocation" x="1289" y="5495"/>
         </scene>
+        <!--Course Detail Info View Controller-->
+        <scene sceneID="EMK-HK-xjr">
+            <objects>
+                <viewController storyboardIdentifier="CourseDetailInfoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bNq-Xx-xWu" customClass="CourseDetailInfoViewController" customModule="EazyFitness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OZ3-8t-FQP">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="U82-vf-mMt">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="3Xd-Mc-TOU" detailTextLabel="As0-Hp-no4" style="IBUITableViewCellStyleValue1" id="rRf-nu-d88">
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rRf-nu-d88" id="SQG-mv-Q7w">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Xd-Mc-TOU">
+                                                    <rect key="frame" x="15" y="12" width="33.5" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="As0-Hp-no4">
+                                                    <rect key="frame" x="261" y="12" width="44" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="bNq-Xx-xWu" id="0Gt-k2-OKH"/>
+                                    <outlet property="delegate" destination="bNq-Xx-xWu" id="n9X-gQ-f6Z"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="U82-vf-mMt" firstAttribute="trailing" secondItem="btU-sO-0Qz" secondAttribute="trailing" id="2c8-jD-gIz"/>
+                            <constraint firstItem="U82-vf-mMt" firstAttribute="top" secondItem="OZ3-8t-FQP" secondAttribute="top" id="Le9-7V-dnx"/>
+                            <constraint firstItem="U82-vf-mMt" firstAttribute="bottom" secondItem="btU-sO-0Qz" secondAttribute="bottom" id="hiy-0X-VmH"/>
+                            <constraint firstItem="U82-vf-mMt" firstAttribute="leading" secondItem="btU-sO-0Qz" secondAttribute="leading" id="jel-8E-gK9"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="btU-sO-0Qz"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="U82-vf-mMt" id="7tK-0Z-iKg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="53j-Wy-n2a" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2026.875" y="5504.5774647887329"/>
+        </scene>
         <!--Title-->
         <scene sceneID="lv5-Ee-t3z">
             <objects>
@@ -3765,11 +3825,11 @@
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="emq-eM-yxL">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="411"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Iu3-HO-Ay8">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" sectionInsetReference="safeArea" id="Iu3-HO-Ay8">
                                             <size key="itemSize" width="50" height="50"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="16" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells/>
                                         <connections>
@@ -3831,7 +3891,7 @@
                         <constraints>
                             <constraint firstItem="yUg-at-Avp" firstAttribute="bottom" secondItem="HdL-3s-N2r" secondAttribute="bottom" id="KQJ-eB-VJw"/>
                             <constraint firstItem="yUg-at-Avp" firstAttribute="trailing" secondItem="HdL-3s-N2r" secondAttribute="trailing" id="O5j-SV-ZDT"/>
-                            <constraint firstItem="yUg-at-Avp" firstAttribute="top" secondItem="HdL-3s-N2r" secondAttribute="top" id="e1O-5J-WtG"/>
+                            <constraint firstItem="yUg-at-Avp" firstAttribute="top" secondItem="Q6b-5s-KqK" secondAttribute="top" constant="64" id="e1O-5J-WtG"/>
                             <constraint firstItem="yUg-at-Avp" firstAttribute="leading" secondItem="HdL-3s-N2r" secondAttribute="leading" id="ym2-Id-VNl"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="HdL-3s-N2r"/>

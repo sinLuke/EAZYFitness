@@ -237,4 +237,14 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let studentName = Array(self.listedCourse.keys.sorted())[indexPath.section]
+        let efCourse = self.listedCourse[studentName]![indexPath.row]
+        let courseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CourseDetailInfoViewController") as! CourseDetailInfoViewController
+
+        courseVC.thisCourse = efCourse
+        self.present(courseVC, animated: true, completion: nil)
+    }
+    
 }
