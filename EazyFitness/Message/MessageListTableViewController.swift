@@ -261,7 +261,47 @@ class MessageListTableViewController: DefaultTableViewController {
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        self.prepareTitle = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageTitle.text
+        if let theStudent = thisUser as? EFStudent{
+            switch indexPath.row{
+            case 0:
+                if let theTrainerExist = theStudent.trainer{
+                    self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("Message")
+                    self.receiverUID = theStudent.trainerUID ?? "null"
+                    
+                    performSegue(withIdentifier: "message", sender: self)
+                } else {
+                    AppDelegate.showError(title: "请稍后", err: "数据尚未完全载入")
+                }
+            default:
+                Firestore.firestore().collection("users").whereField("region", isEqualTo: enumService.toString(e: theStudent.region)).whereField("usergroup", isEqualTo: "admin").getDocuments { (snaps, err) in
+                    if let err = err {
+                        AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
+                    } else {
+                        if snaps!.count == 0 {
+                            AppDelegate.showError(title: "未知错误", err: "未找到管理员")
+                        } else {
+                            for doc in snaps!.documents{
+                                self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("AdminMessage")
+                                self.receiverUID = doc.documentID
+                                self.performSegue(withIdentifier: "message", sender: self)
+                                break
+                            }
+                        }
+                    }
+                }
+                
+            }
+        } else if let thisTrainer = thisUser as? EFTrainer{
+            if thisTrainer.trainee.count != 0{
+                let studentRef = thisTrainer.trainee[indexPath.row]
+                if let student = DataServer.studentDic[studentRef.documentID]{
+                    self.prepareRef = Firestore.firestore().collection("student").document(student.memberID).collection("Message")
+                    self.receiverUID = student.uid
+                    performSegue(withIdentifier: "message", sender: self)
+                }
+            }
+        }
     }
     
     
