@@ -299,7 +299,7 @@ class MessageListTableViewController: DefaultTableViewController {
             if let currentMemberID = AppDelegate.AP().ds?.memberID{
                 dvc.receiver = self.receiverUID
                 dvc.colRef = self.prepareRef
-                dvc.thisTrainerStudent = self.thisUser
+                //dvc.thisTrainerStudent = self.thisUser
                 dvc.nameTitle = self.prepareTitle
                 dvc.title = self.prepareTitle
             }
