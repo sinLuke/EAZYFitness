@@ -259,20 +259,18 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 3
+        return 2
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        if section == 1 {
+        if section == 0 {
             if AppDelegate.AP().ds?.region == userRegion.All{
                 return 2 + EFRequest.requestList.count//request数
             } else {
                 return 2 + EFRequest.requestList.count//request数
             }
-        } else if section == 0 {
-            return 0//EFRequest.requestList.count
         } else {
             if AppDelegate.AP().ds?.region == userRegion.All{
                 return 1 //总课程统计
@@ -284,7 +282,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if section <= 1 {
+        if section == 0 {
             return CGSize(width: 0, height: 0)
         } else {
             return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 50)
@@ -299,7 +297,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 1 {
+        if indexPath.section == 0 {
             switch indexPath.row {
             case EFRequest.requestList.count + 1:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "allStudent", for: indexPath) as! AdminStudentViewCell
@@ -327,22 +325,6 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                     cell.efRequest = efRequest
                     return cell
                 }
-            }
-        } else if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EFCollectionViewCellWithButton", for: indexPath) as! EFCollectionViewCellWithButton
-            cell.alpha = 1
-            cell.waitView.isHidden = true
-            cell.AgreeBtn.isHidden = false
-            
-            if EFRequest.requestList.count <= indexPath.row{
-                return cell
-            } else {
-                let efRequest = EFRequest.requestList[indexPath.row]
-                cell.TitleLabel.text = efRequest.title
-                cell.ContentLabel.text = efRequest.text
-                
-                cell.efRequest = efRequest
-                return cell
             }
         } else {
             if AppDelegate.AP().ds?.region == userRegion.All{
