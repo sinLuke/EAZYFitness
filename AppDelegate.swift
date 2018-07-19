@@ -28,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     var ds:DataServer?
     var superUID:String!
     var studentList:[DocumentReference] = []
+    
+    var thisUser:EFData!
 
     //教练
     var messageListener:[ListenerRegistration] = []
@@ -464,10 +466,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     func getSuperUID(){
-        Firestore.firestore().collection("users").whereField("memberID", isEqualTo: "SUPER").getDocuments { (snaps, err) in
-            for document in snaps!.documents{
-                self.superUID = document.reference.documentID
-            }
+        Firestore.firestore().collection("admin").document("all").getDocument { (snap, err) in
+            self.superUID = snap?.data()!["uid"] as? String
         }
     }
     
@@ -481,17 +481,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         
         //为不同的 ViewCointroller 赋初始值
         if let ivc = initialViewController as? StudentTabBarController{
-            print("StudentVC")
-            ivc.thisStudent = DataServer.studentDic[AppDelegate.AP().ds!.memberID]
+            AppDelegate.AP().thisUser = DataServer.studentDic[AppDelegate.AP().ds!.memberID]
+            ivc.thisStudent = AppDelegate.AP().thisUser as! EFStudent
             UIView.transition(with: AppDelegate.AP().window!, duration: 0.3, options: .transitionFlipFromRight, animations: {
                 AppDelegate.AP().window?.rootViewController = ivc
             })
             AppDelegate.AP().window?.makeKeyAndVisible()
             
         } else if let ivc = initialViewController as? TrainerTabBarController {
-            print("trainerMyStudentVC")
-            print(DataServer.trainerDic)
-            ivc.thisTrainer = DataServer.trainerDic[AppDelegate.AP().ds!.memberID]
+            AppDelegate.AP().thisUser = DataServer.trainerDic[AppDelegate.AP().ds!.memberID]
+            ivc.thisTrainer = AppDelegate.AP().thisUser as! EFTrainer
             
             UIView.transition(with: AppDelegate.AP().window!, duration: 0.3, options: .transitionFlipFromRight, animations: {
                 AppDelegate.AP().window?.rootViewController = ivc
@@ -501,7 +500,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
             AppDelegate.AP().window?.makeKeyAndVisible()
             
         } else {
-            print("else")
             UIView.transition(with: AppDelegate.AP().window!, duration: 0.3, options: .transitionFlipFromRight, animations: {
                 AppDelegate.AP().window?.rootViewController = initialViewController
             })

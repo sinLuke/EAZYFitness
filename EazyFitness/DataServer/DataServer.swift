@@ -48,6 +48,21 @@ class DataServer: NSObject {
                 }
             }
         }
+        DataServer.updateDatabaseUID()
+    }
+    
+    static func updateDatabaseUID(){
+        Firestore.firestore().collection("users").getDocuments { (snap, err) in
+            if let snap = snap {
+                for docs in snap.documents{
+                    if let usergroup = docs.data()["usergroup"] as? String, let region = docs.data()["region"] as? String{
+                        if usergroup == "admin" {
+                            Firestore.firestore().collection("admin").document(region).setData(["uid" : docs.documentID])
+                        }
+                    }
+                }
+            }
+        }
     }
     
     static func initfunc(uid:String){

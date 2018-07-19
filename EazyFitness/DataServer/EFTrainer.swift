@@ -50,7 +50,9 @@ class EFTrainer: EFData {
                     self.trainee = data["trainee"] as! [DocumentReference]
                     self.ready = true
                     self.uid = data["uid"] as? String
-                    print("download")
+                    
+                    
+                    self.setStudentTrainerUID()
                     AppDelegate.reload()
                     
                     for studentRef in self.trainee{
@@ -84,6 +86,13 @@ class EFTrainer: EFData {
             }
         }
         
+    }
+    
+    func setStudentTrainerUID(){
+        for traineeRef in self.trainee {
+            traineeRef.updateData(["trainerUID" : self.uid])
+            traineeRef.updateData(["trainer" : self.memberID])
+        }
     }
     
     func finishACourse(By courseRef:DocumentReference){

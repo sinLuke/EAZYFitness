@@ -52,6 +52,8 @@ class EFStudent: EFData {
                     self.weightUnit = data["weightUnit"] as! String
                     self.goal = data["goal"] as! Int
                     self.uid = data["uid"] as? String
+                    self.trainer = data["trainer"] as? String
+                    self.trainerUID = data["trainerUID"] as? String
                     self.ready = true
                     AppDelegate.reload()
                 }
@@ -226,7 +228,7 @@ class EFStudent: EFData {
         let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
         EFRequest.createRequest(
             bageRef: bageRef,
-            title: "小助手为\(sutdentName)购买课时",
+            title: "小助手为\(sutdentName)购买\(amount)课时",
             receiver: AppDelegate.AP().superUID,
             sander: cuid,
             text: note,

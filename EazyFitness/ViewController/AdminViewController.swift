@@ -272,7 +272,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
                 return 2 + EFRequest.requestList.count//request数
             }
         } else if section == 0 {
-            return EFRequest.requestList.count
+            return 0//EFRequest.requestList.count
         } else {
             if AppDelegate.AP().ds?.region == userRegion.All{
                 return 1 //总课程统计
@@ -284,7 +284,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if section == 0 {
+        if section <= 1 {
             return CGSize(width: 0, height: 0)
         } else {
             return CGSize(width: (self.collectionView?.frame.width)! - 20, height: 50)
