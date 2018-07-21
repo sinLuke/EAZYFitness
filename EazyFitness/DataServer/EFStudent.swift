@@ -198,23 +198,24 @@ class EFStudent: EFData {
             df.dateStyle = .medium
             df.timeStyle = .medium
             
-            
-            
-            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
-            EFRequest.createRequest(
-                bageRef:bageRef,
-                title: "为\(theStudent.name)添加课程",
-                receiver: theStudent.uid!,
-                sander: cuid,
-                text: "申请添加\(date.descriptDate()), 长度为\(AppDelegate.prepareCourseNumber(amount))的课程",
-                requestRef: traineeStudentCourseRef,
-                type: requestType.studentApproveCourse)
-            traineeStudentCourse.append(traineeStudentCourseRef)
-            trainee.append(theStudent.ref)
-            
+            if let ds = AppDelegate.AP().ds {
+                let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
+                EFRequest.createRequest(
+                    bageRef:bageRef,
+                    title: "为\(theStudent.name)添加课程",
+                    receiver: theStudent.uid!,
+                    sander: cuid,
+                    text: "\(enumService.toString(e:ds.region))申请添加\(date.descriptDate()), 长度为\(AppDelegate.prepareCourseNumber(amount))的课程",
+                    requestRef: traineeStudentCourseRef,
+                    type: requestType.studentApproveCourse)
+                traineeStudentCourse.append(traineeStudentCourseRef)
+                trainee.append(theStudent.ref)
+            } else {
+                AppDelegate.showError(title: "读取当前用户出现问题", err: "请重新登录", handler: AppDelegate.AP().signout)
+            }
         }
-        EFCourse.addCourse(courseRef:courseRef, date: date, amount: amount, note: note, trainer: trainer, trainee: trainee, traineeStudentCourse: traineeStudentCourse)
         
+        EFCourse.addCourse(courseRef:courseRef, date: date, amount: amount, note: note, trainer: trainer, trainee: trainee, traineeStudentCourse: traineeStudentCourse)
     }
     
     func addRegistered(amount:Int, note:String, approved:Bool, sutdentName:String){
@@ -223,21 +224,22 @@ class EFStudent: EFData {
             AppDelegate.showError(title: "用户错误", err: "请重新登录", handler: AppDelegate.AP().signout)
             return
         }
-        
-        let registerRef = ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()])
-        let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
-        EFRequest.createRequest(
-            bageRef: bageRef,
-            title: "小助手为\(sutdentName)购买\(amount)课时",
-            receiver: AppDelegate.AP().superUID,
-            sander: cuid,
-            text: note,
-            requestRef: registerRef,
-            type: requestType.studentAddValue)
-        if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-            vc.endLoading()
+        if let ds = AppDelegate.AP().ds {
+            let registerRef = ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()])
+            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
+            EFRequest.createRequest(
+                bageRef: bageRef,
+                title: "\(enumService.toString(e:ds.region))小助手为\(sutdentName)购买\(amount)课时",
+                receiver: AppDelegate.AP().superUID,
+                sander: cuid,
+                text: note,
+                requestRef: registerRef,
+                type: requestType.studentAddValue)
+            if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
+                vc.endLoading()
+            }
+            self.download()
         }
-        self.download()
     }
     
     func getTrainer(){
