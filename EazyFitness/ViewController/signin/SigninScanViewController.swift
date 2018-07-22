@@ -101,7 +101,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             self.lname = data["lastName"] as! String
                             self.memberID = data["memberID"] as! String
                             self.region = enumService.toRegion(s: data["region"] as! String)
-                            let thisStudent = EFStudent(with: snap!.reference)
+                            let thisStudent = EFStudent.setStudent(with: snap!.reference)
                             thisStudent.download()
                             DataServer.studentDic[snap!.reference.documentID] = thisStudent
                             self.gotUserData()
@@ -125,7 +125,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             self.lname = data["lastName"] as! String
                             self.memberID = data["memberID"] as! String
                             self.region = enumService.toRegion(s: data["region"] as! String)
-                            let thisTrainer = EFTrainer(with: snap!.reference)
+                            let thisTrainer = EFTrainer.setTrainer(with: snap!.reference)
                             thisTrainer.download()
                             DataServer.trainerDic[snap!.reference.documentID] = thisTrainer
                             self.gotUserData()

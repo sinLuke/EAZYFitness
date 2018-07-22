@@ -18,7 +18,6 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     @IBOutlet weak var lname: MDCTextField!
     
     var new = false
-    var back = false
     
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var registered: UISegmentedControl!
@@ -32,9 +31,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     var _gesture:UIGestureRecognizer!
     
     override func viewDidAppear(_ animated: Bool) {
-        if back {
-            AppDelegate.showError(title: "该学生不存在", err: "请返回上一页", handler: self.goBack)
-        }
+        AppDelegate.showError(title: "该学生不存在", err: "请返回上一页", handler: self.goBack)
     }
     
     func goBack(){
@@ -147,19 +144,6 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         if let dvc = segue.destination as? PurchaseTableViewController{
             dvc.thisStudent = self.thisStudent
             dvc.title = self.title
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("here")
-        
-        if new {
-            back = true
-            if thisStudent != nil {
-                thisStudent.ref.delete()
-                DataServer.studentDic.removeValue(forKey: thisStudent.ref.documentID)
-                AppDelegate.AP().ds?.download()
-            }
         }
     }
 }

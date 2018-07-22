@@ -69,6 +69,17 @@ class EFCourse: EFData {
         }
     }
     
+    class func setCourse(with ref:DocumentReference) -> EFCourse{
+        if let course = DataServer.courseDic[ref.documentID]{
+            course.download()
+            return course
+        } else {
+            let course = EFCourse(with: ref)
+            DataServer.courseDic[ref.documentID] = course
+            return course
+        }
+    }
+    
     var traineesNamesList:[String:String] = [:]
     
     var traineesNames:String{

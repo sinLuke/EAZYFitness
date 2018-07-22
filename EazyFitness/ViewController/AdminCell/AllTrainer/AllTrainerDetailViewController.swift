@@ -19,14 +19,11 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     var thisTrainer:EFTrainer!
     var titleName:String!
     var new = false
-    var back = false
     
     var cell:AllTrainerDetailViewCell!
 
     override func viewDidAppear(_ animated: Bool) {
-        if back {
-            AppDelegate.showError(title: "该教练不存在", err: "请返回上一页", handler: self.goBack)
-        }
+        AppDelegate.showError(title: "该教练不存在", err: "请返回上一页", handler: self.goBack)
     }
     
     func goBack(){
@@ -95,17 +92,6 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
             dvc.cMemberID = nil
             dvc.theStudentOrTrainer = self.thisTrainer
             dvc.title = "本周"
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        if new {
-            back = true
-            if thisTrainer != nil {
-                thisTrainer.ref.delete()
-                DataServer.trainerDic.removeValue(forKey: thisTrainer.ref.documentID)
-                AppDelegate.AP().ds?.download()
-            }
         }
     }
     

@@ -47,7 +47,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                     return
                 } else {
                     self.dismiss(animated: true) {
-                        DataServer.courseDic[courseREF.documentID] = EFCourse(with: courseREF)
+                        DataServer.courseDic[courseREF.documentID] = EFCourse.setCourse(with: courseREF)
                         AppDelegate.showError(title: "无法读取课程", err: "请稍后重试")
                     }
                 }
@@ -126,7 +126,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                 
                 if let trainreRef = thisCourse.trainerRef {
                     
-                    let newtrainer = EFTrainer(with: trainreRef)
+                    let newtrainer = EFTrainer.setTrainer(with: trainreRef)
                     newtrainer.download()
                     DataServer.trainerDic[trainreRef.documentID] = newtrainer
                     

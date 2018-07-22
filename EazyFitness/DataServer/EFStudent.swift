@@ -33,6 +33,17 @@ class EFStudent: EFData {
     var trainerUID:String?
     var uid:String?
     
+    class func setStudent(with ref:DocumentReference) -> EFStudent{
+        if let student = DataServer.studentDic[ref.documentID]{
+            student.download()
+            return student
+        } else {
+            let student = EFStudent(with: ref)
+            DataServer.studentDic[ref.documentID] = student
+            return student
+        }
+    }
+    
     override func download(){
         AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
@@ -66,7 +77,6 @@ class EFStudent: EFData {
                 message.text = "读取学生时错误: \(err.localizedDescription)"
                 MDCSnackbarManager.show(message)
             } else {
-                self.courseDic = [:]
                 for doc in snap!.documents{
                     let efStudentCourse = EFStudentCourse(with: doc.reference)
                     efStudentCourse.parent = self.ref.documentID
@@ -81,7 +91,6 @@ class EFStudent: EFData {
                         DataServer.courseDic[efStudentCourse.courseRef.documentID]!.download()
                     }
                     self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
-                    print(self.courseDic)
                 }
                 AppDelegate.reload()
             }
@@ -111,7 +120,6 @@ class EFStudent: EFData {
                 message.text = "读取学生时错误: \(err.localizedDescription)"
                 MDCSnackbarManager.show(message)
             } else {
-                self.messageDic = [:]
                 for doc in snap!.documents{
                     let efStudentMessage = EFStudentMessage(with: doc.reference)
                     efStudentMessage.byStudent = doc["byStudent"] as! Bool
@@ -167,7 +175,8 @@ class EFStudent: EFData {
                 vc.endLoading()
             }
         }
-        let newStudent = EFStudent(with: newref)
+        let newStudent = EFStudent.setStudent(with: newref)
+        DataServer.studentDic[memberID] = newStudent
         newStudent.download()
         return newStudent
     }
