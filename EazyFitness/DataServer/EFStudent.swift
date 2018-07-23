@@ -294,7 +294,11 @@ class EFStudent: EFData {
     
     override func upload(handler: (()->())? = nil){
         if ready{
-            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal, "uid":self.uid ?? ""])
+            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal, "uid":self.uid ?? ""]){ (err) in
+                if err == nil {
+                    handler?()
+                }
+            }
         }
         for efStudentCourse in self.courseDic.values{
             efStudentCourse.upload()

@@ -23,7 +23,7 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     var cell:AllTrainerDetailViewCell!
 
     override func viewDidAppear(_ animated: Bool) {
-        AppDelegate.showError(title: "该教练不存在", err: "请返回上一页", handler: self.goBack)
+        //AppDelegate.showError(title: "该教练不存在", err: "请返回上一页", handler: self.goBack)
     }
     
     func goBack(){

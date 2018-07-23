@@ -1509,7 +1509,13 @@
                             <outlet property="delegate" destination="rGL-tQ-SvB" id="G75-je-c5N"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="所有教练" id="2Ky-qz-DIr"/>
+                    <navigationItem key="navigationItem" title="所有教练" id="2Ky-qz-DIr">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="wnH-VG-jGN">
+                            <connections>
+                                <action selector="addTrainerBtn:" destination="rGL-tQ-SvB" id="H5O-HQ-CwV"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="9Vh-w8-xqx" kind="show" identifier="detail" id="RpR-0r-1w7"/>
                     </connections>
@@ -1597,7 +1603,13 @@
                             <outlet property="delegate" destination="l0b-9Q-E2u" id="1hK-WP-368"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="所有学生" id="h5T-IF-H7G"/>
+                    <navigationItem key="navigationItem" title="所有学生" id="h5T-IF-H7G">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="lmr-UF-yyB">
+                            <connections>
+                                <action selector="addStudentBtn:" destination="l0b-9Q-E2u" id="4J1-8u-Dtk"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="TRl-6j-TVy" kind="show" identifier="detail" id="vp0-sM-EUR"/>
                     </connections>
@@ -1749,7 +1761,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="THT-ta-jl0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2986.875" y="6222.8873239436616"/>
+            <point key="canvasLocation" x="-2987" y="6258"/>
         </scene>
         <!--Title-->
         <scene sceneID="6bf-E7-WR5">
@@ -4182,7 +4194,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="bBJ-R5-UlX"/>
         <segue reference="PNY-GZ-YFM"/>
-        <segue reference="4ar-qV-SLA"/>
+        <segue reference="Mi4-Xj-Lx9"/>
         <segue reference="9C1-Qw-4Wt"/>
         <segue reference="7kr-WP-JIT"/>
         <segue reference="8au-Nd-DNN"/>

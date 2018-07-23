@@ -18,8 +18,12 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     let _refreshControl = UIRefreshControl()
     
     var FilteredKeyList:[String] = []
+    var new = false
 
     var selectedName:String = ""
+    
+    var newStudentIDReady: String = ""
+    var newStudentRegion: userRegion = .Mississauga
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -171,6 +175,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         if let student = DataServer.studentDic[memberID]{
             self.selected = student
             self.selectedName = student.name
+            new = false
             self.performSegue(withIdentifier: "detail", sender: self)
         } else {
             AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
@@ -179,8 +184,20 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllStudentDetailViewController{
-            dvc.navigationItem.title = self.selectedName
-            dvc.thisStudent = self.selected
+            if new {
+                dvc.navigationItem.title = "新建学生"
+                dvc.new = new
+                dvc.newStudentIDReady = newStudentIDReady
+                if let intMemberID = Int(self.newStudentIDReady){
+                    dvc.idLabel.text = String(format:"%04d", intMemberID)
+                }
+                dvc.newStudentRegion = self.newStudentRegion
+            } else {
+                dvc.navigationItem.title = self.selectedName
+                dvc.thisStudent = self.selected
+                dvc.new = new
+            }
+            
         }
     }
     
@@ -189,4 +206,30 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         self.refresh()
     }
 
+    @IBAction func addStudentBtn(_ sender: Any) {
+        new = true
+        
+        let alert = UIAlertController(title: "添加学生", message: "请输入卡号或编号", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "0000"
+        }
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+            let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            
+            if let studentID = textField?.text {
+                self.newStudentIDReady = studentID
+                
+                if let ds = AppDelegate.AP().ds{
+                    if ds.region != .All {
+                        self.newStudentRegion = ds.region
+                        self.performSegue(withIdentifier: "detail", sender: self)
+                    }
+                }
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }

@@ -20,6 +20,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     var selectedName:String = ""
 
+    var new = false
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -158,6 +159,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         if let trainer = DataServer.trainerDic[memberID]{
             self.selected = trainer
             self.selectedName = trainer.name
+            new = true
             self.performSegue(withIdentifier: "detail", sender: self)
         } else {
             AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
@@ -196,10 +198,18 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         self.tableView.reloadData()
     }
     
+    
+    @IBAction func addTrainerBtn(_ sender: Any) {
+        new = false
+        self.performSegue(withIdentifier: "detail", sender: self)
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllTrainerDetailViewController{
             dvc.thisTrainer = self.selected
             dvc.titleName = self.selectedName
+            dvc.new = new
         }
     }
     
