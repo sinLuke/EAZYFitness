@@ -32,9 +32,8 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
     var totalNoTrainer:[userRegion: [EFCourse]] = [:]
     var totalNoCard:[userRegion: [EFStudentCourse]] = [:]
     var totalIll:[userRegion: [EFStudentCourse]] = [:]
-    
+
     override func refresh() {
-        print("=======================")
         AppDelegate.AP().ds?.download()
         EFRequest.getRequestForCurrentUser(type: .studentAddValue)
         self.reload()

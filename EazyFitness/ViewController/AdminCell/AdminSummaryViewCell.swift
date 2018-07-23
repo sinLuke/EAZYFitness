@@ -70,6 +70,35 @@ class AdminSummaryViewCell: UICollectionViewCell, UICollectionViewDataSource, UI
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        AdminDataModel.generalDataScope = .all
+        AdminDataModel.generalRegion = region
+        //AppDelegate.showError(title: enumService.toDescription(e: region), err: "region")
+        switch vc.timeid {
+        case 0:
+            AdminDataModel.generalDataTime = .all
+        case 1:
+            AdminDataModel.generalDataTime = .thisMonth
+        default:
+            AdminDataModel.generalDataTime = .today
+        }
+        switch indexPath.row {
+        case 0:
+            AdminDataModel.generalDataTypeOfData = .courseInfo
+        case 1:
+            AdminDataModel.generalDataTypeOfData = .coursePurchase
+        case 2:
+            AdminDataModel.generalDataTypeOfData = .noStudent
+        case 3:
+            AdminDataModel.generalDataTypeOfData = .notrainer
+        case 4:
+            AdminDataModel.generalDataTypeOfData = .nocard
+        default:
+            AdminDataModel.generalDataTypeOfData = .ill
+        }
+        vc.performSegue(withIdentifier: "Datatable", sender: vc)
+    }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 165, height: 110)
     }

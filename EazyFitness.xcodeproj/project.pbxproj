@@ -24,6 +24,7 @@
 		A307796E205B750800512378 /* QRCodeReaderViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */; };
 		A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077965205B750700512378 /* ReaderOverlayView.swift */; };
 		A3077970205B750800512378 /* QRCodeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3077966205B750800512378 /* QRCodeReader.swift */; };
+		A3153FE721068B0E0046EF5B /* GeneralDataViewControllerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3153FE621068B0E0046EF5B /* GeneralDataViewControllerTableViewCell.swift */; };
 		A316E2E020BA283B007F2BC3 /* adminSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A316E2DF20BA283B007F2BC3 /* adminSelector.swift */; };
 		A31A951020CD159D0011DCD3 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */; };
 		A31A951220CD15C10011DCD3 /* ResetEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */; };
@@ -183,6 +184,7 @@
 		A3077964205B750700512378 /* QRCodeReaderViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerDelegate.swift; sourceTree = "<group>"; };
 		A3077965205B750700512378 /* ReaderOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderOverlayView.swift; sourceTree = "<group>"; };
 		A3077966205B750800512378 /* QRCodeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReader.swift; sourceTree = "<group>"; };
+		A3153FE621068B0E0046EF5B /* GeneralDataViewControllerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralDataViewControllerTableViewCell.swift; sourceTree = "<group>"; };
 		A316E2DF20BA283B007F2BC3 /* adminSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adminSelector.swift; sourceTree = "<group>"; };
 		A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEmailViewController.swift; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 				A31E2FE9209EC7CC00677D86 /* AdminSummaryViewCell.swift */,
 				A3A3778D21062F25007AA250 /* GeneralDataViewController.swift */,
 				A3A3778F210631C0007AA250 /* AdminDataModel.swift */,
+				A3153FE621068B0E0046EF5B /* GeneralDataViewControllerTableViewCell.swift */,
 			);
 			path = AdminCell;
 			sourceTree = "<group>";
@@ -1088,6 +1091,7 @@
 				A3A3778E21062F25007AA250 /* GeneralDataViewController.swift in Sources */,
 				A34923622090E3D0004C5455 /* MessageVC.swift in Sources */,
 				A32EBB8920C5B3BC003B5D54 /* EFCollectionViewCellWithNextCourse.swift in Sources */,
+				A3153FE721068B0E0046EF5B /* GeneralDataViewControllerTableViewCell.swift in Sources */,
 				A35735932096502500995346 /* TimeTabelCell.swift in Sources */,
 				A32EBB7120C5A616003B5D54 /* EFViewCellWithTrainerCourseStudentStatus.swift in Sources */,
 				A349236D2090EBC7004C5455 /* SigninPasswordViewController.swift in Sources */,
