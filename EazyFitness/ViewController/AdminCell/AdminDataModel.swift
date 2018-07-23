@@ -104,7 +104,8 @@ class AdminDataModel: NSObject {
                         if let amount = doc.data()["amount"] as? Int,
                             let date = doc.data()["date"] as? Date,
                             let note = doc.data()["note"] as? String{
-                            //AdminDataModel.handleCourseDataFromRef(ref: courseRef)
+                            let dataItem = resultData(title: "\(note), \(amount)", time: date, trainerName: "", studentName: ref.documentID)
+                            AdminDataModel.DataDic[ref.documentID] = dataItem
                         }
                     }
                 }
