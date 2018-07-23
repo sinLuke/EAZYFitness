@@ -1378,6 +1378,7 @@
                         <segue destination="Jri-K0-XM8" kind="show" identifier="showTrainerData" id="oqT-qy-yQf"/>
                         <segue destination="rGL-tQ-SvB" kind="show" identifier="allTrainer" id="5jg-jC-lAi"/>
                         <segue destination="l0b-9Q-E2u" kind="show" identifier="allStudent" id="20H-2g-CUI"/>
+                        <segue destination="AYi-iy-IPX" kind="show" identifier="Datatable" id="xSS-m3-Vrl"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FEV-wU-VrU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3922,6 +3923,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WlJ-Jj-2SX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3003.75" y="4239.0845070422538"/>
+        </scene>
+        <!--General Data View Controller-->
+        <scene sceneID="lQ3-mB-3XX">
+            <objects>
+                <viewController id="AYi-iy-IPX" customClass="GeneralDataViewController" customModule="EazyFitness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4VO-Ko-Pis">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="UXt-TA-hBl">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="UXt-TA-hBl" secondAttribute="bottom" id="3sY-iP-hqY"/>
+                            <constraint firstItem="UXt-TA-hBl" firstAttribute="trailing" secondItem="cLr-XO-gic" secondAttribute="trailing" id="8ry-Y8-IeK"/>
+                            <constraint firstItem="UXt-TA-hBl" firstAttribute="top" secondItem="4VO-Ko-Pis" secondAttribute="top" id="bYO-ZB-8X0"/>
+                            <constraint firstItem="UXt-TA-hBl" firstAttribute="leading" secondItem="cLr-XO-gic" secondAttribute="leading" id="dT4-TA-KAc"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cLr-XO-gic"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="UXt-TA-hBl" id="Zgu-JI-FZo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EWT-6F-Efc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3648.75" y="4993.3098591549297"/>
         </scene>
         <!--Data Collection View Controller-->
         <scene sceneID="Y0g-VA-va1">
