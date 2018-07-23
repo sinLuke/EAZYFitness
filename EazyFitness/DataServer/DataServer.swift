@@ -48,21 +48,6 @@ class DataServer: NSObject {
                 }
             }
         }
-        DataServer.updateDatabaseUID()
-    }
-    
-    static func updateDatabaseUID(){
-        Firestore.firestore().collection("users").getDocuments { (snap, err) in
-            if let snap = snap {
-                for docs in snap.documents{
-                    if let usergroup = docs.data()["usergroup"] as? String, let region = docs.data()["region"] as? String{
-                        if usergroup == "admin" {
-                            Firestore.firestore().collection("admin").document(region).setData(["uid" : docs.documentID])
-                        }
-                    }
-                }
-            }
-        }
     }
     
     static func initfunc(uid:String){
@@ -107,22 +92,25 @@ class DataServer: NSObject {
         userRef = userCollection.document(uid)
         if usergroup == .student{
             studentRef = [studentCollection.document(memberID)]
-            DataServer.studentDic[studentCollection.document(memberID).documentID] = EFStudent.setStudent(with: studentCollection.document(memberID))
+            DataServer.studentDic[studentCollection.document(memberID).documentID] = EFStudent(with: studentCollection.document(memberID))
         }
         super.init()
         self.download()
     }
     
     func download(){
+        DataServer.studentDic = [:]
+        DataServer.courseDic = [:]
+        DataServer.trainerDic = [:]
         switch usergroup {
         case .student:
-            let _student = EFStudent.setStudent(with: studentCollection.document(self.memberID))
+            let _student = EFStudent(with: studentCollection.document(self.memberID))
             _student.download()
             DataServer.studentDic[self.memberID] = _student
             AppDelegate.reload()
             AppDelegate.endLoading()
         case .trainer:
-            let _trainer = EFTrainer.setTrainer(with: self.trainerCollection.document(self.memberID))
+            let _trainer = EFTrainer(with: self.trainerCollection.document(self.memberID))
             _trainer.download()
             DataServer.trainerDic[self.memberID] = _trainer
         case .admin:
@@ -132,7 +120,7 @@ class DataServer: NSObject {
                 } else {
                     self.studentRef = []
                     for doc in snap!.documents{
-                        let _student = EFStudent.setStudent(with: doc.reference)
+                        let _student = EFStudent(with: doc.reference)
                         self.studentRef.append(doc.reference)
                         _student.download()
                         DataServer.studentDic[doc.documentID] = _student
@@ -147,7 +135,7 @@ class DataServer: NSObject {
                 } else {
                     self.studentRef = []
                     for doc in snap!.documents{
-                            let _trainer = EFTrainer.setTrainer(with: doc.reference)
+                            let _trainer = EFTrainer(with: doc.reference)
                             _trainer.download()
                             DataServer.trainerDic[doc.documentID] = _trainer
                     }

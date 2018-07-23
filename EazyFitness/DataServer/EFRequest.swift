@@ -38,7 +38,7 @@ class EFRequest: EFData {
                 if let data = snap?.data(){
                     self.title = data["title"] as! String
                     self.receiver = data["receiver"] as! String
-                    self.sander = data["sander"] as? String ?? ""
+                    self.sander = data["sander"] as! String
                     self.text = data["text"] as! String
                     self.date = data["date"] as! Date
                     self.bageRef = data["bageRef"] as? DocumentReference
@@ -183,7 +183,7 @@ class EFRequest: EFData {
     }
     
     class func getRequestForCurrentUser(type:requestType?){
-
+        print("=================")
         if let currentUserUID = Auth.auth().currentUser?.uid{
             Firestore.firestore().collection("request").whereField("receiver", isEqualTo: currentUserUID).getDocuments { (snap, err) in
                 if let err = err {

@@ -13,12 +13,8 @@ struct MessageListItem {
     var name: String
     var usergroup: userGroup
     var lastMessage: String
-    var messageUserGroup: userGroup?
     var read: Bool
     var time: Date?
-    
-    var uid:String?
-    var ref:CollectionReference?
 }
 
 class MessageListTableViewController: DefaultTableViewController {
@@ -26,6 +22,7 @@ class MessageListTableViewController: DefaultTableViewController {
     var thisUser:EFData!
     var thisUsergroup:userGroup!
     var thisRegion:userRegion!
+    var isAdmin:Bool!
     
     var messageList: [userGroup:[MessageListItem]] = [:]
     let _refreshControl = UIRefreshControl()
@@ -34,7 +31,7 @@ class MessageListTableViewController: DefaultTableViewController {
     var receiverUID:String!
     var db:Firestore!
     
-    //var usergroup: userGroup = .student
+    var usergroup: userGroup = .student
     
     var prepareTitle:String? = ""
     
@@ -61,7 +58,7 @@ class MessageListTableViewController: DefaultTableViewController {
                         name = "\(enumService.toDescription(e: cregion))小助手"
                     }
                 }
-                let thisUID = snap2!.data()?["uid"] as? String
+                
                 collection.document("Last").getDocument { (snap, err) in
                     if let err = err {
                         AppDelegate.showError(title: "读取\(enumService.toDescription(e: usergoup))\(name)最近消息时发生错误", err: err.localizedDescription)
@@ -73,8 +70,7 @@ class MessageListTableViewController: DefaultTableViewController {
                             ref.getDocument(completion: { (snap, _) in
                                 if let snap = snap {
                                     let read = snap.data()?["Read"] as? Bool ?? true
-                                    let messageUserGroup = enumService.toUsergroup(s: (snap.data()?["usergroup"] as? String ?? "student")!)
-                                    let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: lastMessage, messageUserGroup: messageUserGroup, read: read, time: time, uid: thisUID, ref: collection)
+                                    let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: lastMessage, read: read, time: time)
                                     if self.messageList[usergoup] == nil {
                                         self.messageList[usergoup] = [thisMessgae]
                                     } else {
@@ -84,8 +80,7 @@ class MessageListTableViewController: DefaultTableViewController {
                                 }
                             })
                         } else {
-                            
-                            let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: "[无聊天记录]", messageUserGroup: nil, read: true, time: nil, uid: thisUID, ref: collection)
+                            let thisMessgae = MessageListItem(name: name, usergroup: usergoup, lastMessage: "[无聊天记录]", read: true, time: nil)
                             if self.messageList[usergoup] == nil {
                                 self.messageList[usergoup] = [thisMessgae]
                             } else {
@@ -106,7 +101,7 @@ class MessageListTableViewController: DefaultTableViewController {
         self.messageList = [:]
         
         if let currentUserGroup = AppDelegate.AP().ds?.usergroup {
-            //self.usergroup = currentUserGroup
+            self.usergroup = currentUserGroup
             switch currentUserGroup {
             case .trainer:
                 
@@ -183,11 +178,9 @@ class MessageListTableViewController: DefaultTableViewController {
         if let currentUserGroup = AppDelegate.AP().ds?.usergroup {
             if currentUserGroup == .student {
                 return nil
-            } else if self.messageList.keys.count > section{
+            } else {
                 let currentKey = Array(self.messageList.keys)[section]
                 return enumService.toDescription(e: currentKey)
-            } else {
-                return nil
             }
         } else {
             return nil
@@ -215,14 +208,6 @@ class MessageListTableViewController: DefaultTableViewController {
         
         self.tableView!.refreshControl = self._refreshControl
         self.tableView!.addSubview(self._refreshControl)
-        
-        if let ds = AppDelegate.AP().ds{
-            self.thisUsergroup = ds.usergroup
-            self.thisRegion = ds.region
-            self.thisUser = AppDelegate.AP().thisUser
-        } else {
-            AppDelegate.AP().signout()
-        }
         
         //self.refresh()
         
@@ -257,98 +242,20 @@ class MessageListTableViewController: DefaultTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "message", for: indexPath) as! MessageListTableViewCell
         cell.Read = true
-        if self.messageList.keys.count <= indexPath.section {
-            self.reload()
-        } else {
-            let currentKey = Array(self.messageList.keys)[indexPath.section]
-            cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
-                if let atime = a.time, let btime = b.time {
-                    return atime > btime
-                } else {
-                    return a.time != nil
-                }
-            })[indexPath.row]
-        }
+        let currentKey = Array(self.messageList.keys)[indexPath.section]
+        cell.messageData = self.messageList[currentKey]?.sorted(by: { (a, b) -> Bool in
+            if let atime = a.time, let btime = b.time {
+                return atime > btime
+            } else {
+                return a.name > b.name
+            }
+        })[indexPath.row]
         return cell
     }
  
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.prepareTitle = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageTitle.text
-        if let theStudent = thisUser as? EFStudent{
-            
-            let currentKey = Array(self.messageList.keys)[indexPath.section]
-            
-            switch currentKey{
-            case .trainer:
-                if let theTrainerExist = theStudent.trainer{
-                    self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("Message")
-                    self.receiverUID = theStudent.trainerUID
-                    if self.receiverUID == nil {
-                        AppDelegate.showError(title: "无法开启对话", err: "教练尚未注册或未指定")
-                    } else {
-                        performSegue(withIdentifier: "message", sender: self)
-                    }
-                    
-                } else {
-                    AppDelegate.showError(title: "请稍后", err: "数据尚未完全载入")
-                }
-            default:
-                Firestore.firestore().collection("admin").document(enumService.toString(e: self.thisRegion)).getDocument { (snap, err) in
-                    if let err = err {
-                        AppDelegate.showError(title: "无法找到小助手ID", err: err.localizedDescription)
-                    } else {
-                        self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("AdminMessage")
-                        if let uid = snap!.data()?["uid"] as? String{
-                            self.receiverUID = uid
-                            self.performSegue(withIdentifier: "message", sender: self)
-                        } else {
-                            AppDelegate.showError(title: "无法开启对话", err: "\(enumService.toString(e: self.thisRegion))小助手尚未注册或未指定")
-                        }
-                    }
-                }
-            }
-        } else if let thisTrainer = thisUser as? EFTrainer{
-            let currentKey = Array(self.messageList.keys)[indexPath.section]
-            switch currentKey{
-            case .student:
-                if thisTrainer.trainee.count != 0{
-                    let studentRef = thisTrainer.trainee[indexPath.row]
-                    if let student = DataServer.studentDic[studentRef.documentID]{
-                        self.prepareRef = Firestore.firestore().collection("student").document(student.memberID).collection("Message")
-                        self.receiverUID = student.uid
-                        performSegue(withIdentifier: "message", sender: self)
-                    }
-                }
-            default:
-                Firestore.firestore().collection("admin").document(enumService.toString(e: self.thisRegion)).getDocument { (snap, err) in
-                    if let err = err {
-                        AppDelegate.showError(title: "无法找到小助手ID", err: err.localizedDescription)
-                    } else {
-                        self.prepareRef = Firestore.firestore().collection("trainer").document(AppDelegate.AP().ds!.memberID).collection("AdminMessage")
-                        if let uid = snap!.data()?["uid"] as? String{
-                            self.receiverUID = uid
-                            self.performSegue(withIdentifier: "message", sender: self)
-                        } else {
-                            AppDelegate.showError(title: "无法开启对话", err: "\(enumService.toString(e: self.thisRegion))小助手尚未注册或未指定")
-                        }
-                    }
-                }
-            }
-            
-        } else if AppDelegate.AP().ds?.usergroup == .admin {
-            let currentKey = Array(self.messageList.keys)[indexPath.section]
-            if let messageItem = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageData {
-                self.prepareRef = messageItem.ref
-                self.receiverUID = messageItem.uid
-            }
-            
-            if self.receiverUID == nil || self.prepareRef == nil{
-                AppDelegate.showError(title: "无法开启对话", err: "该教练尚未注册")
-            } else {
-                performSegue(withIdentifier: "message", sender: self)
-            }
-        }
+        
     }
     
     
@@ -392,7 +299,6 @@ class MessageListTableViewController: DefaultTableViewController {
             if let currentMemberID = AppDelegate.AP().ds?.memberID{
                 dvc.receiver = self.receiverUID
                 dvc.colRef = self.prepareRef
-                dvc._selfUsergroup = self.thisUsergroup
                 //dvc.thisTrainerStudent = self.thisUser
                 dvc.nameTitle = self.prepareTitle
                 dvc.title = self.prepareTitle

@@ -33,17 +33,6 @@ class EFStudent: EFData {
     var trainerUID:String?
     var uid:String?
     
-    class func setStudent(with ref:DocumentReference) -> EFStudent{
-        if let student = DataServer.studentDic[ref.documentID]{
-            student.download()
-            return student
-        } else {
-            let student = EFStudent(with: ref)
-            DataServer.studentDic[ref.documentID] = student
-            return student
-        }
-    }
-    
     override func download(){
         AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
@@ -63,8 +52,6 @@ class EFStudent: EFData {
                     self.weightUnit = data["weightUnit"] as! String
                     self.goal = data["goal"] as! Int
                     self.uid = data["uid"] as? String
-                    self.trainer = data["trainer"] as? String
-                    self.trainerUID = data["trainerUID"] as? String
                     self.ready = true
                     AppDelegate.reload()
                 }
@@ -77,6 +64,7 @@ class EFStudent: EFData {
                 message.text = "读取学生时错误: \(err.localizedDescription)"
                 MDCSnackbarManager.show(message)
             } else {
+                self.courseDic = [:]
                 for doc in snap!.documents{
                     let efStudentCourse = EFStudentCourse(with: doc.reference)
                     efStudentCourse.parent = self.ref.documentID
@@ -91,6 +79,7 @@ class EFStudent: EFData {
                         DataServer.courseDic[efStudentCourse.courseRef.documentID]!.download()
                     }
                     self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
+                    print(self.courseDic)
                 }
                 AppDelegate.reload()
             }
@@ -120,6 +109,7 @@ class EFStudent: EFData {
                 message.text = "读取学生时错误: \(err.localizedDescription)"
                 MDCSnackbarManager.show(message)
             } else {
+                self.messageDic = [:]
                 for doc in snap!.documents{
                     let efStudentMessage = EFStudentMessage(with: doc.reference)
                     efStudentMessage.byStudent = doc["byStudent"] as! Bool
@@ -175,8 +165,7 @@ class EFStudent: EFData {
                 vc.endLoading()
             }
         }
-        let newStudent = EFStudent.setStudent(with: newref)
-        DataServer.studentDic[memberID] = newStudent
+        let newStudent = EFStudent(with: newref)
         newStudent.download()
         return newStudent
     }
@@ -207,24 +196,23 @@ class EFStudent: EFData {
             df.dateStyle = .medium
             df.timeStyle = .medium
             
-            if let ds = AppDelegate.AP().ds {
-                let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
-                EFRequest.createRequest(
-                    bageRef:bageRef,
-                    title: "为\(theStudent.name)添加课程",
-                    receiver: theStudent.uid!,
-                    sander: cuid,
-                    text: "\(enumService.toString(e:ds.region))申请添加\(date.descriptDate()), 长度为\(AppDelegate.prepareCourseNumber(amount))的课程",
-                    requestRef: traineeStudentCourseRef,
-                    type: requestType.studentApproveCourse)
-                traineeStudentCourse.append(traineeStudentCourseRef)
-                trainee.append(theStudent.ref)
-            } else {
-                AppDelegate.showError(title: "读取当前用户出现问题", err: "请重新登录", handler: AppDelegate.AP().signout)
-            }
+            
+            
+            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : theStudent.uid ?? "null", "bage":2])
+            EFRequest.createRequest(
+                bageRef:bageRef,
+                title: "为\(theStudent.name)添加课程",
+                receiver: theStudent.uid!,
+                sander: cuid,
+                text: "申请添加\(date.descriptDate()), 长度为\(AppDelegate.prepareCourseNumber(amount))的课程",
+                requestRef: traineeStudentCourseRef,
+                type: requestType.studentApproveCourse)
+            traineeStudentCourse.append(traineeStudentCourseRef)
+            trainee.append(theStudent.ref)
+            
         }
-        
         EFCourse.addCourse(courseRef:courseRef, date: date, amount: amount, note: note, trainer: trainer, trainee: trainee, traineeStudentCourse: traineeStudentCourse)
+        
     }
     
     func addRegistered(amount:Int, note:String, approved:Bool, sutdentName:String){
@@ -233,22 +221,21 @@ class EFStudent: EFData {
             AppDelegate.showError(title: "用户错误", err: "请重新登录", handler: AppDelegate.AP().signout)
             return
         }
-        if let ds = AppDelegate.AP().ds {
-            let registerRef = ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()])
-            let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
-            EFRequest.createRequest(
-                bageRef: bageRef,
-                title: "\(enumService.toString(e:ds.region))小助手为\(sutdentName)购买\(amount)课时",
-                receiver: AppDelegate.AP().superUID,
-                sander: cuid,
-                text: note,
-                requestRef: registerRef,
-                type: requestType.studentAddValue)
-            if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-                vc.endLoading()
-            }
-            self.download()
+        
+        let registerRef = ref.collection("registered").addDocument(data: ["amount" : amount, "note" : note, "approved":approved, "date":Date()])
+        let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : AppDelegate.AP().superUID, "bage":2])
+        EFRequest.createRequest(
+            bageRef: bageRef,
+            title: "小助手为\(sutdentName)购买课时",
+            receiver: AppDelegate.AP().superUID,
+            sander: cuid,
+            text: note,
+            requestRef: registerRef,
+            type: requestType.studentAddValue)
+        if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
+            vc.endLoading()
         }
+        self.download()
     }
     
     func getTrainer(){
@@ -294,11 +281,7 @@ class EFStudent: EFData {
     
     override func upload(handler: (()->())? = nil){
         if ready{
-            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal, "uid":self.uid ?? ""]){ (err) in
-                if err == nil {
-                    handler?()
-                }
-            }
+            ref.updateData(["firstName" : self.firstName, "lastName" : self.lastName, "memberID" : self.memberID, "registered" : enumService.toString(e: self.registered), "region" : enumService.toString(e: self.region), "heightUnit":self.heightUnit, "weightUnit":self.weightUnit, "goal":self.goal, "uid":self.uid ?? ""])
         }
         for efStudentCourse in self.courseDic.values{
             efStudentCourse.upload()

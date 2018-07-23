@@ -24,7 +24,7 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     
     var _selfUsergroup: userGroup!
 
-    var receiver:String?
+    var receiver:String!
     var nameTitle:String? = ""
     @IBOutlet weak var topSpace: NSLayoutConstraint!
     @IBOutlet weak var bottomSpace: NSLayoutConstraint!
@@ -57,7 +57,6 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
                 self.LastMessageBySelf = nil
                 self.LastMessageByTarget = nil
                 if let doctList = snaps?.documents{
-                    //AppDelegate.showError(title: "getymessage", err: "\(doctList.count)")
                     for docs in doctList{
                         if docs.documentID != "Last"{
                             if let time = docs.data()["Time"] as? Date, let text = docs.data()["Text"] as? String, let read = docs.data()["Read"] as? Bool, let usergroup = docs.data()["usergroup"] as? String {
@@ -74,7 +73,6 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
                                     }
                                     
                                     self.MessageList.append(self.LastMessage!)
-                                    self.reload()
                                 }
                                 
                                 self.LastMessage = thisMessage
@@ -184,13 +182,12 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     }
     
     @IBAction func sendMessageAction(_ sender: Any) {
-        if let receiverUID = receiver, let ug = AppDelegate.AP().ds?.usergroup {
-            
+        if let receiverUID = receiver{
             let bageRef = Firestore.firestore().collection("Message").addDocument(data: ["uid" : receiverUID, "bage":1])
             let lastRef = colRef.addDocument(data: ["Read" : false,
                                                     "Text" : self.messageField.text,
-                                                    "Time" : Date(),
-                                                    "usergroup" : enumService.toString(e: ug),
+                                                    "Time":Date(),
+                                                    "byStudent":(AppDelegate.AP().ds?.usergroup == userGroup.student),
                                                     "bage" : bageRef])
             AppDelegate.SandNotification(to: receiverUID, with: self.messageField.text, and: "")
             colRef.document("Last").setData(["Text" : self.messageField.text, "ref":lastRef, "Time":Date(), "TypingByStudent": false])

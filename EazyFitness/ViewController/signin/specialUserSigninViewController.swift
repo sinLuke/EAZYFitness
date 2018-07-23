@@ -31,25 +31,9 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     var lname:String!
     var memberID:String!
     
-    var avaliable = false
-    
     override func viewDidLoad() {
         
         db = Firestore.firestore()
-        
-        Firestore.firestore().collection("admin").document(enumService.toString(e: region)).getDocument { (snap, err) in
-            self.avaliable = true
-            if let snap = snap {
-                if let data = snap.data(){
-                    if data["uid"] != nil {
-                        self.avaliable = false
-                        AppDelegate.showError(title: "该账号已存在", err: "无法注册", handler: self.backFunc)
-                    }
-                }
-            }
-        }
-        
-        
         self.fnameField.text = fname
         self.lnameField.text = lname
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
@@ -63,10 +47,6 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-    }
-    
-    func backFunc(){
-        self.navigationController?.popViewController(animated: true)
     }
 
     func cancelfunc(){
@@ -123,10 +103,6 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     }
     
     @IBAction func finish(_ sender: Any) {
-        if !avaliable {
-            self.backFunc()
-            return
-        }
         if let _userEmail = emailField.text{
             let userEmail = _userEmail.trimmingCharacters(in: .whitespaces)
             if self.isValidEmail(testStr: userEmail){

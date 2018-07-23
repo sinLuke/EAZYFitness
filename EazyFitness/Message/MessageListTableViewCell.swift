@@ -18,7 +18,7 @@ class MessageListTableViewCell: UITableViewCell {
         didSet {
             self.messageTitle.text = messageData.name
             self.messageText.text = messageData.lastMessage
-            self.Read = messageData.read || (messageData.messageUserGroup == AppDelegate.AP().ds?.usergroup)
+            self.Read = messageData.read
             self.timeLabel.text = messageData.time?.descriptDate() ?? ""
         }
     }

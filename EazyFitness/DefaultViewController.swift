@@ -21,11 +21,9 @@ extension UIView{
 
 class DefaultViewController: UIViewController, refreshableVC {
     func refresh() {
-        
     }
     
     func reload() {
-        
     }
     
     

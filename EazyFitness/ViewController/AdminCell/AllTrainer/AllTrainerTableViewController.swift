@@ -12,15 +12,16 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     func updateSearchResults(for searchController: UISearchController) {
         filterSearchController(searchBar: searchController.searchBar)
     }
+    
+    var new = false
+    var trainerList:[Int:String] = [:]
+    var trainerEmptyList:[Int] = []
 
     weak var selected:EFTrainer!
-    let _refreshControl = UIRefreshControl()
-    
-    var FilteredKeyList:[String] = []
-    
     var selectedName:String = ""
-
-    var new = false
+    var FtrainerList:[Int:String] = [:]
+    var FtrainerEmptyList:[Int] = []
+    let _refreshControl = UIRefreshControl()
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -29,14 +30,19 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     }
     
     override func reload() {
-        FilteredKeyList = DataServer.trainerDic.keys.sorted(by: { (a, b) -> Bool in
-            if let inta = Int(a), let intb = Int(b){
-                return inta < intb
-            } else {
-                return false
-            }
-        })
         self.tableView.reloadData()
+        FtrainerEmptyList = []
+        trainerEmptyList = []
+        
+        for i in 1...999{
+            if let thisTrainer = DataServer.trainerDic["\(i)"]{
+                trainerList[i] = "\(i)"
+                FtrainerList[i] = "\(i)"
+            } else {
+                trainerEmptyList.append(i)
+                FtrainerEmptyList.append(i)
+            }
+        }
     }
     
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
@@ -73,7 +79,6 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         }
         definesPresentationContext = true
         
-        self.refresh()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -91,12 +96,17 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return FilteredKeyList.count
+        switch section {
+        case 0:
+            return self.FtrainerList.count
+        default:
+            return self.FtrainerEmptyList.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -110,60 +120,82 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-    
-    func isFiltering() -> Bool {
-        return searchController.isActive && !searchBarIsEmpty()
-    }
-    
-    func searchBarIsEmpty() -> Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "trainerCell", for: indexPath) as! AllTrainerTableViewCell
-        let memberID = FilteredKeyList[indexPath.row]
-        
-        if let trainer = DataServer.trainerDic[memberID]{
-            
-            if let valueNumber = Int(trainer.ref.documentID), valueNumber <= 4 {
-                cell.nameLabel.text = "[主教练]\(trainer.name)"
+        if indexPath.section == 0{
+            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys.sorted())[indexPath.row]]{
+                if let trainer = DataServer.trainerDic[memberID]{
+                    
+                    if self.FtrainerList.keys.sorted()[indexPath.row] <= 4 {
+                        cell.nameLabel.text = "[主教练]\(trainer.name)"
+                    } else {
+                        cell.nameLabel.text = trainer.name
+                    }
+                    
+                    cell.idLabel.text = trainer.ref.documentID
+                    cell.regionLabel.text = enumService.toDescription(e: trainer.region)
+                    switch trainer.registered{
+                    case .avaliable:
+                        cell.statusLabel.text = "不可用"
+                        cell.statusLabel.textColor = HexColor.Red
+                    case .unsigned:
+                        cell.statusLabel.text = "待注册"
+                        cell.statusLabel.textColor = HexColor.Blue
+                    case .signed:
+                        cell.statusLabel.text = "已注册"
+                        cell.statusLabel.textColor = HexColor.Green
+                    case .canceled:
+                        cell.statusLabel.text = "已注销"
+                        cell.statusLabel.textColor = HexColor.gray
+                    }
+                } else {
+                }
             } else {
-                cell.nameLabel.text = trainer.name
             }
             
-            cell.idLabel.text = trainer.ref.documentID
-            cell.regionLabel.text = enumService.toDescription(e: trainer.region)
-            switch trainer.registered{
-            case .avaliable:
-                cell.statusLabel.text = "不可用"
-                cell.statusLabel.textColor = HexColor.Red
-            case .unsigned:
-                cell.statusLabel.text = "待注册"
-                cell.statusLabel.textColor = HexColor.Blue
-            case .signed:
-                cell.statusLabel.text = "已注册"
-                cell.statusLabel.textColor = HexColor.Green
-            case .canceled:
-                cell.statusLabel.text = "已注销"
-                cell.statusLabel.textColor = HexColor.gray
-            }
+            return cell
         } else {
-            cell.nameLabel.text = "正在读取..."
+            cell.nameLabel.text = "未注册"
+            cell.idLabel.text = "\(self.FtrainerEmptyList[indexPath.row])"
+            cell.regionLabel.text = "未设定"
+            cell.statusLabel.text = "不可用"
+            cell.statusLabel.textColor = HexColor.gray
+            return cell
         }
-        
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let memberID = FilteredKeyList[indexPath.row]
-        if let trainer = DataServer.trainerDic[memberID]{
-            self.selected = trainer
-            self.selectedName = trainer.name
-            new = true
-            self.performSegue(withIdentifier: "detail", sender: self)
-        } else {
-            AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
+        
+        if indexPath.section == 0{
+            if let memberID = self.FtrainerList[Array(self.FtrainerList.keys.sorted())[indexPath.row]]{
+                if let trainer = DataServer.trainerDic[memberID]{
+                    self.selected = trainer
+                    self.selectedName = trainer.name
+                    self.new = false
+                    self.performSegue(withIdentifier: "detail", sender: self)
+                } else {
+                }
+            } else {
         }
+            
+        } else {
+            let memberID = "\(self.FtrainerEmptyList[indexPath.row])"
+            if let region = AppDelegate.AP().ds?.region{
+                
+                if region == userRegion.All{
+                    self.selected = EFTrainer.addTrainer(at: memberID, in: userRegion.Mississauga)
+                } else {
+                    self.selected = EFTrainer.addTrainer(at: memberID, in: region)
+                }
+            } else {
+                self.selected = EFTrainer.addTrainer(at: memberID, in: userRegion.Mississauga)
+            }
+            self.selectedName = "创建新的记录"
+            self.new = true
+            self.performSegue(withIdentifier: "detail", sender: self)
+        }
+        
     }
     
     func configureSearchController(){
@@ -174,49 +206,47 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     func filterSearchController(searchBar: UISearchBar){
         let searchText = searchBar.text?.lowercased() ?? ""
-        if !isFiltering() {
-            reload()
-            return
-        }
-        FilteredKeyList = DataServer.trainerDic.filter { (key: String, value: EFTrainer) -> Bool in
-            if key.lowercased().contains(searchText){
+        print(searchText)
+        self.FtrainerList = [:]
+        self.FtrainerEmptyList = []
+        
+        self.FtrainerList = self.trainerList.filter({(theKey, theValue) -> Bool in
+            if "\(theKey)".lowercased().contains(searchText){
                 return true
             } else {
-                let namecontain = value.name.lowercased().contains(searchText)
-                let regioncontain = enumService.toString(e: value.region).lowercased().contains(searchText)
-                let memberIDcontain = value.memberID.lowercased().contains(searchText)
-                let registeredcontain = enumService.toDescription(e: value.registered).contains(searchText)
-                return (namecontain || regioncontain || memberIDcontain || registeredcontain)
-            }
-            }.keys.sorted(by: { (a, b) -> Bool in
-                if let inta = Int(a), let intb = Int(b){
-                    return inta < intb
+                if let _trainer = DataServer.trainerDic[theValue]{
+                    return (_trainer.name.lowercased().contains(searchText) ||
+                    enumService.toString(e: _trainer.region).lowercased().contains(searchText) ||
+                    _trainer.memberID.lowercased().contains(searchText) ||
+                    enumService.toDescription(e: _trainer.registered).contains(searchText))
                 } else {
                     return false
                 }
-            })
+            }
+        })
+        
+        self.FtrainerEmptyList = self.trainerEmptyList.filter({ (memberID) -> Bool in
+            return "\(memberID)".lowercased().contains(searchText)
+        })
+        
+        if searchText == ""{
+            self.FtrainerList = self.trainerList
+            self.FtrainerEmptyList = self.trainerEmptyList
+        }
         self.tableView.reloadData()
     }
-    
-    
-    @IBAction func addTrainerBtn(_ sender: Any) {
-        new = false
-        self.performSegue(withIdentifier: "detail", sender: self)
-    }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dvc = segue.destination as? AllTrainerDetailViewController{
             dvc.thisTrainer = self.selected
             dvc.titleName = self.selectedName
-            dvc.new = new
+            dvc.new = self.new
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.tableView.reloadData()
-        //self.refresh()
+        self.refresh()
     }
     
 }

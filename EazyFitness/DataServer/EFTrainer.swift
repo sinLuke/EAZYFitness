@@ -29,17 +29,6 @@ class EFTrainer: EFData {
     var finish:[DocumentReference] = []
     var trainee:[DocumentReference] = []
     
-    class func setTrainer(with ref:DocumentReference) -> EFTrainer {
-        if let trainer = DataServer.trainerDic[ref.documentID]{
-            trainer.download()
-            return trainer
-        } else {
-            let trainer = EFTrainer(with: ref)
-            DataServer.trainerDic[ref.documentID] = trainer
-            return trainer
-        }
-    }
-    
     override func download(){
         AppDelegate.startLoading()
         ref.getDocument { (snap, err) in
@@ -61,13 +50,14 @@ class EFTrainer: EFData {
                     self.trainee = data["trainee"] as! [DocumentReference]
                     self.ready = true
                     self.uid = data["uid"] as? String
-                    
-                    
-                    self.setStudentTrainerUID()
+                    print("download")
                     AppDelegate.reload()
                     
                     for studentRef in self.trainee{
-                        EFStudent.setStudent(with: studentRef)
+                        let newStudent = EFStudent(with: studentRef)
+                        newStudent.download()
+                        print(studentRef)
+                        DataServer.studentDic[studentRef.documentID] = newStudent
                     }
                 }
             }
@@ -84,20 +74,16 @@ class EFTrainer: EFData {
                     let _ref = doc["ref"] as! DocumentReference
                     self.finish.append(_ref)
                     if DataServer.courseDic[_ref.documentID] == nil{
-                        EFCourse.setCourse(with: _ref)
+                        let _course = EFCourse(with: _ref)
+                        _course.download()
+                        DataServer.courseDic[_ref.documentID] = _course
                     }
                 }
+                print("finish")
                 AppDelegate.reload()
             }
         }
         
-    }
-    
-    func setStudentTrainerUID(){
-        for traineeRef in self.trainee {
-            traineeRef.updateData(["trainerUID" : self.uid])
-            traineeRef.updateData(["trainer" : self.memberID])
-        }
     }
     
     func finishACourse(By courseRef:DocumentReference){
@@ -130,7 +116,7 @@ class EFTrainer: EFData {
             }
             AppDelegate.reload()
         }
-        let newTrainer = EFTrainer.setTrainer(with: newref)
+        let newTrainer = EFTrainer(with: newref)
         newTrainer.download()
         return newTrainer
     }

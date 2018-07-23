@@ -525,7 +525,7 @@ DEPENDENCIES:
   - MaterialComponents
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Bolts
     - BoringSSL
     - FBSDKCoreKit
@@ -599,4 +599,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3d96067b5c26e44acf4c7feb9e39c0b7b880a901
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0
