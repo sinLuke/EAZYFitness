@@ -1349,7 +1349,7 @@
 				CODE_SIGN_ENTITLEMENTS = EazyFitness/EazyFitness.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B77H9LBK9T;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1372,7 +1372,7 @@
 				CODE_SIGN_ENTITLEMENTS = EazyFitness/EazyFitness.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B77H9LBK9T;
+				DEVELOPMENT_TEAM = RW646P4KDZ;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

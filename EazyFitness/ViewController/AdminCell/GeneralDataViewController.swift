@@ -19,12 +19,7 @@ class GeneralDataViewController: DefaultViewController, UITableViewDelegate, UIT
     
     
     override func refresh() {
-        switch generalDataTypeOfData {
-        case .coursePurchase:
-            Firestore.firestore().collection("<#T##collectionPath: String##String#>")
-        default:
-            <#code#>
-        }
+        AdminDataModel.refreshData()
     }
     
     override func reload() {
@@ -32,11 +27,17 @@ class GeneralDataViewController: DefaultViewController, UITableViewDelegate, UIT
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        return AdminDataModel.DataDic.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cells")
+        let dataItem = AdminDataModel.DataDic.values.sorted { (a, b) -> Bool in
+            return a.time < b.time
+        }[indexPath.row]
+        cell?.textLabel?.text = "\(dataItem.title) \(dataItem.time.descriptDate())"
+        cell?.textLabel?.text = "\(dataItem.trainerName), \(dataItem.studentName)"
+        return cell!
     }
     
 
