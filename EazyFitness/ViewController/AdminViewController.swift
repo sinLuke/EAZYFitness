@@ -11,8 +11,8 @@ import Firebase
 
 class AdminViewController: DefaultCollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    let 刷新菊花 = UIRefreshControl()
-    var 数据库:Firestore!
+    let refreshView = UIRefreshControl()
+    var db:Firestore!
     
     var 教练ref列表:[[String:DocumentReference]] = []
     var 学生ref列表:[[String:DocumentReference]] = []
@@ -38,6 +38,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         AppDelegate.AP().ds?.download()
         EFRequest.getRequestForCurrentUser(type: .studentAddValue)
         self.reload()
+        
     }
     
     override func reload() {
@@ -195,7 +196,7 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         
     }
     
-    @objc func 用户刷新(_ refreshControl: UIRefreshControl){
+    @objc func userRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.refresh()
     }
@@ -220,19 +221,21 @@ class AdminViewController: DefaultCollectionViewController, UICollectionViewDele
         } else {
             
         }
-        数据库 = Firestore.firestore()
+        db = Firestore.firestore()
 
         self.refresh()
         
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
-        刷新菊花.attributedTitle = NSAttributedString(string: title)
-        刷新菊花.addTarget(self, action:
-            #selector(用户刷新(_:)),
+        refreshView.attributedTitle = NSAttributedString(string: title)
+        refreshView.addTarget(self, action:
+            #selector(userRefresh(_:)),
                                   for: UIControlEvents.valueChanged)
-        刷新菊花.tintColor = HexColor.Pirmary
+        refreshView.tintColor = HexColor.Pirmary
         
-        self.collectionView!.refreshControl = self.刷新菊花
-        self.collectionView!.addSubview(self.刷新菊花)
+        self.collectionView!.refreshControl = self.refreshView
+        self.collectionView!.addSubview(self.refreshView)
+        
+        collectionView?.register(UINib.init(nibName: "EFCollectionViewCellWithButton", bundle: nil), forCellWithReuseIdentifier: "EFCollectionViewCellWithButton")
 
         // Do any additional setup after loading the view.
     }

@@ -124,6 +124,8 @@
 		A39FF65920ACEA9B00B54353 /* EFStudentPersonal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FF65720ACEA9B00B54353 /* EFStudentPersonal.swift */; };
 		A39FF65A20ACEA9B00B54353 /* EFStudentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FF65820ACEA9B00B54353 /* EFStudentMessage.swift */; };
 		A39FF65C20AD080400B54353 /* EFRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39FF65B20AD080400B54353 /* EFRequest.swift */; };
+		A3A3778E21062F25007AA250 /* GeneralDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A3778D21062F25007AA250 /* GeneralDataViewController.swift */; };
+		A3A37790210631C0007AA250 /* AdminDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A3778F210631C0007AA250 /* AdminDataModel.swift */; };
 		A3A9345820CAF0A50057F3B8 /* trainerCourseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */; };
 		A3A9345B20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A9345920CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift */; };
 		A3A9345C20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3A9345A20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib */; };
@@ -289,6 +291,8 @@
 		A39FF65720ACEA9B00B54353 /* EFStudentPersonal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EFStudentPersonal.swift; sourceTree = "<group>"; };
 		A39FF65820ACEA9B00B54353 /* EFStudentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EFStudentMessage.swift; sourceTree = "<group>"; };
 		A39FF65B20AD080400B54353 /* EFRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EFRequest.swift; sourceTree = "<group>"; };
+		A3A3778D21062F25007AA250 /* GeneralDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralDataViewController.swift; sourceTree = "<group>"; };
+		A3A3778F210631C0007AA250 /* AdminDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminDataModel.swift; sourceTree = "<group>"; };
 		A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = trainerCourseVC.swift; sourceTree = "<group>"; };
 		A3A9345920CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EFCollectionViewCellWithDetailDisclosure.swift; sourceTree = "<group>"; };
 		A3A9345A20CAF1CF0057F3B8 /* EFCollectionViewCellWithDetailDisclosure.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EFCollectionViewCellWithDetailDisclosure.xib; sourceTree = "<group>"; };
@@ -404,6 +408,8 @@
 				A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */,
 				A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */,
 				A31E2FE9209EC7CC00677D86 /* AdminSummaryViewCell.swift */,
+				A3A3778D21062F25007AA250 /* GeneralDataViewController.swift */,
+				A3A3778F210631C0007AA250 /* AdminDataModel.swift */,
 			);
 			path = AdminCell;
 			sourceTree = "<group>";
@@ -1074,10 +1080,12 @@
 				A316E2E020BA283B007F2BC3 /* adminSelector.swift in Sources */,
 				A38DEB6720A67A06002350FB /* ClassObj.swift in Sources */,
 				A39FF64220ACC3D900B54353 /* DataServer.swift in Sources */,
+				A3A37790210631C0007AA250 /* AdminDataModel.swift in Sources */,
 				A349235C2090DD90004C5455 /* TrainerTabBarController.swift in Sources */,
 				A39FE31320992A0400A16619 /* StudentAllCoursesTableViewController.swift in Sources */,
 				A32EEE33209CEACA0018FBB5 /* MessageListTableViewController.swift in Sources */,
 				A32EBB6920C5A5DB003B5D54 /* EFViewHeaderCellWithStudentCourse.swift in Sources */,
+				A3A3778E21062F25007AA250 /* GeneralDataViewController.swift in Sources */,
 				A34923622090E3D0004C5455 /* MessageVC.swift in Sources */,
 				A32EBB8920C5B3BC003B5D54 /* EFCollectionViewCellWithNextCourse.swift in Sources */,
 				A35735932096502500995346 /* TimeTabelCell.swift in Sources */,
@@ -1341,7 +1349,7 @@
 				CODE_SIGN_ENTITLEMENTS = EazyFitness/EazyFitness.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RW646P4KDZ;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1364,7 +1372,7 @@
 				CODE_SIGN_ENTITLEMENTS = EazyFitness/EazyFitness.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = RW646P4KDZ;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = EazyFitness/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
