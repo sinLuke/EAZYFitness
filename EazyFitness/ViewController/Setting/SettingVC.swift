@@ -65,12 +65,14 @@ class SettingVC: DefaultViewController, UITableViewDelegate, UITableViewDataSour
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Label")
                 if let cuser = Auth.auth().currentUser{
                     cell?.textLabel?.text = cuser.email
+                    cell?.detailTextLabel?.text = "更改邮箱"
                 }
                 cell?.selectionStyle = .none
                 return cell!
             case 4:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Label")
-                cell?.textLabel?.text = "更改密码"
+                cell?.textLabel?.text = "******"
+                cell?.detailTextLabel?.text = "更改密码"
                 cell?.selectionStyle = .none
                 return cell!
             default:

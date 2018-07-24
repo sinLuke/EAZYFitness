@@ -16,9 +16,13 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnManager: UIButton!
     @IBOutlet weak var timeTabelMgr: UIButton!
-    var thisTrainer:EFTrainer!
+    var thisTrainer:EFTrainer?
     var titleName:String!
     var new = false
+    
+    var newTrainerIDReady: Int!
+    var newTrainerRegion: userRegion = .Mississauga
+    var idLabelString: String!
     
     var cell:AllTrainerDetailViewCell!
 
@@ -43,13 +47,14 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     }
     
     override func refresh() {
-        thisTrainer.download()
+        thisTrainer?.download()
         cell?.refresh()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = titleName
+        
         self._gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         self.view.addGestureRecognizer(_gesture)
         
@@ -68,18 +73,28 @@ class AllTrainerDetailViewController: DefaultViewController, UITextFieldDelegate
     }
     
     @IBAction func donebtn(_ sender: Any) {
-        cell.doneInput()
+        if thisTrainer != nil{
+            cell.doneInput()
+        } else {
+            if let newID = self.newTrainerIDReady{
+                self.thisTrainer = EFTrainer.addTrainer(at: "\(newID)", in: self.newTrainerRegion)
+                self.thisTrainer?.memberID = "\(newID)"
+                cell.doneInput()
+            }
+        }
     }
     
     @IBAction func manageTrainer(_ sender: Any) {
-        cell.uploadData()
-        if cell.goalField.text == ""{
-            cell.goalField.text = "30"
-        }
-        if cell.fname.text == "" || cell.lname.text == ""{
-            AppDelegate.showError(title: "不允许姓名为空", err: "必须填写姓名")
-        } else {
-            performSegue(withIdentifier: "manage", sender: self)
+        if thisTrainer != nil{
+            cell.uploadData()
+            if cell.goalField.text == ""{
+                cell.goalField.text = "30"
+            }
+            if cell.fname.text == "" || cell.lname.text == ""{
+                AppDelegate.showError(title: "不允许姓名为空", err: "必须填写姓名")
+            } else {
+                performSegue(withIdentifier: "manage", sender: self)
+            }
         }
     }
     
@@ -139,7 +154,6 @@ class AllTrainerDetailViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         self.region.isEnabled = false
-        
         if let region = AppDelegate.AP().ds?.region{
             if region == userRegion.All{
                 self.region.selectedSegmentIndex = 0
@@ -165,21 +179,25 @@ class AllTrainerDetailViewCell: UICollectionViewCell {
         }
         if self.fname.text != "" && self.lname.text != "" && goalField.text != "" {
             self.uploadData()
-            vc.thisTrainer.upload()
-            _ = vc.navigationController?.popViewController(animated: true)
+            vc.thisTrainer?.upload(handler: {
+                _ = self.vc.navigationController?.popViewController(animated: true)
+            })
         } else {
             AppDelegate.showError(title: "上传出现错误", err: "必须填写姓名")
         }
     }
     
     func uploadData(){
-        vc.thisTrainer.firstName = self.fname.text!
-        vc.thisTrainer.lastName = self.lname.text!
-        vc.thisTrainer.goal = Int(goalField.text!)!
-        vc.thisTrainer.registered = enumService.toUserStatus(i: self.registered.selectedSegmentIndex)
-        vc.thisTrainer.region = enumService.Region[self.region.selectedSegmentIndex]
-        vc.new = false
-        vc.title = vc.thisTrainer.name
+        if let thisTrainer = vc.thisTrainer{
+            thisTrainer.firstName = self.fname.text!
+            thisTrainer.lastName = self.lname.text!
+            thisTrainer.goal = Int(goalField.text!)!
+            thisTrainer.registered = enumService.toUserStatus(i: self.registered.selectedSegmentIndex)
+            thisTrainer.region = enumService.Region[self.region.selectedSegmentIndex]
+            vc.new = false
+            vc.title = thisTrainer.name
+        }
+        
         self.reload()
     }
     
@@ -196,17 +214,18 @@ class AllTrainerDetailViewCell: UICollectionViewCell {
     func reload() {
         
         if let vc = vc{
-            if let intMemberID = Int(vc.thisTrainer.memberID){
-                idLabel.text = String(format:"%04d", intMemberID)
+            idLabel.text = vc.idLabelString ?? ""
+            if let thisTrainer = vc.thisTrainer{
+                if let intMemberID = Int(thisTrainer.memberID){
+                    idLabel.text = String(format:"%04d", intMemberID)
+                }
+                self.region.selectedSegmentIndex = enumService.toInt(e: thisTrainer.region)
+                self.fname.text = thisTrainer.firstName
+                self.lname.text = thisTrainer.lastName
+                self.goalField.text = String(thisTrainer.goal)
+                self.region.selectedSegmentIndex = enumService.toInt(e: thisTrainer.region)
+                self.registered.selectedSegmentIndex = enumService.toInt(i: thisTrainer.registered)
             }
-            self.region.selectedSegmentIndex = enumService.toInt(e: vc.thisTrainer.region)
-            self.fname.text = vc.thisTrainer.firstName
-            self.lname.text = vc.thisTrainer.lastName
-            self.goalField.text = String(vc.thisTrainer.goal)
-            self.region.selectedSegmentIndex = enumService.toInt(e: vc.thisTrainer.region)
-            self.registered.selectedSegmentIndex = enumService.toInt(i: vc.thisTrainer.registered)
-
         }
-        
     }
 }

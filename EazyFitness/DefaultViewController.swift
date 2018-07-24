@@ -37,6 +37,7 @@ class DefaultViewController: UIViewController, refreshableVC {
     
     override func viewWillAppear(_ animated: Bool) {
         refresh()
+        AppDelegate.cvc = self
         super.viewWillAppear(animated)
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = false
@@ -57,7 +58,7 @@ class DefaultViewController: UIViewController, refreshableVC {
     override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
-        AppDelegate.cvc = self
+        //AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }
@@ -96,6 +97,7 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
     
     override func viewWillAppear(_ animated: Bool) {
         refresh()
+        AppDelegate.cvc = self
         super.viewWillAppear(animated)
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = false
@@ -115,7 +117,7 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
     override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
-        AppDelegate.cvc = self
+        //AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }
@@ -156,6 +158,7 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     
     override func viewWillAppear(_ animated: Bool) {
         refresh()
+        AppDelegate.cvc = self
         super.viewWillAppear(animated)
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = false
@@ -176,7 +179,7 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     
     override func viewDidAppear(_ animated: Bool) {
         let message = MDCSnackbarMessage()
-        AppDelegate.cvc = self
+        //AppDelegate.cvc = self
         if #available(iOS 11.0, *) {
             navigationItem.hidesSearchBarWhenScrolling = true
         }

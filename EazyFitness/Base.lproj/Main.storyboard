@@ -1011,12 +1011,28 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Label" id="6x6-ah-225">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Label" textLabel="SNd-yl-v6y" detailTextLabel="BUg-Dd-IqB" style="IBUITableViewCellStyleValue1" id="6x6-ah-225">
                                         <rect key="frame" x="0.0" y="99.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6x6-ah-225" id="4JK-oM-FfB">
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SNd-yl-v6y">
+                                                    <rect key="frame" x="15" y="12" width="33.5" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BUg-Dd-IqB">
+                                                    <rect key="frame" x="241" y="12" width="44" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Info" textLabel="zrW-gR-itM" detailTextLabel="7u0-Um-PhC" style="IBUITableViewCellStyleValue1" id="O10-6x-BUU">
@@ -1275,13 +1291,13 @@
                                             <rect key="frame" x="20" y="20" width="243" height="123"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="申请标题" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lqM-zy-mym">
-                                                    <rect key="frame" x="0.0" y="0.0" width="69.5" height="102.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="69.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="black" pointSize="17"/>
                                                     <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="申请内容" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bo7-au-x9g">
-                                                    <rect key="frame" x="0.0" y="102.5" width="69.5" height="20.5"/>
+                                                    <rect key="frame" x="0.0" y="20.5" width="69.5" height="102.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1636,23 +1652,69 @@
                                             <rect key="frame" x="0.0" y="0.0" width="116" height="116"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </view>
-                                        <blurEffect style="dark"/>
+                                        <blurEffect style="light"/>
                                     </visualEffectView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LP6-nL-8Lq" customClass="UICircularProgressRing" customModule="UICircularProgressRing">
+                                        <rect key="frame" x="26" y="26" width="64" height="64"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="64" id="KdS-vF-sRU"/>
+                                            <constraint firstAttribute="height" constant="64" id="WZ4-Zu-PPF"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="fullCircle" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="innerRingColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="valueKnobSize">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="startAngle">
+                                                <real key="value" value="90"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="endAngle">
+                                                <real key="value" value="90"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="outerRingWidth">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="outerRingCapStyle">
+                                                <integer key="value" value="0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="ibRingStyle">
+                                                <integer key="value" value="0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="showsValueKnob" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="decimalPlaces">
+                                                <integer key="value" value="0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="innerRingWidth">
+                                                <real key="value" value="3"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="innerRingSpacing">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="innerRingCapStyle">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="shouldShowValueText" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="LP6-nL-8Lq" firstAttribute="centerY" secondItem="JXX-ms-ABP" secondAttribute="centerY" id="0Sp-9s-GwG"/>
                                     <constraint firstAttribute="width" constant="116" id="5dB-i4-rrK"/>
                                     <constraint firstAttribute="bottom" secondItem="xp8-lG-gNu" secondAttribute="bottom" id="C8T-6f-nrU"/>
                                     <constraint firstItem="xp8-lG-gNu" firstAttribute="top" secondItem="JXX-ms-ABP" secondAttribute="top" id="QLv-Eb-uDG"/>
                                     <constraint firstAttribute="trailing" secondItem="xp8-lG-gNu" secondAttribute="trailing" id="XaC-3E-NKj"/>
+                                    <constraint firstItem="LP6-nL-8Lq" firstAttribute="centerX" secondItem="JXX-ms-ABP" secondAttribute="centerX" id="c3I-FM-mWm"/>
                                     <constraint firstItem="xp8-lG-gNu" firstAttribute="leading" secondItem="JXX-ms-ABP" secondAttribute="leading" id="e4g-bb-sFf"/>
                                     <constraint firstAttribute="height" constant="116" id="fNI-7x-6CQ"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="hmL-E3-KPS">
-                                <rect key="frame" x="142" y="266" width="37" height="37"/>
-                            </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cxr-N0-n2L">
+                            <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cxr-N0-n2L">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="stopLoadingBtn:" destination="nIi-N8-WkF" eventType="touchUpInside" id="1gc-hs-EgS"/>
                                 </connections>
@@ -1666,7 +1728,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AY-Su-NCs">
                                             <rect key="frame" x="8" y="4" width="31" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                            <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -1677,15 +1739,13 @@
                                     <constraint firstAttribute="bottom" secondItem="4AY-Su-NCs" secondAttribute="bottom" constant="4" id="hSb-Wb-jgk"/>
                                     <constraint firstItem="4AY-Su-NCs" firstAttribute="top" secondItem="0dX-Gp-ATm" secondAttribute="top" constant="4" id="hTt-XM-Liy"/>
                                 </constraints>
-                                <blurEffect style="dark"/>
+                                <blurEffect style="light"/>
                             </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="hmL-E3-KPS" firstAttribute="centerY" secondItem="8C3-Vc-m6Z" secondAttribute="centerY" id="9PO-AR-YfY"/>
                             <constraint firstItem="cxr-N0-n2L" firstAttribute="leading" secondItem="4PF-3w-mvG" secondAttribute="leading" id="C5P-72-prY"/>
                             <constraint firstItem="JXX-ms-ABP" firstAttribute="centerX" secondItem="8C3-Vc-m6Z" secondAttribute="centerX" id="EJB-5t-jYM"/>
-                            <constraint firstItem="hmL-E3-KPS" firstAttribute="centerX" secondItem="8C3-Vc-m6Z" secondAttribute="centerX" id="GpL-cB-GdU"/>
                             <constraint firstItem="4AY-Su-NCs" firstAttribute="centerX" secondItem="4PF-3w-mvG" secondAttribute="centerX" id="JrD-R1-AXS"/>
                             <constraint firstItem="cxr-N0-n2L" firstAttribute="trailing" secondItem="4PF-3w-mvG" secondAttribute="trailing" id="OMe-Df-50T"/>
                             <constraint firstItem="4AY-Su-NCs" firstAttribute="top" secondItem="JXX-ms-ABP" secondAttribute="bottom" constant="16" id="cGA-yc-iG9"/>
@@ -1697,8 +1757,8 @@
                     </view>
                     <connections>
                         <outlet property="activityLabel" destination="4AY-Su-NCs" id="rZw-ks-ned"/>
-                        <outlet property="activityView" destination="hmL-E3-KPS" id="ys4-s3-AZf"/>
                         <outlet property="baseView" destination="JXX-ms-ABP" id="NEg-Fc-z8Y"/>
+                        <outlet property="circle" destination="LP6-nL-8Lq" id="2ps-aV-55z"/>
                         <outlet property="labelBackgroundView" destination="0dX-Gp-ATm" id="gPt-N9-hRx"/>
                         <outlet property="stopLoading" destination="cxr-N0-n2L" id="qFI-P6-IbW"/>
                     </connections>
@@ -2024,7 +2084,7 @@
                                         <connections>
                                             <outlet property="fname" destination="sqG-TZ-p8z" id="UDD-7f-grl"/>
                                             <outlet property="goalField" destination="YEm-58-oMN" id="sSx-Vc-6dG"/>
-                                            <outlet property="idLabel" destination="nix-kt-41p" id="dBw-pL-ONI"/>
+                                            <outlet property="idLabel" destination="nix-kt-41p" id="kYJ-sK-WNN"/>
                                             <outlet property="lname" destination="OCx-HL-zG6" id="H38-s9-31u"/>
                                             <outlet property="region" destination="Opl-fD-Hli" id="ejs-xD-bCL"/>
                                             <outlet property="registered" destination="Dnj-Aq-cad" id="2ID-Ce-IKa"/>
@@ -4376,9 +4436,9 @@
         <image name="workout" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bBJ-R5-UlX"/>
+        <segue reference="zGn-fp-aVL"/>
         <segue reference="PNY-GZ-YFM"/>
-        <segue reference="4ar-qV-SLA"/>
+        <segue reference="Mi4-Xj-Lx9"/>
         <segue reference="9C1-Qw-4Wt"/>
         <segue reference="7kr-WP-JIT"/>
         <segue reference="8au-Nd-DNN"/>

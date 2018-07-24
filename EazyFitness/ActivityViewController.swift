@@ -7,9 +7,10 @@
 //
 
 import UIKit
-
+import UICircularProgressRing
 class ActivityViewController: UIViewController {
     
+    @IBOutlet weak var circle: UICircularProgressRing!
     static var started:Bool {
         set { (newValue)
             
@@ -49,14 +50,14 @@ class ActivityViewController: UIViewController {
     }
 
     @IBOutlet weak var baseView: UIView!
-    @IBOutlet weak var activityView: UIActivityIndicatorView!
+    //@IBOutlet weak var activityView: UIActivityIndicatorView!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var labelBackgroundView: UIVisualEffectView!
     
     var activityLabelString = "" {
         didSet {
             activityLabel.text = activityLabelString
-            labelBackgroundView.isHidden = activityLabelString == ""
+        //labelBackgroundView.isHidden = activityLabelString == ""
             
         }
     }
@@ -69,7 +70,9 @@ class ActivityViewController: UIViewController {
     class func updateLabel(){
         if ActivityViewController.callStart != ActivityViewController.callEnd {
             ActivityViewController.started = true
-            ActivityViewController.shared?.activityLabelString = "正在载入：%\(Int(Float(ActivityViewController.callEnd)/Float(ActivityViewController.callStart)*100)) (\(ActivityViewController.callEnd)/\(ActivityViewController.callStart))"
+            let progressValue = Int(Float(ActivityViewController.callEnd)/Float(ActivityViewController.callStart)*100)
+            ActivityViewController.shared?.circle.startProgress(to: UICircularProgressRing.ProgressValue(progressValue), duration: Double(progressValue)*0.005)
+            ActivityViewController.shared?.activityLabelString = "正在载入：%\(progressValue) (\(ActivityViewController.callEnd)/\(ActivityViewController.callStart))"
         } else {
             ActivityViewController.started = false
             ActivityViewController.callStart = 0
@@ -86,7 +89,9 @@ class ActivityViewController: UIViewController {
         labelBackgroundView.clipsToBounds = true
         baseView.clipsToBounds = true
         
-        activityView.startAnimating()
+        circle.maxValue = 100
+        
+        //activityView.startAnimating()
         // Do any additional setup after loading the view.
     }
 

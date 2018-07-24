@@ -80,12 +80,14 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     }
     
     @IBAction func donebtn(_ sender: Any) {
-        if let thisStudent = thisStudent {
+        if thisStudent != nil{
             self.doneInput()
         } else {
-            self.thisStudent = EFStudent.addStudent(at: "\(self.newStudentIDReady)", in: self.newStudentRegion)
-            self.thisStudent?.memberID = "\(self.newStudentIDReady)"
-            self.doneInput()
+            if let newID = self.newStudentIDReady{
+                self.thisStudent = EFStudent.addStudent(at: "\(newID)", in: self.newStudentRegion)
+                self.thisStudent?.memberID = "\(newID)"
+                self.doneInput()
+            }
         }
     }
     

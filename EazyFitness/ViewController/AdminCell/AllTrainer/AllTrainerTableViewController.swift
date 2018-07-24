@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class AllTrainerTableViewController: DefaultTableViewController, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
@@ -17,13 +18,12 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     let _refreshControl = UIRefreshControl()
     
     var FilteredKeyList:[String] = []
+    var new = false
     
     var selectedName:String = ""
 
-    var new = false
-    
-    var newTrainerIDReady = ""
-    var newStudentRegion:userRegion = .Mississauga
+    var newTrainerIDReady: Int?
+    var newTrainerRegion:userRegion = .Mississauga
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -101,14 +101,6 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         // #warning Incomplete implementation, return the number of rows
         return FilteredKeyList.count
     }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0{
-            return "已占用"
-        } else {
-            return "未占用"
-        }
-    }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
@@ -157,18 +149,6 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let memberID = FilteredKeyList[indexPath.row]
-        if let trainer = DataServer.trainerDic[memberID]{
-            self.selected = trainer
-            self.selectedName = trainer.name
-            new = true
-            self.performSegue(withIdentifier: "detail", sender: self)
-        } else {
-            AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
-        }
-    }
-    
     func configureSearchController(){
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
@@ -201,8 +181,97 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         self.tableView.reloadData()
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let memberID = FilteredKeyList[indexPath.row]
+        if let trainer = DataServer.trainerDic[memberID]{
+            self.selected = trainer
+            self.selectedName = trainer.name
+            new = true
+            self.performSegue(withIdentifier: "detail", sender: self)
+        } else {
+            AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let dvc = segue.destination as? AllTrainerDetailViewController{
+            if new {
+                dvc.navigationItem.title = "新建教练"
+                dvc.new = new
+                dvc.newTrainerIDReady = self.newTrainerIDReady
+                if let intMemberID = self.newTrainerIDReady{
+                    dvc.idLabelString = String(format:"%04d", intMemberID)
+                }
+                dvc.newTrainerRegion = self.newTrainerRegion
+            } else {
+                dvc.navigationItem.title = self.selectedName
+                dvc.thisTrainer = self.selected
+                dvc.new = new
+            }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tableView.reloadData()
+        //self.refresh()
+    }
     
     @IBAction func addTrainerBtn(_ sender: Any) {
+        new = true
+        
+        let alert = UIAlertController(title: "添加学生", message: "请输入卡号或编号", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "0000"
+        }
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+            let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            
+            
+            
+            if let studentID = textField?.text {
+                guard let studentIDINT = Int(studentID) else {
+                    AppDelegate.showError(title: "该编号无效", err: "输入值为：\(studentID)")
+                    return
+                }
+                if studentIDINT <= 0 || studentIDINT > 1000{
+                    AppDelegate.showError(title: "该编号无效或不可用于教练", err: "输入值为：\(studentID)")
+                    return
+                }
+                ActivityViewController.callStart += 1
+                Firestore.firestore().collection("QRCODE").whereField("MemberID", isEqualTo: studentIDINT).getDocuments(completion: { (snap, err) in
+                    if (snap?.documents.count ?? 0) > 0 {
+                        ActivityViewController.callStart += 1
+                        Firestore.firestore().collection("student").document(studentID).getDocument(completion: { (snap, err) in
+                            if snap?.data()?["memberID"] as? String == nil {
+                                self.newTrainerIDReady = studentIDINT
+                                
+                                if let ds = AppDelegate.AP().ds{
+                                    if ds.region != .All {
+                                        self.newTrainerRegion = ds.region
+                                    } else {
+                                        self.newTrainerRegion = .Mississauga
+                                    }
+                                    self.performSegue(withIdentifier: "detail", sender: self)
+                                } else {
+                                    AppDelegate.showError(title: "登录错误", err: "请重新登录", handler: AppDelegate.AP().signout)
+                                }
+                            } else {
+                                AppDelegate.showError(title: "该编号已被占用", err: "输入值为：\(studentID)")
+                            }
+                            ActivityViewController.callEnd += 1
+                        })
+                    } else {
+                        AppDelegate.showError(title: "该编号无效或不可用于教练", err: "输入值为：\(studentID)")
+                    }
+                    ActivityViewController.callEnd += 1
+                })
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+        /*
         new = true
         
         let alert = UIAlertController(title: "添加教练", message: "请输入卡号或编号", preferredStyle: .alert)
@@ -229,21 +298,12 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
             }
         }))
         self.present(alert, animated: true, completion: nil)
+ */
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dvc = segue.destination as? AllTrainerDetailViewController{
-            dvc.thisTrainer = self.selected
-            dvc.titleName = self.selectedName
-            dvc.new = new
-        }
-    }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.tableView.reloadData()
-        //self.refresh()
-    }
+    
+    
     
 }
