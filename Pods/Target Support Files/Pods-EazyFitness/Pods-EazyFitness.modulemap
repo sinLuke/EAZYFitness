@@ -1,6 +1,0 @@
-framework module Pods_EazyFitness {
-  umbrella header "Pods-EazyFitness-umbrella.h"
-
-  export *
-  module * { export * }
-}
