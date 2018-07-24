@@ -34,6 +34,7 @@ class DataServer: NSObject {
     static var trainerDic:[String:EFTrainer]  = [:]
     
     static func initfunc(email:String){
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("users").whereField("email", isEqualTo: email).getDocuments { (snap, err) in
             if let err = err {
                 AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
@@ -44,14 +45,16 @@ class DataServer: NSObject {
                     DataServer.createDataServer(data: data, uid: doc[0].documentID)
                 } else {
                     AppDelegate.showError(title: "邮箱错误", err: "请重新输入邮箱，或与客服联系。您输入的邮箱为: \(email)")
-                    AppDelegate.endLoading()
+
                 }
             }
+            ActivityViewController.callEnd += 1
         }
         DataServer.updateDatabaseUID()
     }
     
     static func updateDatabaseUID(){
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("users").getDocuments { (snap, err) in
             if let snap = snap {
                 for docs in snap.documents{
@@ -62,11 +65,13 @@ class DataServer: NSObject {
                     }
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
     static func initfunc(uid:String){
         let userRef = Firestore.firestore().collection("users").document(uid)
+        ActivityViewController.callStart += 1
         userRef.getDocument { (snap, err) in
             if let err = err {
                 AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
@@ -77,6 +82,7 @@ class DataServer: NSObject {
                     AppDelegate.showError(title: "登录错误", err: "无法读取用户数据", handler:AppDelegate.AP().signout)
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
@@ -119,14 +125,15 @@ class DataServer: NSObject {
             let _student = EFStudent.setStudent(with: studentCollection.document(self.memberID))
             _student.download()
             DataServer.studentDic[self.memberID] = _student
-            AppDelegate.reload()
-            AppDelegate.endLoading()
+
         case .trainer:
             let _trainer = EFTrainer.setTrainer(with: self.trainerCollection.document(self.memberID))
             _trainer.download()
             DataServer.trainerDic[self.memberID] = _trainer
         case .admin:
+            ActivityViewController.callStart += 1
             self.studentCollection.getDocuments { (snap, err) in
+                
                 if let err = err {
                     AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
                 } else {
@@ -137,10 +144,11 @@ class DataServer: NSObject {
                         _student.download()
                         DataServer.studentDic[doc.documentID] = _student
                     }
-                    AppDelegate.reload()
-                    AppDelegate.endLoading()
+
                 }
+                ActivityViewController.callEnd += 1
             }
+            ActivityViewController.callStart += 1
             self.trainerCollection.getDocuments { (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "未知错误", err: err.localizedDescription)
@@ -152,9 +160,10 @@ class DataServer: NSObject {
                             DataServer.trainerDic[doc.documentID] = _trainer
                     }
 
-                    AppDelegate.reload()
-                    AppDelegate.endLoading()
+
+
                 }
+                ActivityViewController.callEnd += 1
             }
         default:
             return

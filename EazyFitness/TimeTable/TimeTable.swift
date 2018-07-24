@@ -103,7 +103,9 @@ class TimeTable: NSObject {
         for names in Array(_collectionRef.keys){
             if let collectionRef = _collectionRef[names]{
                 var timetableDic: [String:[[Any]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
-                collectionRef.whereField("Date", isGreaterThan: startoftheweek).whereField("Date", isLessThan: startoftheweek.endOfWeek()).whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
+                ActivityViewController.callStart += 1
+                collectionRef.whereField("Date", isGreaterThan: startoftheweek).whereField("Date", isLessThan:
+                    startoftheweek.endOfWeek()).whereField("Approved", isEqualTo: true).getDocuments { (snap, err) in
                     if let err = err{
                         AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
                     } else {
@@ -121,6 +123,7 @@ class TimeTable: NSObject {
                         timetableDicWithName.updateValue(timetableDic, forKey: names)
                         currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, startoftheweek: startoftheweek, handeler:handeler)
                     }
+                        ActivityViewController.callEnd += 1
                 }
             } else {
             }
@@ -136,6 +139,7 @@ class TimeTable: NSObject {
         for names in Array(_collectionRef.keys){
             if let collectionRef = _collectionRef[names]{
                 var timetableDic: [String:[[Int]]] = ["mon":[[]], "tue":[[]], "wed":[[]], "thu":[[]], "fri":[[]], "sat":[[]], "sun":[[]]]
+                ActivityViewController.callStart += 1
                 collectionRef.whereField("Date", isGreaterThan: Date().startOfWeek()).whereField("Date", isLessThan: Date().endOfWeek()).whereField("TrainerApproved", isEqualTo: true).getDocuments { (snap, err) in
                     if let err = err{
                         AppDelegate.showError(title: "读取课程表时出错", err: err.localizedDescription)
@@ -154,6 +158,7 @@ class TimeTable: NSObject {
                         timetableDicWithName.updateValue(timetableDic, forKey: names)
                         currentTimeTabel?.LoadFinished(view: view, timetable: timetableDicWithName, startoftheweek: startoftheweek, handeler:handeler)
                     }
+                    ActivityViewController.callEnd += 1
                 }
             } else {
             }

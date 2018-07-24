@@ -36,7 +36,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     override func viewDidLoad() {
         
         db = Firestore.firestore()
-        
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("admin").document(enumService.toString(e: region)).getDocument { (snap, err) in
             self.avaliable = true
             if let snap = snap {
@@ -47,6 +47,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                     }
                 }
             }
+            ActivityViewController.callEnd += 1
         }
         
         
@@ -98,7 +99,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
     func createUserComplete(user:User?, error:Error?)->(){
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
-            self.endLoading()
+
         } else {
             if let cuser = Auth.auth().currentUser{
                 self.db.collection("users").document(cuser.uid).setData(self.Userdata)
@@ -136,7 +137,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
                 } else {
                     if let password = passwordField.text{
                         if let fname = self.fnameField.text, let lname = self.lnameField.text, let ug = self.usergroup, let cardID = self.memberID, let email = self.emailField.text{
-                            self.startLoading()
+
                             let uuid = UIDevice.current.identifierForVendor!.uuidString
                             self.Userdata = [
                                 "firstName": fname,

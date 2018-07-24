@@ -55,32 +55,8 @@ class AdminDataModel: NSObject {
         case all
     }
     
-    static var callStart = 0 {
-        didSet {
-            print("\(AdminDataModel.callEnd)/\(AdminDataModel.callStart)")
-            let vc = AdminDataModel.managedVC as? UIViewController
-            vc?.navigationController?.title = "\(AdminDataModel.callEnd)/\(AdminDataModel.callStart)"
-            if callStart == callEnd {
-                AdminDataModel.managedVC?.reload()
-            }
-        }
-    }
-    static var callEnd = 0 {
-        didSet {
-            print("\(AdminDataModel.callEnd)/\(AdminDataModel.callStart)")
-            let vc = AdminDataModel.managedVC as? UIViewController
-            vc?.navigationController?.title = "\(AdminDataModel.callEnd)/\(AdminDataModel.callStart)"
-            if callStart == callEnd {
-                AdminDataModel.managedVC?.reload()
-            }
-        }
-    }
-    
     class func refreshData(){
-        AdminDataModel.callEnd = 0
-        AdminDataModel.callStart = 0
         AdminDataModel.DataDic = [:]
-        managedVC?.startLoading()
         AdminDataModel.funcForEach()
     }
     
@@ -96,14 +72,14 @@ class AdminDataModel: NSObject {
     class func funcForEach(){
         switch AdminDataModel.generalDataScope {
         case .all:
-            AdminDataModel.callStart += 1
+            ActivityViewController.callStart += 1
             Firestore.firestore().collection("student").getDocuments { (snap, err) in
                 if let snap = snap {
                     for doc in snap.documents {
                         AdminDataModel.handleStudentRef(ref: doc.reference)
                     }
                 }
-                AdminDataModel.callEnd += 1
+                ActivityViewController.callEnd += 1
             }
         case .byTrainer:
             if let scopeTrainer = AdminDataModel.scopeTrainer{
@@ -120,7 +96,7 @@ class AdminDataModel: NSObject {
     
     class func handleStudentRef(ref: DocumentReference) {
         if AdminDataModel.generalDataTypeOfData == .coursePurchase {
-            AdminDataModel.callStart += 1
+            ActivityViewController.callStart += 1
             ref.collection("registered").getDocuments { (snaps, err) in
                 if let snaps = snaps {
                     for doc in snaps.documents {
@@ -138,10 +114,10 @@ class AdminDataModel: NSObject {
                         }
                     }
                 }
-                AdminDataModel.callEnd += 1
+                ActivityViewController.callEnd += 1
             }
         } else {
-            AdminDataModel.callStart += 1
+            ActivityViewController.callStart += 1
             ref.collection("course").getDocuments { (snaps, err) in
                 if let snaps = snaps {
                     for doc in snaps.documents {
@@ -150,13 +126,13 @@ class AdminDataModel: NSObject {
                         }
                     }
                 }
-                AdminDataModel.callEnd += 1
+                ActivityViewController.callEnd += 1
             }
         }
     }
     
     class func handleCourseDataFromRef(ref: DocumentReference) {
-        AdminDataModel.callStart += 1
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
             if let snap = snap {
                 if let amount = snap.data()?["amount"] as? Int,
@@ -183,7 +159,7 @@ class AdminDataModel: NSObject {
                     }
                 }
             }
-            AdminDataModel.callEnd += 1
+            ActivityViewController.callEnd += 1
         }
     }
 }

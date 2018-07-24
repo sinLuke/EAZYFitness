@@ -14,13 +14,15 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
     var thisStudent:EFStudent?
     var titleName:String!
     
-    var newStudentIDReady: String = ""
+    var newStudentIDReady: Int!
     var newStudentRegion: userRegion = .Mississauga
     
     @IBOutlet weak var fname: MDCTextField!
     @IBOutlet weak var lname: MDCTextField!
     
     var new = false
+    
+    var idLabelString: String!
     
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var registered: UISegmentedControl!
@@ -46,7 +48,7 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         self.title = titleName
         
         self.region.isEnabled = false
-
+        idLabel.text = idLabelString ?? ""
         if let region = AppDelegate.AP().ds?.region{
             if region == userRegion.All{
                 self.region.selectedSegmentIndex = 0
@@ -81,8 +83,8 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
         if let thisStudent = thisStudent {
             self.doneInput()
         } else {
-            self.thisStudent = EFStudent.addStudent(at: self.newStudentIDReady, in: self.newStudentRegion)
-            self.thisStudent?.memberID = self.newStudentIDReady
+            self.thisStudent = EFStudent.addStudent(at: "\(self.newStudentIDReady)", in: self.newStudentRegion)
+            self.thisStudent?.memberID = "\(self.newStudentIDReady)"
             self.doneInput()
         }
     }
@@ -95,7 +97,8 @@ class AllStudentDetailViewController: DefaultViewController, UITextFieldDelegate
             goalField.text = "30"
         }
         if self.fname.text != "" && self.lname.text != "" && goalField.text != "" {
-            self.startLoading()
+
+            ActivityViewController.shared?.activityLabelString = "AllStudentDetailViewController"
             self.uploadData()
             thisStudent?.upload(handler: {
                 _ = self.navigationController?.popViewController(animated: true)

@@ -41,7 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
 
     var window: UIWindow?
     
-    static var cvc: UIViewController?
+    static var cvc: UIViewController? {
+        didSet{
+            ActivityViewController.startLoading()
+        }
+    }
     
     static var token:String?
     /*
@@ -91,19 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
             cvc.reload()
         }
     }
-    
-    class func startLoading() {
-        if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
-            cvc.startLoading()
-        }
-    }
-    
-    class func endLoading() {
-        if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
-            cvc.endLoading()
-        }
-    }
-    
+
     func dataServerDidFinishInit(){
         getSuperUID()
         for listener in self.messageListener{
@@ -114,9 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         
         
         self.startListener()
-        if let cvc = AppDelegate.getCurrentVC() as? refreshableVC{
-            cvc.endLoading()
-        }
+        
         //Update All Data
         self.ds!.download()
         if Auth.auth().currentUser == nil{
@@ -174,6 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
             listener.remove()
         }
         if let _ds = ds {
+            ActivityViewController.callStart += 1
             Firestore.firestore().collection("Message").whereField("uid", isEqualTo: _ds.uid).getDocuments{ (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "获取通知消息时发生错误", err: err.localizedDescription)
@@ -196,6 +187,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                     application.applicationIconBadgeNumber = bagesTotal
                     completionHandler(UIBackgroundFetchResult.newData)
                 }
+                ActivityViewController.callEnd += 1
             }
         } else {
             completionHandler(UIBackgroundFetchResult.noData)
@@ -240,6 +232,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                 Database.database().reference().child("users/\(currentUser.uid)/notificationTokens").setValue(token)
                 
                 //读取新的用户名等信息
+                ActivityViewController.callStart += 1
                 Firestore.firestore().collection("users").document(currentUser.uid).getDocument { (snap, err) in
                     if let snap = snap {
                         if let data = snap.data(){
@@ -251,6 +244,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
                             }
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 }
                 
                 
@@ -426,7 +420,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         print(err)
         let alert: MDCAlertController = MDCAlertController(title: title, message: err)
         alert.addAction(MDCAlertAction(title: "确定", handler: {_ in
-            self.endLoading()
+
             if let _handler = handler{
                 _handler()
             }
@@ -440,13 +434,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         print(text)
         let alert: MDCAlertController = MDCAlertController(title: title, message: text)
         alert.addAction(MDCAlertAction(title: "确定", handler: {_ in
-            self.endLoading()
+
             if let _handler = handlerAgree{
                 _handler()
             }
         }))
         alert.addAction(MDCAlertAction(title: "取消", handler: {_ in
-            self.endLoading()
+
             if let _handler = handlerDismiss{
                 _handler()
             }
@@ -466,8 +460,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     }
     
     func getSuperUID(){
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("admin").document("all").getDocument { (snap, err) in
             self.superUID = snap?.data()!["uid"] as? String
+            ActivityViewController.callEnd += 1
         }
     }
     

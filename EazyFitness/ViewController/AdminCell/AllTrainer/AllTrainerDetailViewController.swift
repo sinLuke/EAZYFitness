@@ -205,7 +205,7 @@ class AllTrainerDetailViewCell: UICollectionViewCell {
             self.goalField.text = String(vc.thisTrainer.goal)
             self.region.selectedSegmentIndex = enumService.toInt(e: vc.thisTrainer.region)
             self.registered.selectedSegmentIndex = enumService.toInt(i: vc.thisTrainer.registered)
-            vc.endLoading()
+
         }
         
     }

@@ -389,11 +389,11 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     
     func resizeViews(maxHeight:CGFloat)->(){
         if maxHeight == 0{
-            self.endLoading()
+
             noCourseLabel.isHidden = false
         } else {
             noCourseLabel.isHidden = true
-            self.endLoading()
+
             self.timetableView.contentSize = CGSize(width: self.view.frame.width, height: maxHeight)
             self.timetable?.frame = CGRect(x: (self.timetable?.frame.minX)!, y: (self.timetable?.frame.minY)!, width: self.view.frame.width, height: maxHeight)
         }

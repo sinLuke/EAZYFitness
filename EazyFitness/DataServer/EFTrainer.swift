@@ -41,9 +41,8 @@ class EFTrainer: EFData {
     }
     
     override func download(){
-        AppDelegate.startLoading()
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
-            AppDelegate.endLoading()
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取教练时错误: \(err.localizedDescription)"
@@ -64,16 +63,17 @@ class EFTrainer: EFData {
                     
                     
                     self.setStudentTrainerUID()
-                    AppDelegate.reload()
                     
                     for studentRef in self.trainee{
                         EFStudent.setStudent(with: studentRef)
                     }
                 }
             }
+            ActivityViewController.callEnd += 1
         }
+        ActivityViewController.callStart += 1
         ref.collection("finish").getDocuments { (snap, err) in
-            AppDelegate.endLoading()
+
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取已完成课程时错误: \(err.localizedDescription)"
@@ -87,8 +87,8 @@ class EFTrainer: EFData {
                         EFCourse.setCourse(with: _ref)
                     }
                 }
-                AppDelegate.reload()
             }
+            ActivityViewController.callEnd += 1
         }
         
     }
@@ -125,10 +125,6 @@ class EFTrainer: EFData {
                 message.text = "添加教练失败: \(err.localizedDescription)"
                 MDCSnackbarManager.show(message)
             }
-            if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-                vc.endLoading()
-            }
-            AppDelegate.reload()
         }
         let newTrainer = EFTrainer.setTrainer(with: newref)
         newTrainer.download()
@@ -147,7 +143,7 @@ class EFTrainer: EFData {
                 "weightUnit":self.weightUnit,
                 "trainee":self.trainee,
                 "goal":self.goal]) { (_) in
-                    AppDelegate.endLoading()
+
                     let message = MDCSnackbarMessage()
                     message.text = "对\(self.name)的修改上传成功"
                     MDCSnackbarManager.show(message)

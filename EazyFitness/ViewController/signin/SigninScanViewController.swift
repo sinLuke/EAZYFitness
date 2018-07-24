@@ -26,16 +26,18 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
         reader.stopScanning()
         
         dismiss(animated: true, completion: nil)
-        self.startLoading()
+
+        ActivityViewController.shared?.activityLabelString = "SigninScanViewController"
         let charset = CharacterSet(charactersIn: ".#$[]")
         if result.value.rangeOfCharacter(from: charset) != nil || result.value == ""{
-            self.endLoading()
+
             AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0101#)", of: self)
         } else{
             print(result.value)
+            ActivityViewController.callStart += 1
             db.collection("QRCODE").document(result.value).getDocument { (snap, err) in
                 if let err = err{
-                    self.endLoading()
+
                     AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                 } else {
                     if let document = snap!.data(){
@@ -71,11 +73,12 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                                 self.fetchUserData(CardID: "\(numberValue)")
                             }
                         } else {
-                            self.endLoading()
+
                             AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0103#)", of: self)
                         }
                     }
                 }
+                ActivityViewController.callEnd += 1
             }
         }
     }
@@ -89,9 +92,10 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
             if CardIDNumber > 1000 && CardIDNumber < 2000{
                 //学生
                 self.usergroup = userGroup.student
+                ActivityViewController.callStart += 1
                 db.collection("student").document(CardID).getDocument { (snap, err) in
                     if let err = err{
-                        self.endLoading()
+
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                     } else {
                         if let data = snap!.data(){
@@ -109,13 +113,15 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             AppDelegate.showError(title: "二维码无效", err: "请与客服联系", of: self)
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 }
             } else {
                 //教练
                 self.usergroup = userGroup.trainer
+                ActivityViewController.callStart += 1
                 db.collection("trainer").document(CardID).getDocument { (snap, err) in
                     if let err = err{
-                        self.endLoading()
+
                         AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                     } else {
                         if let data = snap!.data(){
@@ -133,6 +139,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
                             AppDelegate.showError(title: "二维码无效", err: "请与客服联系", of: self)
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 }
             }
         } else {
@@ -146,14 +153,14 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
         
 
         if registered == userStatus.canceled || registered == userStatus.avaliable{
-            self.endLoading()
+
             AppDelegate.showError(title: "此卡不允许注册", err: "此会员卡尚未激活或已被注销，请联系客服(#0105#)", of: self, handler: self.signInCancel)
         } else if registered == userStatus.signed{
-            self.endLoading()
+
             AppDelegate.showError(title: "用户已存在", err: "此会员卡已经被注册，请直接登录，或联系客服(#0106#)", of: self, handler: self.signInCancel)
             dismiss(animated: true, completion: nil)
         } else {
-            self.endLoading()
+
             if self.usergroup == userGroup.trainer || self.usergroup == userGroup.admin {
                 performSegue(withIdentifier: "special", sender: self)
             } else {
@@ -186,7 +193,7 @@ class SigninScanViewController: DefaultViewController, QRCodeReaderViewControlle
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        self.endLoading()
+
         if let vc = segue.destination as? SigninPasswordViewController{
             vc.theUserRefrence = self.theUserRefrence
             vc.usergroup = self.usergroup

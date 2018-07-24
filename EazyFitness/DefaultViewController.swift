@@ -29,53 +29,10 @@ class DefaultViewController: UIViewController, refreshableVC {
     }
     
     
-    var loadingView:UIVisualEffectView!
-    var loadingIndicator:UIActivityIndicatorView!
-    
-    
     lazy var timer = Timer()
     override func viewDidLoad() {
-        loadingView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
-        loadingView.frame = CGRect(x: self.view.frame.width/2-50, y: self.view.frame.height/2-50, width: 100, height: 100)
-        loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-        loadingIndicator.frame = CGRect(x: self.view.frame.width/2-20, y: self.view.frame.height/2-20, width: 40, height: 40)
-        loadingView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.5)
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.endLoading))
-        loadingView.addGestureRecognizer(gesture)
-        
-        loadingView.layer.cornerRadius = 10
-        loadingView.clipsToBounds = true
-        loadingView.isHidden = true
 
         super.viewDidLoad()
-    }
-    
-    
-    func startLoading() -> (){
-        if let loadingView = loadingView{
-            loadingView.isHidden = false
-            loadingIndicator.isHidden = false
-            loadingIndicator.startAnimating()
-            view.isUserInteractionEnabled = false
-            
-            self.view.addSubview(loadingView)
-            self.view.addSubview(loadingIndicator)
-            
-            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(endLoading), userInfo: nil, repeats: false)
-            timer.fire()
-        }
-    }
-    
-    @objc func endLoading() -> (){
-        if let loadingView = loadingView {
-            loadingView.isHidden = true
-            loadingIndicator.isHidden = true
-            loadingIndicator.stopAnimating()
-            self.view.isUserInteractionEnabled = true
-            self.loadingView.removeFromSuperview()
-            self.loadingIndicator.removeFromSuperview()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -133,44 +90,8 @@ class DefaultCollectionViewController: UICollectionViewController, refreshableVC
     
     lazy var timer = Timer()
     override func viewDidLoad() {
-        loadingView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
-        loadingView.frame = CGRect(x: self.view.frame.width/2-50, y: self.view.frame.height/2-50, width: 100, height: 100)
-        loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-        loadingIndicator.frame = CGRect(x: self.view.frame.width/2-20, y: self.view.frame.height/2-20, width: 40, height: 40)
-        loadingView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.5)
-        
-        loadingView.layer.cornerRadius = 10
-        loadingView.clipsToBounds = true
-        loadingView.isHidden = true
         
         super.viewDidLoad()
-    }
-    
-    
-    func startLoading() -> (){
-        
-        if let loadingView = loadingView{
-            loadingView.isHidden = false
-            loadingIndicator.isHidden = false
-            loadingIndicator.startAnimating()
-            view.isUserInteractionEnabled = false
-            
-            self.view.addSubview(loadingView)
-            self.view.addSubview(loadingIndicator)
-            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(endLoading), userInfo: nil, repeats: false)
-            timer.fire()
-        }
-    }
-    
-    @objc func endLoading() -> (){
-        if let loadingView = loadingView {
-            loadingView.isHidden = true
-            loadingIndicator.isHidden = true
-            loadingIndicator.stopAnimating()
-            self.view.isUserInteractionEnabled = true
-            self.loadingView.removeFromSuperview()
-            self.loadingIndicator.removeFromSuperview()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -229,46 +150,9 @@ class DefaultTableViewController: UITableViewController, refreshableVC {
     lazy var timer = Timer()
     override func viewDidLoad() {
         
-        loadingView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
-        loadingView.frame = CGRect(x: self.view.frame.width/2-50, y: self.view.frame.height/2-50, width: 100, height: 100)
-        loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-        loadingIndicator.frame = CGRect(x: self.view.frame.width/2-20, y: self.view.frame.height/2-20, width: 40, height: 40)
-        loadingView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.5)
-        
-        loadingView.layer.cornerRadius = 10
-        loadingView.clipsToBounds = true
-        loadingView.isHidden = true
-        
         super.viewDidLoad()
     }
     
-    
-    func startLoading() -> (){
-        
-        if let loadingView = loadingView{
-            loadingView.isHidden = false
-            loadingIndicator.isHidden = false
-            loadingIndicator.startAnimating()
-            view.isUserInteractionEnabled = false
-            
-            self.view.addSubview(loadingView)
-            self.view.addSubview(loadingIndicator)
-            
-            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(endLoading), userInfo: nil, repeats: false)
-            timer.fire()
-        }
-    }
-    
-    @objc func endLoading() -> (){
-        if let loadingView = loadingView {
-            loadingView.isHidden = true
-            loadingIndicator.isHidden = true
-            loadingIndicator.stopAnimating()
-            self.view.isUserInteractionEnabled = true
-            self.loadingView.removeFromSuperview()
-            self.loadingIndicator.removeFromSuperview()
-        }
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         refresh()

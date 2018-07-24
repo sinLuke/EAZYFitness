@@ -32,12 +32,13 @@ class WelcomeViewController: DefaultViewController, UIWebViewDelegate {
     }
     
     func webViewDidStartLoad(_ webView: UIWebView) {
-        self.startLoading()
+        //ActivityViewController.startLoading()
+        
         self.view.isUserInteractionEnabled = true
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
-        self.endLoading()
+        //ActivityViewController.endLoading()
     }
     
     /*

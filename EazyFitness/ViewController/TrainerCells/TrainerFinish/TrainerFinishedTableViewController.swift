@@ -128,7 +128,7 @@ class TrainerFinishedTableViewController: DefaultTableViewController {
     }
     
     override func refresh() {
-        print("refresh")
+        ActivityViewController.callStart += 1
         ref.getDocuments { (snap, err) in
             self.thismonth = []
             self.othermonth = []
@@ -139,6 +139,7 @@ class TrainerFinishedTableViewController: DefaultTableViewController {
                     if let dateOfDoc = doc.data()["Date"] as? Date{
                         if dateOfDoc > Date().startOfMonth(){
                             var readyToUpdateDic = doc.data()
+                            ActivityViewController.callStart += 1
                             Firestore.firestore().collection("student").document(doc.data()["StudentID"] as! String).getDocument(completion: { (snap, err) in
                                 if let err = err {
                                     AppDelegate.showError(title: "获取完成课时时发生错误", err: err.localizedDescription)
@@ -152,9 +153,11 @@ class TrainerFinishedTableViewController: DefaultTableViewController {
                                     }
                                 }
                                 self.reload()
+                                ActivityViewController.callEnd += 1
                             })
                         } else {
                             var readyToUpdateDic = doc.data()
+                            ActivityViewController.callStart += 1
                             Firestore.firestore().collection("student").document(doc.data()["StudentID"] as! String).getDocument(completion: { (snap, err) in
                                 if let err = err {
                                     AppDelegate.showError(title: "获取完成课时时发生错误", err: err.localizedDescription)
@@ -168,6 +171,7 @@ class TrainerFinishedTableViewController: DefaultTableViewController {
                                     }
                                 }
                                 self.reload()
+                                ActivityViewController.callEnd += 1
                             })
                         }
                     }
@@ -175,6 +179,7 @@ class TrainerFinishedTableViewController: DefaultTableViewController {
                 
                 self.reload()
             }
+            ActivityViewController.callEnd += 1
         }
         
     }

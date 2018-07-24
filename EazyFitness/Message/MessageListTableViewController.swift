@@ -44,6 +44,7 @@ class MessageListTableViewController: DefaultTableViewController {
     }
     
     func getLastMessageFromCollection(ref: DocumentReference, collection: CollectionReference, usergoup: userGroup) {
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap2, err2) in
             if let err = err2 {
                 AppDelegate.showError(title: "读取\(enumService.toDescription(e: usergoup))(\(ref.documentID))信息时发生错误", err: err.localizedDescription)
@@ -62,6 +63,7 @@ class MessageListTableViewController: DefaultTableViewController {
                     }
                 }
                 let thisUID = snap2!.data()?["uid"] as? String
+                ActivityViewController.callStart += 1
                 collection.document("Last").getDocument { (snap, err) in
                     if let err = err {
                         AppDelegate.showError(title: "读取\(enumService.toDescription(e: usergoup))\(name)最近消息时发生错误", err: err.localizedDescription)
@@ -70,6 +72,7 @@ class MessageListTableViewController: DefaultTableViewController {
                         if let lastMessage = snap!.data()?["Text"] as? String,
                             let ref = snap!.data()?["ref"] as? DocumentReference,
                             let time = snap!.data()?["Time"] as? Date {
+                            ActivityViewController.callStart += 1
                             ref.getDocument(completion: { (snap, _) in
                                 if let snap = snap {
                                     let read = snap.data()?["Read"] as? Bool ?? true
@@ -82,6 +85,7 @@ class MessageListTableViewController: DefaultTableViewController {
                                     }
                                     self.reload()
                                 }
+                                ActivityViewController.callEnd += 1
                             })
                         } else {
                             
@@ -94,8 +98,10 @@ class MessageListTableViewController: DefaultTableViewController {
                             self.reload()
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
@@ -112,6 +118,7 @@ class MessageListTableViewController: DefaultTableViewController {
                 
                 if let currentID = AppDelegate.AP().ds?.memberID {
                     let trainerRef = Firestore.firestore().collection("trainer").document(currentID)
+                    ActivityViewController.callStart += 1
                     trainerRef.getDocument { (snap, err) in
                         if let err = err {
                             AppDelegate.showError(title: "读取学生列表时错误，请稍后重试", err: err.localizedDescription)
@@ -122,12 +129,14 @@ class MessageListTableViewController: DefaultTableViewController {
                                 }
                             }
                         }
+                        ActivityViewController.callEnd += 1
                     }
                     self.getLastMessageFromCollection(ref: trainerRef, collection: trainerRef.collection("AdminMessage"), usergoup: .admin)
                 }
                 
             case .admin:
                 if let currentRegion = AppDelegate.AP().ds?.region {
+                    ActivityViewController.callStart += 1
                     Firestore.firestore().collection("trainer").getDocuments { (snaps, err) in
                         if let err = err {
                             AppDelegate.showError(title: "读取教练列表时错误，请稍后重试", err: err.localizedDescription)
@@ -146,8 +155,9 @@ class MessageListTableViewController: DefaultTableViewController {
                                 }
                             }
                         }
+                        ActivityViewController.callEnd += 1
                     }
-                    
+                    ActivityViewController.callStart += 1
                     Firestore.firestore().collection("student").getDocuments { (snaps, err) in
                         if let err = err {
                             AppDelegate.showError(title: "读取学生列表时错误，请稍后重试", err: err.localizedDescription)
@@ -166,6 +176,7 @@ class MessageListTableViewController: DefaultTableViewController {
                                 }
                             }
                         }
+                        ActivityViewController.callEnd += 1
                     }
                 }
             case .student:
@@ -294,6 +305,7 @@ class MessageListTableViewController: DefaultTableViewController {
                     AppDelegate.showError(title: "请稍后", err: "数据尚未完全载入")
                 }
             default:
+                ActivityViewController.callStart += 1
                 Firestore.firestore().collection("admin").document(enumService.toString(e: self.thisRegion)).getDocument { (snap, err) in
                     if let err = err {
                         AppDelegate.showError(title: "无法找到小助手ID", err: err.localizedDescription)
@@ -306,6 +318,7 @@ class MessageListTableViewController: DefaultTableViewController {
                             AppDelegate.showError(title: "无法开启对话", err: "\(enumService.toString(e: self.thisRegion))小助手尚未注册或未指定")
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 }
             }
         } else if let thisTrainer = thisUser as? EFTrainer{
@@ -321,6 +334,7 @@ class MessageListTableViewController: DefaultTableViewController {
                     }
                 }
             default:
+                ActivityViewController.callStart += 1
                 Firestore.firestore().collection("admin").document(enumService.toString(e: self.thisRegion)).getDocument { (snap, err) in
                     if let err = err {
                         AppDelegate.showError(title: "无法找到小助手ID", err: err.localizedDescription)
@@ -333,6 +347,7 @@ class MessageListTableViewController: DefaultTableViewController {
                             AppDelegate.showError(title: "无法开启对话", err: "\(enumService.toString(e: self.thisRegion))小助手尚未注册或未指定")
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 }
             }
             

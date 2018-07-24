@@ -45,9 +45,8 @@ class EFStudent: EFData {
     }
     
     override func download(){
-        AppDelegate.startLoading()
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
-            AppDelegate.endLoading()
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取学生时错误: \(err.localizedDescription)"
@@ -66,12 +65,13 @@ class EFStudent: EFData {
                     self.trainer = data["trainer"] as? String
                     self.trainerUID = data["trainerUID"] as? String
                     self.ready = true
-                    AppDelegate.reload()
                 }
             }
+            ActivityViewController.callEnd += 1
         }
+        ActivityViewController.callStart += 1
         ref.collection("course").getDocuments { (snap, err) in
-            AppDelegate.endLoading()
+
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取学生时错误: \(err.localizedDescription)"
@@ -92,11 +92,14 @@ class EFStudent: EFData {
                     }
                     self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
                 }
-                AppDelegate.reload()
+
             }
+            
+            ActivityViewController.callEnd += 1
         }
+        ActivityViewController.callStart += 1
         ref.collection("registered").getDocuments { (snap, err) in
-            AppDelegate.endLoading()
+
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取学生时错误: \(err.localizedDescription)"
@@ -110,11 +113,12 @@ class EFStudent: EFData {
                     efStudentRegistered.note = doc["note"] as? String
                     self.registeredDic[doc.documentID] = efStudentRegistered
                 }
-                AppDelegate.reload()
             }
+            ActivityViewController.callEnd += 1
         }
+        ActivityViewController.callStart += 1
         ref.collection("message").getDocuments { (snap, err) in
-            AppDelegate.endLoading()
+
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取学生时错误: \(err.localizedDescription)"
@@ -129,11 +133,12 @@ class EFStudent: EFData {
                     efStudentMessage.date = doc["date"] as! Date
                     self.messageDic[(doc["ref"] as! DocumentReference).documentID] = efStudentMessage
                 }
-                AppDelegate.reload()
             }
+            ActivityViewController.callEnd += 1
         }
+        ActivityViewController.callStart += 1
         ref.collection("personal").getDocuments { (snap, err) in
-            AppDelegate.endLoading()
+
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取学生时错误: \(err.localizedDescription)"
@@ -147,8 +152,8 @@ class EFStudent: EFData {
                     efStudentPersonal.recordValue = doc["recordValue"] as! Float
                     self.personalDic[(doc["ref"] as! DocumentReference).documentID] = efStudentPersonal
                 }
-                AppDelegate.reload()
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
@@ -172,7 +177,7 @@ class EFStudent: EFData {
                 let message = MDCSnackbarMessage()
                 message.text = "添加学生完成"
                 MDCSnackbarManager.show(message)
-                vc.endLoading()
+
             }
         }
         let newStudent = EFStudent.setStudent(with: newref)
@@ -245,13 +250,14 @@ class EFStudent: EFData {
                 requestRef: registerRef,
                 type: requestType.studentAddValue)
             if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-                vc.endLoading()
+
             }
             self.download()
         }
     }
     
     func getTrainer(){
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("trainer").getDocuments { (snaps, err) in
             if let err = err {
                 let message = MDCSnackbarMessage()
@@ -269,7 +275,7 @@ class EFStudent: EFData {
                     }
                 }
             }
-            AppDelegate.reload()
+            ActivityViewController.callEnd += 1
         }
     }
     
@@ -280,9 +286,6 @@ class EFStudent: EFData {
                     let message = MDCSnackbarMessage()
                     message.text = "发送信息失败: \(err.localizedDescription)"
                     MDCSnackbarManager.show(message)
-                }
-                if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-                    vc.endLoading()
                 }
             }
         } else {

@@ -27,9 +27,8 @@ class EFRequest: EFData {
     var disable = false
     
     override func download() {
-        AppDelegate.startLoading()
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
-            AppDelegate.endLoading()
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取申请时错误: \(err.localizedDescription)"
@@ -48,9 +47,9 @@ class EFRequest: EFData {
                     //studentAddValue:
                     self.type = enumService.toRequestType(s: data["type"] as! String)
                     self.ready = true
-                    AppDelegate.reload()
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
@@ -59,6 +58,7 @@ class EFRequest: EFData {
     }
     
     class func removeRequestForReference(ref:DocumentReference){
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("request").whereField("requestRef", isEqualTo: ref).getDocuments { (snaps, err) in
             if let err = err {
                 let message = MDCSnackbarMessage()
@@ -69,6 +69,7 @@ class EFRequest: EFData {
                     doc.reference.delete()
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
@@ -94,7 +95,7 @@ class EFRequest: EFData {
                     let message = MDCSnackbarMessage()
                     message.text = "添加申请成功，已成功添加\(enumService.toDescription(e: type))"
                     MDCSnackbarManager.show(message)
-                    vc.endLoading()
+
                 }
         }
     }
@@ -185,6 +186,7 @@ class EFRequest: EFData {
     class func getRequestForCurrentUser(type:requestType?){
 
         if let currentUserUID = Auth.auth().currentUser?.uid{
+            ActivityViewController.callStart += 1
             Firestore.firestore().collection("request").whereField("receiver", isEqualTo: currentUserUID).getDocuments { (snap, err) in
                 if let err = err {
                     let message = MDCSnackbarMessage()
@@ -201,6 +203,7 @@ class EFRequest: EFData {
                     }
                     AppDelegate.load()
                 }
+                ActivityViewController.callEnd += 1
             }
         }
     }

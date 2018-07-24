@@ -115,12 +115,14 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                 cell?.detailTextLabel?.text = thisCourse.note ?? "无备注"
             default:
                 cell?.textLabel?.text = "教练"
+                ActivityViewController.callStart += 1
                 thisCourse.trainerRef?.getDocument(completion: { (snap, err) in
                     if let snap = snap {
                         if let firstName = snap.data()?["firstName"] as? String, let lastName = snap.data()?["lastName"] as? String{
                             cell?.detailTextLabel?.text = "\(firstName) \(lastName)"
                         }
                     }
+                    ActivityViewController.callEnd += 1
                 })
                 
                 

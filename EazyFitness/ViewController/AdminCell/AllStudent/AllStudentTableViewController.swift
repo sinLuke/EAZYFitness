@@ -22,7 +22,7 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
 
     var selectedName:String = ""
     
-    var newStudentIDReady: String = ""
+    var newStudentIDReady: Int?
     var newStudentRegion: userRegion = .Mississauga
     
     private let searchController = UISearchController(searchResultsController: nil)
@@ -188,8 +188,8 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
                 dvc.navigationItem.title = "新建学生"
                 dvc.new = new
                 dvc.newStudentIDReady = newStudentIDReady
-                if let intMemberID = Int(self.newStudentIDReady){
-                    dvc.idLabel.text = String(format:"%04d", intMemberID)
+                if let intMemberID = self.newStudentIDReady{
+                    dvc.idLabelString = String(format:"%04d", intMemberID)
                 }
                 dvc.newStudentRegion = self.newStudentRegion
             } else {
@@ -203,6 +203,8 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        ActivityViewController.shared?.activityLabelString = "AllStudentTableViewController"
         self.refresh()
     }
 
@@ -218,15 +220,45 @@ class AllStudentTableViewController: DefaultTableViewController, UISearchResults
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
             let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
             
+            
+            
             if let studentID = textField?.text {
-                self.newStudentIDReady = studentID
-                
-                if let ds = AppDelegate.AP().ds{
-                    if ds.region != .All {
-                        self.newStudentRegion = ds.region
-                        self.performSegue(withIdentifier: "detail", sender: self)
-                    }
+                guard let studentIDINT = Int(studentID) else {
+                    AppDelegate.showError(title: "该编号无效", err: "输入值为：\(studentID)")
+                    return
                 }
+                if studentIDINT <= 1000 || studentIDINT > 2000{
+                    AppDelegate.showError(title: "该编号无效或不可用于学生", err: "输入值为：\(studentID)")
+                    return
+                }
+                ActivityViewController.callStart += 1
+                Firestore.firestore().collection("QRCODE").whereField("MemberID", isEqualTo: studentIDINT).getDocuments(completion: { (snap, err) in
+                    if (snap?.documents.count ?? 0) > 0 {
+                        ActivityViewController.callStart += 1
+                        Firestore.firestore().collection("student").document(studentID).getDocument(completion: { (snap, err) in
+                            if snap?.data()?["memberID"] as? String == nil {
+                                self.newStudentIDReady = studentIDINT
+                                
+                                if let ds = AppDelegate.AP().ds{
+                                    if ds.region != .All {
+                                        self.newStudentRegion = ds.region
+                                    } else {
+                                        self.newStudentRegion = .Mississauga
+                                    }
+                                    self.performSegue(withIdentifier: "detail", sender: self)
+                                } else {
+                                    AppDelegate.showError(title: "登录错误", err: "请重新登录", handler: AppDelegate.AP().signout)
+                                }
+                            } else {
+                                AppDelegate.showError(title: "该编号已被占用", err: "输入值为：\(studentID)")
+                            }
+                            ActivityViewController.callEnd += 1
+                        })
+                    } else {
+                        AppDelegate.showError(title: "该编号无效或不可用于学生", err: "输入值为：\(studentID)")
+                    }
+                    ActivityViewController.callEnd += 1
+                })
             }
         }))
         self.present(alert, animated: true, completion: nil)

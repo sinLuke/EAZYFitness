@@ -9,8 +9,9 @@
 import UIKit
 import Firebase
 
-class AllStudentNewPurchaseViewController: DefaultViewController {
+class AllStudentNewPurchaseViewController: DefaultViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var courseLabel: UILabel!
     @IBOutlet weak var courseTime: UITextField!
     var _gesture:UIGestureRecognizer!
     @IBOutlet weak var plusOrMinus: UISegmentedControl!
@@ -21,6 +22,8 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
         super.viewDidLoad()
         self._gesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         self.title = "为\(thisStudent.name)加课"
+        
+        courseTime.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         // Do any additional setup after loading the view.
     }
 
@@ -55,6 +58,30 @@ class AllStudentNewPurchaseViewController: DefaultViewController {
         }
     }
     
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        if let stringValue = courseTime.text, let intValue = Int(stringValue){
+            if self.plusOrMinus.selectedSegmentIndex == 0 {
+                courseLabel.text = "（记录为：\(prepareCourseNumber(intValue))课时）"
+            } else {
+                courseLabel.text = "（记录为：减去\(prepareCourseNumber(intValue))课时）"
+            }
+        } else {
+            courseLabel.text = "（记录为：0课时）"
+        }
+    }
+
+    @IBAction func textFieldValueChanged(_ sender: Any) {
+        
+    }
+    
+    func prepareCourseNumber(_ int:Int) -> String{
+        let float = Float(int)/2.0
+        if int%2 == 0{
+            return String(format: "%.0f", float)
+        } else {
+            return String(float)
+        }
+    }
     
     /*
     // MARK: - Navigation

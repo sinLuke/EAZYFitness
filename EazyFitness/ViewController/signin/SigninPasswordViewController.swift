@@ -68,7 +68,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
     func createUserComplete(user:User?, error:Error?)->(){
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
-            self.endLoading()
+
         } else {
             if let cuser = Auth.auth().currentUser{
                 if let memberID = self.memberID{
@@ -88,7 +88,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
                     AppDelegate.AP().applicationDidStart()
                 } else {
                     AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: "无法确认卡号")
-                    self.endLoading()
+
                 }
             }
         }
@@ -103,7 +103,7 @@ class SigninPasswordViewController: DefaultViewController, UITextFieldDelegate {
                     self.password2Field.text = ""
                 } else {
                     if let password = passwordField.text{
-                        self.startLoading()
+
                         Auth.auth().createUser(withEmail: userEmail, password: password, completion: self.createUserComplete)
                     }
                 }

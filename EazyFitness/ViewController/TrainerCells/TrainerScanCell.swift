@@ -37,22 +37,22 @@ class TrainerScanCell: MDCCardCollectionCell {
         let alert = UIAlertController(title: "记录学生没到", message: "请选择该学生未到原因", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "生病", style: .default, handler: { (action) in
             self.thisStudentCourse.status = .ill
-            self.vc.endLoading()
+
             self.thisStudentCourse.upload()
         }))
         alert.addAction(UIAlertAction(title: "没来", style: .default, handler: { (action) in
             self.thisStudentCourse.status = .noStudent
-            self.vc.endLoading()
+
             self.thisStudentCourse.upload()
         }))
         alert.addAction(UIAlertAction(title: "没带卡", style: .default, handler: { (action) in
             self.thisStudentCourse.status = .noCard
-            self.vc.endLoading()
+
             self.thisStudentCourse.upload()
         }))
         alert.addAction(UIAlertAction(title: "其他原因", style: .default, handler: { (action) in
             self.thisStudentCourse.status = .other
-            self.vc.endLoading()
+
             let alert = UIAlertController(title: "记录学生没到", message: "请输入该学生未到原因", preferredStyle: .alert)
             alert.addTextField { (textField) in
                 textField.placeholder = "请在此处填写备注……"
@@ -67,7 +67,7 @@ class TrainerScanCell: MDCCardCollectionCell {
             self.vc.present(alert, animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
-            self.vc.endLoading()
+
         }))
         vc.present(alert, animated: true, completion: nil)
     }

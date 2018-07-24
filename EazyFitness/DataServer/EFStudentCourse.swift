@@ -16,9 +16,8 @@ class EFStudentCourse: EFData {
     var courseRef:DocumentReference!
     var parent:String!
     override func download() {
-        AppDelegate.startLoading()
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
-            AppDelegate.endLoading()
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取学生课程时错误: \(err.localizedDescription)"
@@ -30,8 +29,8 @@ class EFStudentCourse: EFData {
                     self.courseRef = data["ref"] as? DocumentReference
                     self.ready = true
                 }
-                AppDelegate.reload()
             }
+            ActivityViewController.callEnd += 1
         }
     }
         

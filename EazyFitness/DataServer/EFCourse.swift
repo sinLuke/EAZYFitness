@@ -56,6 +56,7 @@ class EFCourse: EFData {
     
     func getTraineesNames() {
         for thisref in traineeRef{
+            ActivityViewController.callStart += 1
             thisref.getDocument { (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "获取课程中学生名字时失败", err: err.localizedDescription)
@@ -64,7 +65,7 @@ class EFCourse: EFData {
                         self.traineesNamesList[thisref.documentID] = "\(fname) \(lname)"
                     }
                 }
-                AppDelegate.reload()
+                ActivityViewController.callEnd += 1
             }
         }
     }
@@ -107,6 +108,7 @@ class EFCourse: EFData {
     
     func getTraineesStatus(){
         for thisref in traineeRef{
+            ActivityViewController.callStart += 1
             thisref.collection("course").document(ref.documentID) .getDocument { (snap, err) in
                 if let err = err {
                     AppDelegate.showError(title: "获取课程中学生名字时失败", err: err.localizedDescription)
@@ -115,7 +117,7 @@ class EFCourse: EFData {
                         self.traineesStatusList[thisref.documentID] = enumService.toCourseStatus(s: status)
                     }
                 }
-                AppDelegate.reload()
+                ActivityViewController.callEnd += 1
             }
         }
     }
@@ -145,6 +147,7 @@ class EFCourse: EFData {
                 type = courseType.multiple
             }
         }
+        ActivityViewController.callStart += 1
         courseRef.setData([
             "type" : enumService.toString(e: type),
             "amount": amount,
@@ -156,16 +159,13 @@ class EFCourse: EFData {
             if let err = err{
                 AppDelegate.showError(title: "添加课程失败", err: err.localizedDescription)
             }
-            if let vc = AppDelegate.getCurrentVC() as? refreshableVC{
-                vc.endLoading()
-            }
+            ActivityViewController.callEnd += 1
         }
     }
     
     override func download(){
-        AppDelegate.startLoading()
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
-            AppDelegate.endLoading()
             if let err = err {
                 AppDelegate.showError(title: "课程下载时错误", err: err.localizedDescription)
             } else {
@@ -185,6 +185,7 @@ class EFCourse: EFData {
                     
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     override func upload(handler: (()->())? = nil){

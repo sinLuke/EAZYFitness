@@ -28,17 +28,21 @@ class GeneralDataViewController: DefaultViewController, UITableViewDelegate, UIT
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GeneralDataViewControllerTableViewCell") as! GeneralDataViewControllerTableViewCell
-        let dataItem = AdminDataModel.DataDic.values.sorted { (a, b) -> Bool in
-            return a.time > b.time
-        }[indexPath.row]
-        cell.TimeLabel.text = dataItem.time.descriptDate()
-        cell.TitleLabel.text = "课时：\(dataItem.value) \(dataItem.title)"
-        if AdminDataModel.generalDataTypeOfData == .coursePurchase {
-            cell.RightUpLabel.text = enumService.toDescription(e: dataItem.region)
+        if indexPath.row >= AdminDataModel.DataDic.count{
+            self.reload()
         } else {
-            cell.RightUpLabel.text = "教练：\(dataItem.trainerName)"
+            let dataItem = AdminDataModel.DataDic.values.sorted { (a, b) -> Bool in
+                return a.time > b.time
+                }[indexPath.row]
+            cell.TimeLabel.text = dataItem.time.descriptDate()
+            cell.TitleLabel.text = "课时：\(dataItem.value) \(dataItem.title)"
+            if AdminDataModel.generalDataTypeOfData == .coursePurchase {
+                cell.RightUpLabel.text = enumService.toDescription(e: dataItem.region)
+            } else {
+                cell.RightUpLabel.text = "教练：\(dataItem.trainerName)"
+            }
+            cell.RightDownLabel.text = "学生：\(dataItem.studentName)"
         }
-        cell.RightDownLabel.text = "学生：\(dataItem.studentName)"
         return cell
     }
     

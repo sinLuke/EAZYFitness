@@ -47,7 +47,6 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     override func refresh() {
         
         AppDelegate.AP().startListener()
-        
         colRef.order(by: "Time").getDocuments { (snaps, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取信息时发生错误", err: err.localizedDescription)

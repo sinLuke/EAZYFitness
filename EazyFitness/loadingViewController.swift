@@ -14,7 +14,6 @@ class loadingViewController: DefaultViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.startLoading()
         // Do any additional setup after loading the view.
     }
 

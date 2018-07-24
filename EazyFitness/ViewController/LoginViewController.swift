@@ -56,7 +56,8 @@ class LoginViewController: DefaultViewController, UITextFieldDelegate {
             if isValidEmail(testStr: self.emailField.text!) == false{
                 AppDelegate.showError(title: "邮箱错误", err: "这不是有效的邮箱")
             } else {
-                self.startLoading()
+
+                ActivityViewController.shared?.activityLabelString = "LoginViewController"
                 if singleUse {
                     self.performSegue(withIdentifier: "loginPassword", sender: self)
                 } else {

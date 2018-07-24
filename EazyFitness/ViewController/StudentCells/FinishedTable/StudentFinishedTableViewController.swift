@@ -18,6 +18,7 @@ class StudentFinishedTableViewController: DefaultTableViewController {
     
     override func refresh() {
         CourseList = []
+        ActivityViewController.callStart += 1
         studentCourseRef.getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
@@ -35,10 +36,12 @@ class StudentFinishedTableViewController: DefaultTableViewController {
                 }
                 self.reload()
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
     func getCourseInfo(ref:DocumentReference, classObj:ClassObj){
+        ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "读取课程时发生错误", err: err.localizedDescription)
@@ -53,10 +56,12 @@ class StudentFinishedTableViewController: DefaultTableViewController {
                     AppDelegate.showError(title: "未知错误", err: "读取课程信息时发生错误")
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     
     func getListOfStudentInCourse(ref:CollectionReference, classObj:ClassObj){
+        ActivityViewController.callStart += 1
         ref.getDocuments { (snap, err) in
             if let err = err{
                 AppDelegate.showError(title: "获得上课学员时发生错误", err: err.localizedDescription)
@@ -69,6 +74,7 @@ class StudentFinishedTableViewController: DefaultTableViewController {
                     }
                     if let studentRef = doc["ref"] as? DocumentReference{
                         classObj.student.append(studentRef)
+                        ActivityViewController.callStart += 1
                         studentRef.getDocument(completion: { (snap, err) in
                             if let err = err{
                                 AppDelegate.showError(title: "读取学员信息时发生错误", err: err.localizedDescription)
@@ -79,12 +85,14 @@ class StudentFinishedTableViewController: DefaultTableViewController {
                                     self.reload()
                                 }
                             }
+                            ActivityViewController.callEnd += 1
                         })
                     } else {
                         AppDelegate.showError(title: "未知错误", err: "读取学员信息时发生错误")
                     }
                 }
             }
+            ActivityViewController.callEnd += 1
         }
     }
     

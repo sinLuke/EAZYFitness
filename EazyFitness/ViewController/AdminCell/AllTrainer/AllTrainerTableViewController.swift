@@ -22,6 +22,9 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
 
     var new = false
     
+    var newTrainerIDReady = ""
+    var newStudentRegion:userRegion = .Mississauga
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     override func refresh() {
@@ -200,8 +203,32 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     
     
     @IBAction func addTrainerBtn(_ sender: Any) {
-        new = false
-        self.performSegue(withIdentifier: "detail", sender: self)
+        new = true
+        
+        let alert = UIAlertController(title: "添加教练", message: "请输入卡号或编号", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "0000"
+        }
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+            let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            
+            if let studentID = textField?.text {
+                self.newTrainerIDReady = studentID
+                
+                if let ds = AppDelegate.AP().ds{
+                    if ds.region != .All {
+                        self.newStudentRegion = ds.region
+                        
+                    } else {
+                        self.newStudentRegion = .Mississauga
+                    }
+                    self.performSegue(withIdentifier: "detail", sender: self)
+                }
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     

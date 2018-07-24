@@ -57,12 +57,13 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     }
     
     func copyCourseFromThisWeel(ref:[DocumentReference]){
-        
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("course").whereField("date", isGreaterThan: Date().startOfWeek()).getDocuments { (snap, err) in
             if let err = err {
                 AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
             } else {
                 for doc in snap!.documents{
+                    ActivityViewController.callStart += 1
                     doc.reference.collection("trainee").getDocuments(completion: { (snap2, err2) in
                         if let err = err2 {
                             AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
@@ -100,17 +101,21 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
                                 }
                             }
                         }
+                        ActivityViewController.callEnd += 1
                     })
                 }
             }
+            ActivityViewController.callEnd += 1
         }
 
         let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: Date())
+        ActivityViewController.callStart += 1
         Firestore.firestore().collection("course").whereField("Date", isLessThan: nextWeek!.endOfWeek()).whereField("Date", isGreaterThan: nextWeek!.startOfWeek()).getDocuments { (snap, err) in
             if let err = err {
                 AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
             } else {
                 for doc in snap!.documents{
+                    ActivityViewController.callStart += 1
                     doc.reference.collection("trainee").getDocuments(completion: { (snap2, err2) in
                         if let err = err2 {
                             AppDelegate.showError(title: "获取课程时发生错误", err: err.localizedDescription, of: self)
@@ -140,9 +145,11 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
                                 }
                             }
                         }
+                        ActivityViewController.callEnd += 1
                     })
                 }
             }
+            ActivityViewController.callEnd += 1
         }
         
     }
@@ -258,10 +265,10 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
         if maxHeight == 0{
             noCourseLabel.isHidden = false
             self.view.bringSubview(toFront: noCourseLabel)
-            self.endLoading()
+
         } else {
             noCourseLabel.isHidden = true
-            self.endLoading()
+
             self.timetableView.contentSize = CGSize(width: self.view.frame.width, height: maxHeight)
             self.timetable?.frame = CGRect(x: (self.timetable?.frame.minX)!, y: (self.timetable?.frame.minY)!, width: self.view.frame.width, height: maxHeight)
         }

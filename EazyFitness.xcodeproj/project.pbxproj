@@ -14,6 +14,7 @@
 		A302A83E2096E32D0055C15D /* TimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A302A83D2096E32D0055C15D /* TimeTableView.swift */; };
 		A303D8BD20AE818200623218 /* CourseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303D8BC20AE818200623218 /* CourseTableViewController.swift */; };
 		A303D8BF20AE819300623218 /* CourseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303D8BE20AE819300623218 /* CourseTableViewCell.swift */; };
+		A305E28A2106BBB60072C3AB /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A305E2892106BBB60072C3AB /* ActivityViewController.swift */; };
 		A3077967205B750800512378 /* QRCodeReaderViewControllerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */; };
 		A3077968205B750800512378 /* SwitchCameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795E205B750700512378 /* SwitchCameraButton.swift */; };
 		A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A307795F205B750700512378 /* QRCodeReaderViewController.swift */; };
@@ -174,6 +175,7 @@
 		A302A83D2096E32D0055C15D /* TimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableView.swift; sourceTree = "<group>"; };
 		A303D8BC20AE818200623218 /* CourseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseTableViewController.swift; sourceTree = "<group>"; };
 		A303D8BE20AE819300623218 /* CourseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseTableViewCell.swift; sourceTree = "<group>"; };
+		A305E2892106BBB60072C3AB /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		A307795D205B750700512378 /* QRCodeReaderViewControllerBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewControllerBuilder.swift; sourceTree = "<group>"; };
 		A307795E205B750700512378 /* SwitchCameraButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCameraButton.swift; sourceTree = "<group>"; };
 		A307795F205B750700512378 /* QRCodeReaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeReaderViewController.swift; sourceTree = "<group>"; };
@@ -490,6 +492,7 @@
 				A38DEB6620A67A06002350FB /* ClassObj.swift */,
 				A345101520B2B526007E1267 /* loadingViewController.swift */,
 				A364964C20EE9DFA00A2FFEF /* CourseInfo */,
+				A305E2892106BBB60072C3AB /* ActivityViewController.swift */,
 			);
 			path = EazyFitness;
 			sourceTree = "<group>";
@@ -1058,6 +1061,7 @@
 				A39FF64A20ACDCDF00B54353 /* EFTrainer.swift in Sources */,
 				A3F3E653209EE88B0054AEF0 /* AllTrainerStudentTableViewController.swift in Sources */,
 				A31E2FE6209EC7AD00677D86 /* AdminStudentViewCell.swift in Sources */,
+				A305E28A2106BBB60072C3AB /* ActivityViewController.swift in Sources */,
 				A307796C205B750800512378 /* ToggleTorchButton.swift in Sources */,
 				A34923642090E4F8004C5455 /* SigninViewController.swift in Sources */,
 				A3281BFD205A3372001965F7 /* Alphanumeric.swift in Sources */,

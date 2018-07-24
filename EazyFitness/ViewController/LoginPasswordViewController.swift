@@ -73,21 +73,21 @@ class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
     }
     @IBAction func login(_ sender: Any) {
         if let password = self.passwordField.text{
-            startLoading()
+
             if self.singleUse {
                 self.callBackVC.callBack(authCredential: EmailAuthProvider.credential(withEmail: self.email, password: password))
                 self.dismiss(animated: true, completion: nil)
             } else {
+                ActivityViewController.callStart += 1
                 Auth.auth().signIn(withEmail: self.email, password: password, completion: { (user, error) in
                     if let error = error{
-                        self.endLoading()
                         AppDelegate.showError(title: "登陆错误", err: error.localizedDescription)
                     } else {
                         let uuid = UIDevice.current.identifierForVendor!.uuidString
                         Firestore.firestore().collection("users").document(user!.uid).updateData(["loginDevice" : uuid])
-                        self.endLoading()
-                        AppDelegate.AP().applicationDidStart()
                     }
+                    AppDelegate.AP().dataServerDidFinishInit()
+                    ActivityViewController.callEnd += 1
                 })
             }
         } else {

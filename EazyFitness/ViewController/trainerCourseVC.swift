@@ -263,12 +263,13 @@ class trainerCourseVC: DefaultCollectionViewController, UICollectionViewDelegate
         
         let charset = CharacterSet(charactersIn: ".#$[]")
         if result.value.rangeOfCharacter(from: charset) != nil {
-            self.endLoading()
+
             AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0101#)", of: self)
         } else {
+            ActivityViewController.callStart += 1
             Firestore.firestore().collection("QRCODE").document(result.value).getDocument { (snap, err) in
                 if let err = err{
-                    self.endLoading()
+
                     AppDelegate.showError(title: "未知错误", err: err.localizedDescription, of: self)
                 } else {
                     if let doc = snap?.data(){
@@ -299,11 +300,12 @@ class trainerCourseVC: DefaultCollectionViewController, UICollectionViewDelegate
                             }
                             
                         } else {
-                            self.endLoading()
+
                             AppDelegate.showError(title: "二维码无效", err: "请对准 EAZY Fitness® 会员卡背面的二维码重试(#0103#)", of: self)
                         }
                     }
                 }
+                ActivityViewController.callEnd += 1
             }
         }
     }
