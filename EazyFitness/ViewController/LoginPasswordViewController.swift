@@ -10,6 +10,9 @@ import UIKit
 import FirebaseAuth
 import Firebase
 import MaterialComponents
+import FirebaseFirestore
+
+
 class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
     var singleUse:Bool = false
     var callBackVC:credentialReciever!
@@ -84,7 +87,11 @@ class LoginPasswordViewController: DefaultViewController, UITextFieldDelegate {
                         AppDelegate.showError(title: "登陆错误", err: error.localizedDescription)
                     } else {
                         let uuid = UIDevice.current.identifierForVendor!.uuidString
-                        Firestore.firestore().collection("users").document(user!.uid).updateData(["loginDevice" : uuid])
+                        if let user = user {
+                            Firestore.firestore().collection("users").document(user.user.uid).updateData(["loginDevice" : uuid])
+                        } else {
+                            AppDelegate.showError(title: "登陆设备时发生错误", err: "建议重新登录用户")
+                        }
                     }
                     AppDelegate.AP().dataServerDidFinishInit()
                     ActivityViewController.callEnd += 1

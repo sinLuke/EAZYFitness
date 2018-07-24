@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
+import FirebaseAuth
 import MaterialComponents
 class specialUserSigninViewController: DefaultViewController, UITextFieldDelegate{
     
@@ -96,7 +98,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
         return emailTest.evaluate(with: testStr)
     }
     
-    func createUserComplete(user:User?, error:Error?)->(){
+    func createUserComplete(user:AuthDataResult?, error:Error?)->(){
         if let error = error {
             AppDelegate.showError(title: "创建用户时出现问题(#0103#)", err: error.localizedDescription)
 

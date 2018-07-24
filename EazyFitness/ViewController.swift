@@ -11,8 +11,7 @@ import AVFoundation
 import FirebaseDatabase
 import GoogleSignIn
 
-import FirebaseAuthUI
-import FirebaseGoogleAuthUI
+import FirebaseUI
 
 class ViewController: DefaultViewController {
     var ref: DatabaseReference!
