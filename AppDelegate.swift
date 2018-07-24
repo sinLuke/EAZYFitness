@@ -43,7 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
     
     static var cvc: UIViewController? {
         didSet{
-            ActivityViewController.startLoading()
+            if ActivityViewController.started {
+                ActivityViewController.startLoading()
+            }
         }
     }
     
