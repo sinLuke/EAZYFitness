@@ -510,6 +510,7 @@ PODS:
   - TwitterCore (3.1.0)
   - TwitterKit (3.3.0):
     - TwitterCore (>= 3.1.0)
+  - UICircularProgressRing (3.0.0)
 
 DEPENDENCIES:
   - Firebase/Core
@@ -523,6 +524,7 @@ DEPENDENCIES:
   - FirebaseUI/Phone
   - FirebaseUI/Twitter
   - MaterialComponents
+  - UICircularProgressRing
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -560,6 +562,7 @@ SPEC REPOS:
     - SDWebImage
     - TwitterCore
     - TwitterKit
+    - UICircularProgressRing
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
@@ -596,7 +599,8 @@ SPEC CHECKSUMS:
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
   TwitterCore: 644d59e75abccb26cf0a9050d2c4dea0e5412241
   TwitterKit: a2e60ddcedbf54091eac6f27685ca7a87681e1d7
+  UICircularProgressRing: 3b472692ffca84060fd444ea5c0b387161067c54
 
-PODFILE CHECKSUM: 3d96067b5c26e44acf4c7feb9e39c0b7b880a901
+PODFILE CHECKSUM: a0b11ada2ada26f347a73c3ef43e8daf5b591ece
 
 COCOAPODS: 1.5.3

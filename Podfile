@@ -18,6 +18,9 @@ pod 'FirebaseUI/Facebook'
 pod 'FirebaseUI/Twitter'
 pod 'FirebaseUI/Phone'
 
+# https://github.com/luispadron/UICircularProgressRing
+pod 'UICircularProgressRing'
+
 pod 'MaterialComponents'
 
   target 'EazyFitnessTests' do
