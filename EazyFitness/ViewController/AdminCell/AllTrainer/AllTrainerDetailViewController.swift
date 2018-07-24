@@ -189,16 +189,19 @@ class AllTrainerDetailViewCell: UICollectionViewCell {
     
     func uploadData(){
         if let thisTrainer = vc.thisTrainer{
+            if self.region.selectedSegmentIndex < 0 || self.region.selectedSegmentIndex >= enumService.Region.count {
+                self.region.selectedSegmentIndex = 0
+            }
             thisTrainer.firstName = self.fname.text!
             thisTrainer.lastName = self.lname.text!
             thisTrainer.goal = Int(goalField.text!)!
             thisTrainer.registered = enumService.toUserStatus(i: self.registered.selectedSegmentIndex)
             thisTrainer.region = enumService.Region[self.region.selectedSegmentIndex]
+            thisTrainer.ready = true
             vc.new = false
             vc.title = thisTrainer.name
+            self.reload()
         }
-        
-        self.reload()
     }
     
     func refresh() {
@@ -206,14 +209,12 @@ class AllTrainerDetailViewCell: UICollectionViewCell {
         for i in 0...enumService.RegionName.count-1{
             self.region.insertSegment(withTitle: enumService.RegionName[i], at: i, animated: false)
         }
-        
-        
         reload()
     }
     
     func reload() {
-        
         if let vc = vc{
+            self.region.selectedSegmentIndex = 0
             idLabel.text = vc.idLabelString ?? ""
             if let thisTrainer = vc.thisTrainer{
                 if let intMemberID = Int(thisTrainer.memberID){

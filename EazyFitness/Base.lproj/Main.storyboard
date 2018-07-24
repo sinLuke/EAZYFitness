@@ -1670,10 +1670,10 @@
                                                 <real key="value" value="0.0"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="startAngle">
-                                                <real key="value" value="90"/>
+                                                <real key="value" value="-90"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="endAngle">
-                                                <real key="value" value="90"/>
+                                                <real key="value" value="-90"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="outerRingWidth">
                                                 <real key="value" value="0.0"/>

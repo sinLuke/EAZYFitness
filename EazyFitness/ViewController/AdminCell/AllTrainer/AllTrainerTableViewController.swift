@@ -186,7 +186,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
         if let trainer = DataServer.trainerDic[memberID]{
             self.selected = trainer
             self.selectedName = trainer.name
-            new = true
+            new = false
             self.performSegue(withIdentifier: "detail", sender: self)
         } else {
             AppDelegate.showError(title: "未知错误", err: "无法读取\(memberID)")
@@ -220,7 +220,7 @@ class AllTrainerTableViewController: DefaultTableViewController, UISearchResults
     @IBAction func addTrainerBtn(_ sender: Any) {
         new = true
         
-        let alert = UIAlertController(title: "添加学生", message: "请输入卡号或编号", preferredStyle: .alert)
+        let alert = UIAlertController(title: "添加教练", message: "请输入卡号或编号", preferredStyle: .alert)
         
         alert.addTextField { (textField) in
             textField.placeholder = "0000"
