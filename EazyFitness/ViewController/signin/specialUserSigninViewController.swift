@@ -43,7 +43,7 @@ class specialUserSigninViewController: DefaultViewController, UITextFieldDelegat
             self.avaliable = true
             if let snap = snap {
                 if let data = snap.data(){
-                    if data["uid"] != nil {
+                    if data["uid"] != nil && self.usergroup == .admin{
                         self.avaliable = false
                         AppDelegate.showError(title: "该账号已存在", err: "无法注册", handler: self.backFunc)
                     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 struct MessageListItem {
     var name: String
@@ -292,17 +293,15 @@ class MessageListTableViewController: DefaultTableViewController {
             
             switch currentKey{
             case .trainer:
-                if let theTrainerExist = theStudent.trainer{
-                    self.prepareRef = Firestore.firestore().collection("student").document(AppDelegate.AP().ds!.memberID).collection("Message")
-                    self.receiverUID = theStudent.trainerUID
-                    if self.receiverUID == nil {
-                        AppDelegate.showError(title: "无法开启对话", err: "教练尚未注册或未指定")
-                    } else {
-                        performSegue(withIdentifier: "message", sender: self)
-                    }
-                    
+                if let messageItem = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageData {
+                    self.prepareRef = messageItem.ref
+                    self.receiverUID = messageItem.uid
+                }
+                
+                if self.receiverUID == nil || self.prepareRef == nil{
+                    AppDelegate.showError(title: "无法开启对话", err: "该教练尚未注册")
                 } else {
-                    AppDelegate.showError(title: "请稍后", err: "数据尚未完全载入")
+                    performSegue(withIdentifier: "message", sender: self)
                 }
             default:
                 ActivityViewController.callStart += 1
@@ -325,13 +324,15 @@ class MessageListTableViewController: DefaultTableViewController {
             let currentKey = Array(self.messageList.keys)[indexPath.section]
             switch currentKey{
             case .student:
-                if thisTrainer.trainee.count != 0{
-                    let studentRef = thisTrainer.trainee[indexPath.row]
-                    if let student = DataServer.studentDic[studentRef.documentID]{
-                        self.prepareRef = Firestore.firestore().collection("student").document(student.memberID).collection("Message")
-                        self.receiverUID = student.uid
-                        performSegue(withIdentifier: "message", sender: self)
-                    }
+                if let messageItem = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageData {
+                    self.prepareRef = messageItem.ref
+                    self.receiverUID = messageItem.uid
+                }
+                
+                if self.receiverUID == nil || self.prepareRef == nil{
+                    AppDelegate.showError(title: "无法开启对话", err: "该教练尚未注册")
+                } else {
+                    performSegue(withIdentifier: "message", sender: self)
                 }
             default:
                 ActivityViewController.callStart += 1
@@ -352,7 +353,6 @@ class MessageListTableViewController: DefaultTableViewController {
             }
             
         } else if AppDelegate.AP().ds?.usergroup == .admin {
-            let currentKey = Array(self.messageList.keys)[indexPath.section]
             if let messageItem = (tableView.cellForRow(at: indexPath) as! MessageListTableViewCell).messageData {
                 self.prepareRef = messageItem.ref
                 self.receiverUID = messageItem.uid
