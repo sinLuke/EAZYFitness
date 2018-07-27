@@ -1,34 +1,18 @@
 //
-//  TrainerTabBarController.swift
+//  TabbarController.swift
 //  EazyFitness
 //
-//  Created by Luke on 2018/4/25.
-//  Copyright © 2018年 luke. All rights reserved.
+//  Created by Luke on 2018-07-27.
+//  Copyright © 2018 luke. All rights reserved.
 //
 
 import UIKit
 
-class TrainerTabBarController: UITabBarController, UITabBarControllerDelegate {
-    
-    var thisTrainer:EFTrainer!
-    
-    var lastVC: UIViewController?
-    
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        if let vc = self.selectedViewController as? WelcomeViewController {
-            if vc == lastVC {
-                vc.home()
-            } else {
-            }
-            
-        } else {
-        }
-        lastVC = viewController
-    }
-    
+class TabbarController: UITabBarController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.delegate = self
+
         // Do any additional setup after loading the view.
     }
 

@@ -8,13 +8,27 @@
 
 import UIKit
 
-class StudentTabBarController: UITabBarController {
+class StudentTabBarController: UITabBarController, UITabBarControllerDelegate {
 
     var thisStudent:EFStudent!
     
+    var lastVC: UIViewController?
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if let vc = self.selectedViewController as? WelcomeViewController {
+            if vc == lastVC {
+                vc.home()
+            } else {
+            }
+            
+        } else {
+        }
+        lastVC = viewController
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.delegate = self
         // Do any additional setup after loading the view.
     }
 

@@ -14,16 +14,23 @@ class WelcomeViewController: DefaultViewController, UIWebViewDelegate {
 
     @IBOutlet weak var homepage: UIWebView!
     
-    var ref:DatabaseReference!
+    var myRequestedUrl: URL?
+    var myLoadedUrl: URL?
+    
+    var urlDidLoad: URL?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        let url:URL = URL(string:"https://www.eazy.fitness/")!
+        homepage.delegate = self
+        self.home()
+        // Do any additional setup after loading the view.
+    }
+    
+    func home(){
+        let url:URL = URL(string:"https://yinluke9.wixsite.com/eazyfitnessapp")!
         let request:URLRequest = URLRequest(url:url)
         homepage.loadRequest(request)
         homepage.scalesPageToFit = true
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,14 +38,39 @@ class WelcomeViewController: DefaultViewController, UIWebViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        AppDelegate.showError(title: "网页加载时出现问题", err: error.localizedDescription)
+    }
+    
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if request.url?.absoluteURL == URL(string:"https://yinluke9.wixsite.com/eazyfitnessapp")!.absoluteURL {
+            return true
+        } else {
+            urlDidLoad = request.url?.absoluteURL
+            self.performSegue(withIdentifier: "show", sender: self)
+            return false
+        }
+    }
+    
     func webViewDidStartLoad(_ webView: UIWebView) {
         //ActivityViewController.startLoading()
+        myRequestedUrl = webView.request?.mainDocumentURL
         
-        self.view.isUserInteractionEnabled = true
+        print("webViewDidStartLoad: \(myRequestedUrl)")
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         //ActivityViewController.endLoading()
+        myLoadedUrl = webView.request?.mainDocumentURL
+        print("webViewDidFinishLoad: \(myLoadedUrl)")
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? UINavigationController {
+            if let dvc = vc.topViewController as? WelcomeWebViewController {
+                dvc.url = self.urlDidLoad?.absoluteURL
+            }
+        }
     }
     
     /*
