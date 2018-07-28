@@ -65,6 +65,7 @@ class ActivityViewController: UIViewController {
     
     @IBAction func stopLoadingBtn(_ sender: Any) {
         ActivityViewController.started = false
+        self.dismiss(animated: false, completion: nil)
     }
     
     class func updateLabel(){
@@ -113,6 +114,9 @@ class ActivityViewController: UIViewController {
     
     class func endLoading(){
         ActivityViewController.shared?.dismiss(animated: false, completion: nil)
+        if let vc = AppDelegate.getTopViewController() as? ActivityViewController{
+            vc.dismiss(animated: false, completion: nil)
+        }
         AppDelegate.reload()
     }
 

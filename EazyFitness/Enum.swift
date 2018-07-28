@@ -14,6 +14,7 @@ enum courseStatus {
     case noCard
     case noCardFirst //第一次不管，之后有惩罚
     case other
+    case deleted
 }
 
 enum multiCourseStatus {
@@ -28,6 +29,8 @@ enum multiCourseStatus {
     case special
     case someApproved
     case uncompleted
+    
+    case deleted
 }
 
 enum userRegion{
@@ -97,6 +100,8 @@ class enumService: NSObject {
     }
     class func toString(e:courseStatus) -> String{
         switch e {
+        case .deleted:
+            return "deleted"
         case .decline:
             return "decline"
         case .waitForTrainer:
@@ -165,6 +170,8 @@ class enumService: NSObject {
     
     class func toDescription(e:courseStatus) -> String{
         switch e {
+        case .deleted:
+            return "课程已删除"
         case .decline:
             return "学生已拒绝"
         case .waitForStudent:
@@ -194,6 +201,8 @@ class enumService: NSObject {
     
     class func toDescription(e:multiCourseStatus) -> String{
         switch e {
+        case .deleted:
+            return "课程已删除"
         case .decline:
             return "学生已拒绝"
         case .waitForStudent:
@@ -219,6 +228,8 @@ class enumService: NSObject {
     
     class func toColor(e:courseStatus) -> HexColor{
         switch e {
+        case .deleted:
+            return HexColor.lightGray as! HexColor
         case .decline:
             return HexColor.Red
         case .waitForStudent:
@@ -298,6 +309,8 @@ class enumService: NSObject {
         
         for e in list{
             switch e {
+            case .deleted:
+                return .deleted
             case .waitForStudent:
                 someWaitForStudent = true
                 allApproved = false
@@ -390,6 +403,8 @@ class enumService: NSObject {
     
     class func toColor(d:multiCourseStatus) -> HexColor{
         switch d {
+        case .deleted:
+            return HexColor.lightGray as! HexColor
         case .decline:
             return HexColor.Red
         case .waitForStudent:
@@ -576,6 +591,8 @@ class enumService: NSObject {
     
     class func toCourseStatus(s:String) -> courseStatus{
         switch s {
+        case "deleted":
+            return courseStatus.deleted
         case "decline":
             return courseStatus.decline
         case "waitForTrainer":

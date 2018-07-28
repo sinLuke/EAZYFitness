@@ -504,6 +504,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         }
     }
     
+    class func getTopViewController () -> UIViewController? {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            return topController
+        } else {
+            return nil
+        }
+    }
+    
     class func refHandler(dic:[String:Any]) -> DocumentReference {
         return (dic["ref"]! as! DocumentReference)
     }

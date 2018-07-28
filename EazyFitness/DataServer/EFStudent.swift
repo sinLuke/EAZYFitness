@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
+import FirebaseAuth
 import MaterialComponents
 
 class EFStudent: EFData {
@@ -78,19 +80,23 @@ class EFStudent: EFData {
                 MDCSnackbarManager.show(message)
             } else {
                 for doc in snap!.documents{
-                    let efStudentCourse = EFStudentCourse(with: doc.reference)
-                    efStudentCourse.parent = self.ref.documentID
-                    efStudentCourse.courseRef = doc["ref"] as! DocumentReference
-                    efStudentCourse.note = doc["note"] as! String
-                    efStudentCourse.status = enumService.toCourseStatus(s: doc["status"] as! String)
-                    if DataServer.courseDic[efStudentCourse.courseRef.documentID] == nil{
-                        let _course = EFCourse(with: efStudentCourse.courseRef)
-                        _course.download()
-                        DataServer.courseDic[efStudentCourse.courseRef.documentID] = _course
-                    } else {
-                        DataServer.courseDic[efStudentCourse.courseRef.documentID]!.download()
+                    if let status = doc["status"] as? String, status != enumService.toString(e: .deleted)
+                    {
+                        let efStudentCourse = EFStudentCourse(with: doc.reference)
+                        efStudentCourse.parent = self.ref.documentID
+                        efStudentCourse.courseRef = doc["ref"] as! DocumentReference
+                        efStudentCourse.note = doc["note"] as! String
+                        efStudentCourse.status = enumService.toCourseStatus(s: doc["status"] as! String)
+                        if DataServer.courseDic[efStudentCourse.courseRef.documentID] == nil{
+                            let _course = EFCourse(with: efStudentCourse.courseRef)
+                            _course.download()
+                            DataServer.courseDic[efStudentCourse.courseRef.documentID] = _course
+                        } else {
+                            DataServer.courseDic[efStudentCourse.courseRef.documentID]!.download()
+                        }
+                        self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
                     }
-                    self.courseDic[(doc["ref"] as! DocumentReference).documentID] = efStudentCourse
+                    
                 }
 
             }

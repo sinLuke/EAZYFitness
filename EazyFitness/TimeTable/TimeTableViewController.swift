@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
@@ -64,36 +65,16 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if editingStyle == .delete {
-            let i = Array(StudentCourseList.keys)[indexPath.section]
-            if let courseObjs = StudentCourseList[i]{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let courseObjs = StudentCourseList[Array(StudentCourseList.keys)[indexPath.section]]{
+            if indexPath.row < courseObjs.count {
                 let courseObj = courseObjs[indexPath.row]
-                let ref = courseObj.ref
-                ref.delete()
-                for studentCourseRef in courseObj.traineeStudentCourseRef{
-                    studentCourseRef.delete()
-                }
-                EFRequest.removeRequestForReference(ref: ref)
-                for student in DataServer.studentDic.values{
-                    for studentCourse in student.courseDic{
-                        if studentCourse.value.courseRef == ref{
-                            student.courseDic.removeValue(forKey: studentCourse.key)
-                        }
-                    }
-                }
-                for course in DataServer.courseDic{
-                    if course.value.ref == ref{
-                        DataServer.courseDic.removeValue(forKey: course.key)
-                    }
-                }
-                StudentCourseList[i]!.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
+                let courseVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CourseDetailInfoViewController") as! CourseDetailInfoViewController
+                
+                courseVC.thisCourse = courseObj
+                self.present(courseVC, animated: true, completion: nil)
             }
-            
         }
- 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

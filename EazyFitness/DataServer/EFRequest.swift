@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 import MaterialComponents
 
 class EFRequest: EFData {

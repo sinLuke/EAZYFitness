@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 import MaterialComponents
 
 class EFTrainer: EFData {
@@ -143,7 +144,6 @@ class EFTrainer: EFData {
                 "weightUnit":self.weightUnit,
                 "trainee":self.trainee,
                 "goal":self.goal]) { (_) in
-
                     let message = MDCSnackbarMessage()
                     message.text = "对\(self.name)的修改上传成功"
                     MDCSnackbarManager.show(message)

@@ -35,8 +35,6 @@ class CourseTableViewController: DefaultViewController, UITableViewDelegate, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-
         let title = NSLocalizedString("下拉刷新", comment: "下拉刷新")
 
         _refreshControl.attributedTitle = NSAttributedString(string: title)

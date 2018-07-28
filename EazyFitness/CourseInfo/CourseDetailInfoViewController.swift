@@ -15,6 +15,9 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
     var thisCourse: EFCourse!
     var thisStudentCourse: EFStudentCourse!
     
+    var isEditable = false
+    var isDeletable = false
+    
     @objc func handleRefresh(_ refreshControl: UIRefreshControl){
         refreshControl.endRefreshing()
         self.dismiss(animated: true, completion: nil)
@@ -33,13 +36,36 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
         self.tableView.refreshControl = self._refreshControl
         self.tableView.addSubview(self._refreshControl)
         
+        self.isEditable = false
+        self.isDeletable = false
         
+        if let ds = AppDelegate.AP().ds {
+            if ds.usergroup == .admin  {
+                if ds.region == .All {
+                    self.isEditable = true
+                    self.isDeletable = true
+                } else {
+                    self.isEditable = true
+                    self.isDeletable = true
+                }
+            } else if ds.usergroup == .trainer {
+                if Calendar.current.date(byAdding: .day, value: 1, to: Date())! < thisCourse.date {
+                    self.isEditable = true
+                    self.isDeletable = false
+                } else {
+                    self.isEditable = false
+                    self.isDeletable = false
+                }
+            }
+        }
 
+        self.reload()
+        
         // Do any additional setup after loading the view.
     }
     
     override func reload() {
-        if thisCourse == nil {
+        /*if thisCourse == nil {
             if let courseREF = thisStudentCourse.courseRef{
                 if let thisCourse = DataServer.courseDic[courseREF.documentID]{
                     self.thisCourse = thisCourse
@@ -59,7 +85,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
             } else {
                 
             }
-        }
+        }*/
     }
     
     func prepareCourseNumber(_ int:Int) -> String{
@@ -72,7 +98,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.reload()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -81,79 +107,127 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        
+        var a = 2
+        if self.isDeletable {
+            a = a + 1
+        }
+        if self.isEditable {
+            a = a + 1
+        }
+        return a
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        switch section {
+        case 0:
             return 4
-        } else {
+        case 1:
             return thisCourse?.traineeRef.count ?? 0
+        default:
+            return 1
         }
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return "课程信息"
-        } else {
+        } else if section == 1{
             return "学生信息"
+        } else {
+            return ""
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-        if indexPath.section == 0 {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        switch indexPath.section {
+        case 0:
             switch indexPath.row {
             case 0:
-                cell?.textLabel?.text = "时间"
-                cell?.detailTextLabel?.text = thisCourse.date.descriptDate()
+                cell.textLabel?.text = "时间"
+                cell.detailTextLabel?.text = thisCourse.date.descriptDate()
             case 1:
-                cell?.textLabel?.text = "课时长度"
-                cell?.detailTextLabel?.text = "\(self.prepareCourseNumber(thisCourse.amount)) 课时"
+                cell.textLabel?.text = "课时长度"
+                cell.detailTextLabel?.text = "\(self.prepareCourseNumber(thisCourse.amount)) 课时"
             case 2:
-                cell?.textLabel?.text = "备注"
-                cell?.detailTextLabel?.text = thisCourse.note ?? "无备注"
+                cell.textLabel?.text = "备注"
+                cell.detailTextLabel?.text = thisCourse.note ?? "无备注"
             default:
-                cell?.textLabel?.text = "教练"
-                ActivityViewController.callStart += 1
+                cell.textLabel?.text = "教练"
+                //ActivityViewController.callStart += 1
                 thisCourse.trainerRef?.getDocument(completion: { (snap, err) in
                     if let snap = snap {
                         if let firstName = snap.data()?["firstName"] as? String, let lastName = snap.data()?["lastName"] as? String{
-                            cell?.detailTextLabel?.text = "\(firstName) \(lastName)"
+                            cell.detailTextLabel?.text = "\(firstName) \(lastName)"
                         }
                     }
-                    ActivityViewController.callEnd += 1
+                    //ActivityViewController.callEnd += 1
                 })
                 
                 
                 if let trainreRef = thisCourse.trainerRef {
                     
                     let newtrainer = EFTrainer.setTrainer(with: trainreRef)
-                    newtrainer.download()
-                    DataServer.trainerDic[trainreRef.documentID] = newtrainer
+                    //newtrainer.download()
+                    //DataServer.trainerDic[trainreRef.documentID] = newtrainer
                     
-                    cell?.detailTextLabel?.text = newtrainer.name
+                    //cell?.detailTextLabel?.text = newtrainer.name
                 }
             }
-        } else {
+        case 1:
             let theTraineeRef = thisCourse.traineeRef[indexPath.row]
             if let theStudent = DataServer.studentDic[theTraineeRef.documentID]{
-                cell?.textLabel?.text = theStudent.name
+                cell.textLabel?.text = theStudent.name
                 
                 if let thisStudentCourse = theStudent.courseDic[thisCourse.ref.documentID]{
-                    cell?.detailTextLabel?.text = enumService.toDescription(e: thisStudentCourse.status)
+                    cell.detailTextLabel?.text = enumService.toDescription(e: thisStudentCourse.status)
+                    cell.detailTextLabel?.textColor = enumService.toColor(e: thisStudentCourse.status)
                 } else {
-                    cell?.detailTextLabel?.text = "状态未知"
+                    cell.detailTextLabel?.text = "状态未知"
                 }
                 
             } else {
-                cell?.textLabel?.text = "学生未知"
-                cell?.detailTextLabel?.text = "状态未知"
+                cell.textLabel?.text = "学生未知"
+                cell.detailTextLabel?.text = "状态未知"
             }
+        case 2:
+            if self.isEditable {
+                cell.textLabel?.text = "更该课程时间"
+                cell.detailTextLabel?.text = ""
+                cell.textLabel?.textColor = UIColor.red
+            } else {
+                cell.textLabel?.text = "删除该课程"
+                cell.detailTextLabel?.text = ""
+                cell.textLabel?.textColor = UIColor.red
+            }
+        default:
+            cell.textLabel?.text = "删除该课程"
+            cell.detailTextLabel?.text = ""
+            cell.textLabel?.textColor = UIColor.red
         }
-        return cell!
+        return cell
+        
+            
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 2:
+            if self.isEditable {
+                if let course = self.thisCourse {
+                    let timeSelectorVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TimeSelectorViewController") as! TimeSelectorViewController
+                    timeSelectorVC.TimeDate = course.date
+                    timeSelectorVC.ref = course.ref
+                    self.present(timeSelectorVC, animated: true, completion: nil)
+                }
+            } else {
+                thisCourse.delete()
+            }
+        default:
+            thisCourse.delete()
+        }
+    }
     /*
     // MARK: - Navigation
 

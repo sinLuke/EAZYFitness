@@ -29,6 +29,7 @@
 		A316E2E020BA283B007F2BC3 /* adminSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A316E2DF20BA283B007F2BC3 /* adminSelector.swift */; };
 		A31A951020CD159D0011DCD3 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */; };
 		A31A951220CD15C10011DCD3 /* ResetEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */; };
+		A31C92F5210CF3A3006765CD /* TimeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31C92F4210CF3A3006765CD /* TimeSelectorViewController.swift */; };
 		A31E2FE3209E91E400677D86 /* AdminViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE2209E91E400677D86 /* AdminViewController.swift */; };
 		A31E2FE6209EC7AD00677D86 /* AdminStudentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */; };
 		A31E2FE8209EC7B900677D86 /* AdminTrainerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */; };
@@ -192,6 +193,7 @@
 		A316E2DF20BA283B007F2BC3 /* adminSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adminSelector.swift; sourceTree = "<group>"; };
 		A31A950F20CD159D0011DCD3 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		A31A951120CD15C10011DCD3 /* ResetEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEmailViewController.swift; sourceTree = "<group>"; };
+		A31C92F4210CF3A3006765CD /* TimeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelectorViewController.swift; sourceTree = "<group>"; };
 		A31E2FE2209E91E400677D86 /* AdminViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminViewController.swift; sourceTree = "<group>"; };
 		A31E2FE5209EC7AD00677D86 /* AdminStudentViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminStudentViewCell.swift; sourceTree = "<group>"; };
 		A31E2FE7209EC7B900677D86 /* AdminTrainerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTrainerViewCell.swift; sourceTree = "<group>"; };
@@ -664,6 +666,7 @@
 				A35F26AF20A0E2E500697BB3 /* selectionTableViewCell.swift */,
 				A34D051C20A8FCBB00813B7D /* SelectionNavigationViewController.swift */,
 				A3B040B5210B53E90050A847 /* TabbarController.swift */,
+				A31C92F4210CF3A3006765CD /* TimeSelectorViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1165,6 +1168,7 @@
 				A3EDEBE820B3A5A0005DDE45 /* LocalNextDataTableViewController.swift in Sources */,
 				A367993B20B60FD700A582D7 /* MemberCollectionViewCell.swift in Sources */,
 				A39FF64620ACDB5200B54353 /* EFStudent.swift in Sources */,
+				A31C92F5210CF3A3006765CD /* TimeSelectorViewController.swift in Sources */,
 				A3077970205B750800512378 /* QRCodeReader.swift in Sources */,
 				A3CEFF632098098900B05FC1 /* TrainerNextCell.swift in Sources */,
 				A3F3E64F209EE8650054AEF0 /* AllStudentDetailViewController.swift in Sources */,

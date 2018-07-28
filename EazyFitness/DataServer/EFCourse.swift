@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 class EFCourse: EFData {
     var amount:Int = 0
@@ -161,6 +162,19 @@ class EFCourse: EFData {
             }
             ActivityViewController.callEnd += 1
         }
+    }
+    
+    func delete(){
+        for studentRef in self.traineeRef {
+            ActivityViewController.callStart += 1
+            studentRef.collection("course").document(self.ref.documentID).updateData(["status" : enumService.toString(e: .deleted)]) { (err) in
+                if let err = err {
+                    AppDelegate.showError(title: "删除课程时出现错误", err: err.localizedDescription)
+                }
+                ActivityViewController.callEnd += 1
+            }
+        }
+        EFRequest.removeRequestForReference(ref: self.ref)
     }
     
     override func download(){

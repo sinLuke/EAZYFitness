@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
+
 class EFData: NSObject {
     let ref:DocumentReference
     var ready = false
