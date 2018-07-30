@@ -149,6 +149,16 @@ class EFCourse: EFData {
             }
         }
         ActivityViewController.callStart += 1
+        
+        let newCourse = EFCourse.init(with: courseRef)
+        newCourse.amount = amount
+        newCourse.type = type
+        newCourse.date = date
+        newCourse.traineeRef = trainee
+        newCourse.trainerRef = trainer
+        newCourse.traineeStudentCourseRef = traineeStudentCourse
+        
+        DataServer.courseDic[courseRef.documentID] = newCourse
         courseRef.setData([
             "type" : enumService.toString(e: type),
             "amount": amount,

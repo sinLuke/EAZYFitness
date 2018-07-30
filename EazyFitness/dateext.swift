@@ -79,6 +79,7 @@ extension Date {
         df.dateStyle = .none
         if self > now{
             let components = Calendar.current.dateComponents([.minute, .hour, .day, .year], from: now, to: self)
+            let thisComponents_day = thisComponents.day! - nowComponents.day!
             
             if thisComponents.year! - nowComponents.year! > 0 && self.timeIntervalSinceNow >= day*6 {
                 return "\(thisComponents.year!)年\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
@@ -86,18 +87,24 @@ extension Date {
                 return "\(thisComponents.month!)月\(thisComponents.day!)日 \(df.string(from: self))"
             } else if thisComponents.weekOfYear! - nowComponents.weekOfYear! == 1 {
                 return "下\(self.getThisWeekDayLongName()) \(df.string(from: self))"
-            } else if thisComponents.day! - nowComponents.day! > 1{
-                return "\(self.getThisWeekDayLongName()) \(df.string(from: self))"
-            } else if thisComponents.day! - nowComponents.day! == 1{
-                return "明天 \(df.string(from: self))"
-            } else if components.hour! > 3{
-                return "今天 \(df.string(from: self))"
-            } else if components.hour! != 0{
-                return "\(components.hour!)小时 \(components.minute!) 分钟后"
-            } else if components.minute! >= 2{
-                return "\(components.minute!) 分钟后"
             } else {
-                return "马上"
+                if thisComponents.day! < nowComponents.day! {
+                    return "\(self.getThisWeekDayLongName()) \(df.string(from: self))"
+                } else {
+                    if thisComponents.day! - nowComponents.day! > 1{
+                        return "\(self.getThisWeekDayLongName()) \(df.string(from: self))"
+                    } else if thisComponents.day! - nowComponents.day! == 1{
+                        return "明天 \(df.string(from: self))"
+                    } else if components.hour! > 3{
+                        return "今天 \(df.string(from: self))"
+                    } else if components.hour! != 0{
+                        return "\(components.hour!)小时 \(components.minute!) 分钟后"
+                    } else if components.minute! >= 2{
+                        return "\(components.minute!) 分钟后"
+                    } else {
+                        return "马上"
+                    }
+                }
             }
         } else if self < now {
             let components = Calendar.current.dateComponents([.minute, .hour, .day, .year], from: self, to: now)

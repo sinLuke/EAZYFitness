@@ -10,6 +10,8 @@ import UIKit
 import UICircularProgressRing
 class ActivityViewController: UIViewController {
     
+    static var isViewEnable:Bool = true
+    
     @IBOutlet weak var circle: UICircularProgressRing!
     static var started:Bool {
         set { (newValue)
@@ -103,12 +105,14 @@ class ActivityViewController: UIViewController {
     
     class func startLoading(){
         shared?.dismiss(animated: false, completion: nil)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let shared = storyboard.instantiateViewController(withIdentifier: "activity") as? ActivityViewController{
-            ActivityViewController.shared = shared
-            shared.view.backgroundColor = .clear
-            shared.modalPresentationStyle = .overCurrentContext
-            AppDelegate.cvc?.present(shared, animated: false, completion: nil)
+        if ActivityViewController.isViewEnable {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let shared = storyboard.instantiateViewController(withIdentifier: "activity") as? ActivityViewController{
+                ActivityViewController.shared = shared
+                shared.view.backgroundColor = .clear
+                shared.modalPresentationStyle = .overCurrentContext
+                AppDelegate.cvc?.present(shared, animated: false, completion: nil)
+            }
         }
     }
     

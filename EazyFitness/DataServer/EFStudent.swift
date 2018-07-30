@@ -214,6 +214,15 @@ class EFStudent: EFData {
             
             let traineeStudentCourseRef = theStudent.ref.collection("course").document(courseRef.documentID)
             traineeStudentCourseRef.setData(["note" : note ?? "无备注", "ref":courseRef, "status":enumService.toString(e: status)])
+            
+            let efStudentCourse = EFStudentCourse(with: traineeStudentCourseRef)
+            efStudentCourse.parent = theStudent.ref.documentID
+            efStudentCourse.courseRef = courseRef
+            efStudentCourse.note = note ?? "一般课程"
+            efStudentCourse.status = status
+
+            theStudent.courseDic[courseRef.documentID] = efStudentCourse
+            
             let df = DateFormatter()
             df.dateStyle = .medium
             df.timeStyle = .medium

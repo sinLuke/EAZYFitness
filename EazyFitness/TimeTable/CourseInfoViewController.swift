@@ -225,6 +225,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ActivityViewController.isViewEnable = true
         if self.studentListToManageCourse.count == 1{
             titleLabel.text = "添加单人课"
         } else {

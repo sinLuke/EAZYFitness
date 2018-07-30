@@ -233,6 +233,10 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     @IBAction func addCourseAction(_ sender: Any) {
+        addCourse()
+    }
+    
+    func addCourse(){
         if let theTrainer = self.theStudentOrTrainer as? EFTrainer{
             let story = UIStoryboard(name: "Main", bundle: nil)
             let vc = story.instantiateViewController(withIdentifier: "selection") as! SelectionNavigationViewController
@@ -398,18 +402,22 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
             
         } else if let dvc = segue.destination as? CourseInfoViewController{
             if segue.identifier == "courseDetail"{
+                
                 dvc.studentListToManageCourse = self.studentListToManageCourse
                 dvc.StudentCourseList = self.StudentCourseList
                 dvc.thisTrainer = self.theStudentOrTrainer as! EFTrainer
             }
+        } else if let dvc = segue.destination as? AddCourseViewController {
+            dvc.model = AddCourseDataModel(studentList: self.studentListToManageCourse, trainer: self.theStudentOrTrainer as! EFTrainer)
         }
     }
     
     func handleStudentSelection(Student:[EFStudent]){
         if Student.count > 2 {
-            AppDelegate.showError(title: "无法添加", err: "暂时只支持到双人课")
+            AppDelegate.showError(title: "无法添加", err: "暂时只支持到双人课", handler:addCourse)
         } else if Student.count > 0 {
             self.studentListToManageCourse = Student
+            ActivityViewController.isViewEnable = false
             self.performSegue(withIdentifier: "courseDetail", sender: self)
         }
     }

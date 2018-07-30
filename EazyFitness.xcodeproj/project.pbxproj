@@ -110,6 +110,11 @@
 		A367993B20B60FD700A582D7 /* MemberCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367993A20B60FD700A582D7 /* MemberCollectionViewCell.swift */; };
 		A367993D20B60FE500A582D7 /* DataItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367993C20B60FE500A582D7 /* DataItemCollectionViewCell.swift */; };
 		A36D4AED20A53B790059F54F /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36D4AEC20A53B790059F54F /* Enum.swift */; };
+		A370410A210EABE8009309F4 /* AddCourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3704109210EABE8009309F4 /* AddCourseViewController.swift */; };
+		A370410C210EABFE009309F4 /* AddCoureseCourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370410B210EABFE009309F4 /* AddCoureseCourseCell.swift */; };
+		A370410E210EAC0E009309F4 /* AddCourseCustumTimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370410D210EAC0E009309F4 /* AddCourseCustumTimeCell.swift */; };
+		A3704110210EAC56009309F4 /* AddCourseMasterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370410F210EAC56009309F4 /* AddCourseMasterCell.swift */; };
+		A3704114210EBEBC009309F4 /* AddCourseDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3704113210EBEBC009309F4 /* AddCourseDataModel.swift */; };
 		A38DEB6720A67A06002350FB /* ClassObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38DEB6620A67A06002350FB /* ClassObj.swift */; };
 		A39C5D892092B2A600D46739 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39C5D882092B2A600D46739 /* LoginViewController.swift */; };
 		A39C5D8B2092B4DA00D46739 /* LoginPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */; };
@@ -282,6 +287,11 @@
 		A367993A20B60FD700A582D7 /* MemberCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCollectionViewCell.swift; sourceTree = "<group>"; };
 		A367993C20B60FE500A582D7 /* DataItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		A36D4AEC20A53B790059F54F /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
+		A3704109210EABE8009309F4 /* AddCourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCourseViewController.swift; sourceTree = "<group>"; };
+		A370410B210EABFE009309F4 /* AddCoureseCourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCoureseCourseCell.swift; sourceTree = "<group>"; };
+		A370410D210EAC0E009309F4 /* AddCourseCustumTimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCourseCustumTimeCell.swift; sourceTree = "<group>"; };
+		A370410F210EAC56009309F4 /* AddCourseMasterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCourseMasterCell.swift; sourceTree = "<group>"; };
+		A3704113210EBEBC009309F4 /* AddCourseDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCourseDataModel.swift; sourceTree = "<group>"; };
 		A38DEB6620A67A06002350FB /* ClassObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassObj.swift; sourceTree = "<group>"; };
 		A39C5D882092B2A600D46739 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPasswordViewController.swift; sourceTree = "<group>"; };
@@ -690,6 +700,18 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		A3704108210EABD1009309F4 /* AddCourse */ = {
+			isa = PBXGroup;
+			children = (
+				A3704109210EABE8009309F4 /* AddCourseViewController.swift */,
+				A370410B210EABFE009309F4 /* AddCoureseCourseCell.swift */,
+				A370410D210EAC0E009309F4 /* AddCourseCustumTimeCell.swift */,
+				A370410F210EAC56009309F4 /* AddCourseMasterCell.swift */,
+				A3704113210EBEBC009309F4 /* AddCourseDataModel.swift */,
+			);
+			path = AddCourse;
+			sourceTree = "<group>";
+		};
 		A39C5D862092ACFE00D46739 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -722,6 +744,7 @@
 		A3CEFF5D2097FACC00B05FC1 /* TrainerCells */ = {
 			isa = PBXGroup;
 			children = (
+				A3704108210EABD1009309F4 /* AddCourse */,
 				A3CEFF622098098900B05FC1 /* TrainerNextCell.swift */,
 				A31F2A4A209FBCBB004ADD26 /* TrainerFinish */,
 				A3CEFF602098097C00B05FC1 /* TrainerScanCell.swift */,
@@ -1112,6 +1135,7 @@
 				A32EBB6D20C5A5F2003B5D54 /* EFViewHeaderCellWithTrainerCourse.swift in Sources */,
 				A35B1845209031AD0058EA7B /* MyStudentVC.swift in Sources */,
 				A367993D20B60FE500A582D7 /* DataItemCollectionViewCell.swift in Sources */,
+				A370410A210EABE8009309F4 /* AddCourseViewController.swift in Sources */,
 				A3CEFF67209809AC00B05FC1 /* TrainerMonthCell.swift in Sources */,
 				A349235A2090DD81004C5455 /* StudentTabBarController.swift in Sources */,
 				A31E2FEA209EC7CC00677D86 /* AdminSummaryViewCell.swift in Sources */,
@@ -1142,6 +1166,7 @@
 				A3077969205B750800512378 /* QRCodeReaderViewController.swift in Sources */,
 				A3B040B6210B53E90050A847 /* TabbarController.swift in Sources */,
 				A32EEE54209D6D570018FBB5 /* AllCourseTableViewCell.swift in Sources */,
+				A370410C210EABFE009309F4 /* AddCoureseCourseCell.swift in Sources */,
 				A31F2A50209FE8A0004ADD26 /* AllTrainerStudentTableViewCell.swift in Sources */,
 				A31F2A4C209FBCD1004ADD26 /* TrainerFinishedTableViewController.swift in Sources */,
 				A3F3E65F209EE94B0054AEF0 /* AllStudentCourseTableTableViewCell.swift in Sources */,
@@ -1151,6 +1176,7 @@
 				A3F3E64D209EE83F0054AEF0 /* AllStudentTableViewController.swift in Sources */,
 				A36D4AED20A53B790059F54F /* Enum.swift in Sources */,
 				A307796D205B750800512378 /* QRCodeReaderResult.swift in Sources */,
+				A3704114210EBEBC009309F4 /* AddCourseDataModel.swift in Sources */,
 				A32EBB8520C5AFBC003B5D54 /* EFExtentableHeaderCellWithLabel.swift in Sources */,
 				A3F3E649209EE8260054AEF0 /* AllTrainerTableViewCell.swift in Sources */,
 				A39C5D892092B2A600D46739 /* LoginViewController.swift in Sources */,
@@ -1174,6 +1200,7 @@
 				A3F3E64F209EE8650054AEF0 /* AllStudentDetailViewController.swift in Sources */,
 				A35735B02096890400995346 /* TimeTableViewController.swift in Sources */,
 				A303D8BD20AE818200623218 /* CourseTableViewController.swift in Sources */,
+				A3704110210EAC56009309F4 /* AddCourseMasterCell.swift in Sources */,
 				A39FF64E20ACE2F000B54353 /* EFData.swift in Sources */,
 				A307796F205B750800512378 /* ReaderOverlayView.swift in Sources */,
 				A350170020A02ED3000BD6AC /* ViewController.swift in Sources */,
@@ -1184,6 +1211,7 @@
 				A364964E20EEA12B00A2FFEF /* CourseDetailInfoViewController.swift in Sources */,
 				A34923602090E38F004C5455 /* SettingVC.swift in Sources */,
 				A31A951220CD15C10011DCD3 /* ResetEmailViewController.swift in Sources */,
+				A370410E210EAC0E009309F4 /* AddCourseCustumTimeCell.swift in Sources */,
 				A349236B2090EBAF004C5455 /* SigninScanViewController.swift in Sources */,
 				A32EEE35209CEADF0018FBB5 /* MessageCollectionViewController.swift in Sources */,
 				A3252A9D2094F42B00FD5EC3 /* TimeTable.swift in Sources */,

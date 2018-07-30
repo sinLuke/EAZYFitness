@@ -117,15 +117,16 @@ class tableStudentSelectionTableViewController: DefaultTableViewController, UISe
     }
 
     @IBAction func doneBtn(_ sender: Any) {
-        self.dismiss(animated: true)
-        if let f = self.handler{
-            var returnList:[EFStudent] = []
-            if let selelctedList = self.tableView.indexPathsForSelectedRows{
-                for indexpath in selelctedList{
-                    returnList.append(listOfStudent[indexpath.row])
+        self.dismiss(animated: true) {
+            if let f = self.handler{
+                var returnList:[EFStudent] = []
+                if let selelctedList = self.tableView.indexPathsForSelectedRows{
+                    for indexpath in selelctedList{
+                        returnList.append(self.listOfStudent[indexpath.row])
+                    }
                 }
+                f(returnList)
             }
-            f(returnList)
         }
     }
     
