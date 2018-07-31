@@ -68,6 +68,8 @@ class ActivityViewController: UIViewController {
     @IBAction func stopLoadingBtn(_ sender: Any) {
         ActivityViewController.started = false
         self.dismiss(animated: false, completion: nil)
+        ActivityViewController.callStart = 0
+        ActivityViewController.callEnd = 0
     }
     
     class func updateLabel(){

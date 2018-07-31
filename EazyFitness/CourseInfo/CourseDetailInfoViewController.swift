@@ -26,6 +26,9 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        getTranerName()
+        
         let title = NSLocalizedString("下拉返回", comment: "下拉返回")
         _refreshControl.attributedTitle = NSAttributedString(string: title)
         _refreshControl.addTarget(self, action:
@@ -64,6 +67,22 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
         // Do any additional setup after loading the view.
     }
     
+    var fullName = ""
+    
+    func getTranerName() {
+        thisCourse.trainerRef?.getDocument(completion: { (snap, err) in
+            if let snap = snap {
+                if let firstName = snap.data()?["firstName"] as? String, let lastName = snap.data()?["lastName"] as? String{
+                    self.fullName = "\(firstName) \(lastName)"
+                }
+            }
+            self.reload()
+        })
+        if let trainreRef = thisCourse.trainerRef {
+            let newtrainer = EFTrainer.setTrainer(with: trainreRef)
+        }
+    }
+    
     override func reload() {
         /*if thisCourse == nil {
             if let courseREF = thisStudentCourse.courseRef{
@@ -86,6 +105,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                 
             }
         }*/
+        self.tableView.reloadData()
     }
     
     func prepareCourseNumber(_ int:Int) -> String{
@@ -98,7 +118,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
+        self.reload()
     }
 
     override func didReceiveMemoryWarning() {
@@ -139,6 +159,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
         }
     }
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
         switch indexPath.section {
@@ -155,25 +176,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                 cell.detailTextLabel?.text = thisCourse.note ?? "无备注"
             default:
                 cell.textLabel?.text = "教练"
-                //ActivityViewController.callStart += 1
-                thisCourse.trainerRef?.getDocument(completion: { (snap, err) in
-                    if let snap = snap {
-                        if let firstName = snap.data()?["firstName"] as? String, let lastName = snap.data()?["lastName"] as? String{
-                            cell.detailTextLabel?.text = "\(firstName) \(lastName)"
-                        }
-                    }
-                    //ActivityViewController.callEnd += 1
-                })
-                
-                
-                if let trainreRef = thisCourse.trainerRef {
-                    
-                    let newtrainer = EFTrainer.setTrainer(with: trainreRef)
-                    //newtrainer.download()
-                    //DataServer.trainerDic[trainreRef.documentID] = newtrainer
-                    
-                    //cell?.detailTextLabel?.text = newtrainer.name
-                }
+                cell.detailTextLabel?.text = self.fullName
             }
         case 1:
             let theTraineeRef = thisCourse.traineeRef[indexPath.row]
@@ -222,9 +225,13 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                     self.present(timeSelectorVC, animated: true, completion: nil)
                 }
             } else {
+                
+                self.dismiss(animated: true, completion: nil)
                 thisCourse.delete()
             }
         default:
+            
+            self.dismiss(animated: true, completion: nil)
             thisCourse.delete()
         }
     }

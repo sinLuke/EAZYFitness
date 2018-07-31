@@ -1291,13 +1291,13 @@
                                             <rect key="frame" x="20" y="20" width="243" height="123"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="申请标题" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lqM-zy-mym">
-                                                    <rect key="frame" x="0.0" y="0.0" width="69.5" height="102.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="69.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="black" pointSize="17"/>
                                                     <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="申请内容" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bo7-au-x9g">
-                                                    <rect key="frame" x="0.0" y="102.5" width="69.5" height="20.5"/>
+                                                    <rect key="frame" x="0.0" y="20.5" width="69.5" height="102.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -4187,6 +4187,9 @@
                                 <date key="date" timeIntervalSinceReferenceDate="554496658.54610002">
                                     <!--2018-07-28 18:50:58 +0000-->
                                 </date>
+                                <connections>
+                                    <action selector="valueChanged:" destination="D0W-xp-ggd" eventType="valueChanged" id="8ZT-qY-FPt"/>
+                                </connections>
                             </datePicker>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCb-72-xUl">
                                 <rect key="frame" x="136" y="91" width="48" height="24"/>

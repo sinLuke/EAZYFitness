@@ -133,17 +133,13 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
                     }
                 }
             } else if let thisStudent = theStudentOrTrainer as? EFStudent{
-                if course.traineeRef.contains(thisStudent.ref){
-                    contain = true
-                } else {
-                    contain = false
-                }
+                contain = course.traineeRef.contains(thisStudent.ref)
             }
             
             if course.date < self.startoftheweek.startOfWeek() || course.date > self.startoftheweek.endOfWeek() || course.date < Date() {
                 contain = false
             }
-            if contain{
+            if contain {
                 
                 if timeTableList[course.traineesNames] == nil {
                     timeTableList[course.traineesNames] = [course]
@@ -222,7 +218,7 @@ class TimeTableViewController: DefaultViewController, UIScrollViewDelegate, UITa
     }
     
     override func refresh() {
-        print("refresh")
+
         for student in self.studentListToManageCourse{
             student.download()
         }

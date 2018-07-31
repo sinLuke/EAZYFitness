@@ -22,7 +22,12 @@ class TimeSelectorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.TimeDate = thisCourse.date
+        
         timeSelector.minimumDate = Date()
+        
+        reloadLabel()
         // Do any additional setup after loading the view.
     }
 
@@ -30,6 +35,24 @@ class TimeSelectorViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+    @IBAction func valueChanged(_ sender: Any) {
+        self.TimeDate = timeSelector.date
+        reloadLabel()
+    }
+    
+    func reloadLabel(){
+        timeLabel.text = timeSelector.date.descriptDate()
+        let dateformater = DateFormatter()
+        dateformater.dateStyle = .medium
+        dateformater.timeStyle = .none
+        let timeformater = DateFormatter()
+        timeformater.dateStyle = .none
+        timeformater.timeStyle = .short
+        timeDetailLabel.text = "\(dateformater.string(from: self.TimeDate)) \(self.TimeDate.getThisWeekDayLongName()) \(timeformater.string(from: self.TimeDate))"
+    }
+    
     
     @IBAction func finishBtn(_ sender: Any) {
         
