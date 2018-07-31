@@ -37,13 +37,14 @@ class TimeSelectorViewController: UIViewController {
             traineeStudentCourseRef.updateData(["status":enumService.toString(e: courseStatus.waitForStudent)])
             
         }
-        
+        let oldtime = self.thisCourse.date
+        self.thisCourse.date = self.TimeDate
         for trainee in self.thisCourse.traineeRef {
             trainee.getDocument { (snap, err) in
                 if let snap = snap {
                     if let uid = snap.data()?["uid"] as? String{
-                        AppDelegate.SandNotification(to: uid, with: "\(self.thisCourse.date.descriptDate())的课程已更改为\(self.TimeDate.descriptDate())", and: nil)
-                        self.thisCourse.date = TimeDate
+                        AppDelegate.SandNotification(to: uid, with: "\(oldtime.descriptDate())的课程已更改为\(self.TimeDate.descriptDate())", and: nil)
+                        
                     }
                 }
             }
