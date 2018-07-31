@@ -455,6 +455,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate, UNUserNo
         }
     }
     
+    class func showWarning(title: String, err:Error?) {
+        let message = MDCSnackbarMessage()
+        if let err = err {
+            message.text = "\(title): \(err.localizedDescription)"
+        } else {
+            message.text = "\(title)"
+        }
+        MDCSnackbarManager.show(message)
+    }
+    
     class func AP() -> AppDelegate{
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate

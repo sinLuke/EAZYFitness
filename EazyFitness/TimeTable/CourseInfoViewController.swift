@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
 
@@ -29,7 +30,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     @IBOutlet weak var courseDatePicker: UIDatePicker!
     @IBOutlet weak var courseDate: UILabel!
     
-    var 准备增加:Int = 3
+    var readyAmount:Int = 3
     
     @IBOutlet weak var viewContainer: UIView!
     var PickedDate:Date?
@@ -282,7 +283,7 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     
     
     @IBAction func 用户按了填加这个没有最大的(_ sender: Any) {
-        EFStudent.addCourse(of: self.studentListToManageCourse, date: self.courseDatePicker.date, amount: 准备增加, note: courseNoteField.text ?? "无备注", trainer: thisTrainer.ref, status: courseStatus.waitForStudent)
+        EFStudent.addCourse(of: self.studentListToManageCourse, date: self.courseDatePicker.date, amount: readyAmount, note: courseNoteField.text ?? "无备注", trainer: thisTrainer.ref, status: courseStatus.waitForStudent)
         for student in studentListToManageCourse{
             student.download()
         }
@@ -293,16 +294,16 @@ class CourseInfoViewController: DefaultViewController, UIScrollViewDelegate {
     }
     
     @IBAction func 减少(_ sender: Any) {
-        准备增加 = 准备增加 - 1
-        if 准备增加 == 0 {
+        readyAmount = readyAmount - 1
+        if readyAmount == 0 {
             减少按钮.isHidden = true
         }
-        courseAmount.text = prepareCourseNumber(准备增加)
+        courseAmount.text = prepareCourseNumber(readyAmount)
     }
     
     @IBAction func 增加(_ sender: Any) {
-        准备增加 = 准备增加 + 1
-        courseAmount.text = prepareCourseNumber(准备增加)
+        readyAmount = readyAmount + 1
+        courseAmount.text = prepareCourseNumber(readyAmount)
     }
     
     func prepareCourseNumber(_ int:Int) -> String{

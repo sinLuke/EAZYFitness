@@ -275,17 +275,12 @@ class trainerCourseVC: DefaultCollectionViewController, UICollectionViewDelegate
                     if let doc = snap?.data(){
                         if let _numberValue = doc["MemberID"] as? Int{
                             var i = 0
-                            print("self.thisCourse.values")
-                            print(self.studentCourseForCourse)
                             for thisOneCourse in self.thisCourse.values {
                                 
                                 if let thisCourseStudentCourseList = self.studentCourseForCourse[thisOneCourse.ref.documentID]{
-                                    print("thisCourseStudentCourseList")
-                                    print(thisCourseStudentCourseList)
                                     for studentCourse in thisCourseStudentCourseList {
                                         if studentCourse.parent == "\(_numberValue)"{
                                             i += 1
-                                            print(i)
                                             self.recordACourse(thatStudentCourse: studentCourse , thatCourseRef: thisOneCourse.ref)
                                             
                                         }

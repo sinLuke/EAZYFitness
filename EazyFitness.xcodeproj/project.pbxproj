@@ -669,8 +669,6 @@
 				A34923612090E3D0004C5455 /* MessageVC.swift */,
 				A39C5D882092B2A600D46739 /* LoginViewController.swift */,
 				A39C5D8A2092B4DA00D46739 /* LoginPasswordViewController.swift */,
-				A3CEFF5E2097FB4E00B05FC1 /* trainerMyStudentVC.swift */,
-				A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */,
 				A31E2FE2209E91E400677D86 /* AdminViewController.swift */,
 				A35F26AD20A0DF7A00697BB3 /* tableStudentSelectionTableViewController.swift */,
 				A35F26AF20A0E2E500697BB3 /* selectionTableViewCell.swift */,
@@ -744,6 +742,8 @@
 		A3CEFF5D2097FACC00B05FC1 /* TrainerCells */ = {
 			isa = PBXGroup;
 			children = (
+				A3CEFF5E2097FB4E00B05FC1 /* trainerMyStudentVC.swift */,
+				A3A9345720CAF0A50057F3B8 /* trainerCourseVC.swift */,
 				A3704108210EABD1009309F4 /* AddCourse */,
 				A3CEFF622098098900B05FC1 /* TrainerNextCell.swift */,
 				A31F2A4A209FBCBB004ADD26 /* TrainerFinish */,

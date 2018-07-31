@@ -44,6 +44,8 @@ class EFTrainer: EFData {
     override func download(){
         ActivityViewController.callStart += 1
         ref.getDocument { (snap, err) in
+            print(self.ref.path)
+            print(snap?.data())
             if let err = err {
                 let message = MDCSnackbarMessage()
                 message.text = "读取教练时错误: \(err.localizedDescription)"

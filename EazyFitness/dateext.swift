@@ -10,6 +10,7 @@ extension Date {
     }
     
     func startOfWeek() -> Date {
+
         return Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Calendar.current.startOfDay(for: self)))!
     }
     
@@ -35,6 +36,13 @@ extension Date {
     
     func getThisWeekDayNumber()->Int{
         return Calendar.current.component(.weekday, from: self)
+    }
+    
+    func createDateFromWeekAndTime()->Date{
+        let endOfWeek = Calendar.current.date(byAdding: DateComponents(day: 6), to: Date().startOfWeek())!
+        
+        let selfComponents = Calendar.current.dateComponents([.weekday, .hour, .minute], from: self)
+        return Calendar.current.date(byAdding: selfComponents, to: endOfWeek)!
     }
     
     static func getWeekDayNumber(str:String) -> Int?{

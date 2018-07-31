@@ -8,36 +8,31 @@
 
 import UIKit
 
-struct preferedCourseTime{
+struct courseReadyItem{
     var date: Date
     var amount: Int
+    var note: String?
     var count: Int
 }
 
-extension preferedCourseTime: Equatable {
-    static func == (lhs: preferedCourseTime, rhs: preferedCourseTime) -> Bool {
+extension courseReadyItem: Equatable {
+    static func == (lhs: courseReadyItem, rhs: courseReadyItem) -> Bool {
         return lhs.date == rhs.date &&
             lhs.amount == rhs.amount
     }
 }
 
-extension preferedCourseTime: Hashable {
+extension courseReadyItem: Hashable {
     var hashValue: Int {
         return date.hashValue ^ amount.hashValue
     }
-}
-
-struct courseReadyItem{
-    var date: Date
-    var amount: Int
-    var note: String
 }
 
 
 class AddCourseDataModel: NSObject {
     var studentList: [EFStudent]
     var trainer: EFTrainer
-    var preferedCourseTimeList: [Int: preferedCourseTime] = [:]
+    var preferedCourseTimeList: [Int: courseReadyItem] = [:]
     var courseReadyList: [courseReadyItem] = []
     init(studentList: [EFStudent], trainer: EFTrainer) {
         self.studentList = studentList
@@ -45,7 +40,7 @@ class AddCourseDataModel: NSObject {
         for student in studentList {
             for studentCourse in student.courseDic.values {
                 if let course = DataServer.courseDic[studentCourse.courseRef.documentID]{
-                    let preferedCourseTimeItem = preferedCourseTime(date: course.date, amount: course.amount, count: 1)
+                    let preferedCourseTimeItem = courseReadyItem(date: course.date, amount: course.amount, note: nil, count: 1)
                     if self.preferedCourseTimeList[preferedCourseTimeItem.hashValue] != nil {
                         self.preferedCourseTimeList[preferedCourseTimeItem.hashValue]?.count += 1
                     } else {
@@ -54,5 +49,11 @@ class AddCourseDataModel: NSObject {
                 }
             }
         }
+    }
+    
+    var refreshRootViewController: refreshableVC!
+    
+    func reload(){
+        refreshRootViewController.reload()
     }
 }

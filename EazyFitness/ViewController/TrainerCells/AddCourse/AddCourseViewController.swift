@@ -16,6 +16,17 @@ class AddCourseViewController: DefaultViewController {
     @IBOutlet weak var addCourseBtn: UIButton!
     override func reload() {
         super.reload()
+        self.title = "创建课程"
+        self.AddCourseCollectionView.reloadData()
+        self.masterTableView.reloadData()
+        if self.model.courseReadyList.count == 0{
+            addCourseBtn.setTitle("添加课程", for: .normal)
+            addCourseBtn.isEnabled = false
+        } else {
+            addCourseBtn.setTitle("添加\(self.model.courseReadyList.count)项", for: .normal)
+            addCourseBtn.isEnabled = true
+        }
+        
     }
 
     override func refresh() {
@@ -28,6 +39,7 @@ class AddCourseViewController: DefaultViewController {
         AddCourseCollectionView.delegate = self
         masterTableView.dataSource = self
         AddCourseCollectionView.dataSource = self
+        self.model.refreshRootViewController = self
         // Do any additional setup after loading the view.
     }
 
@@ -63,7 +75,7 @@ class AddCourseViewController: DefaultViewController {
 
 }
 
-extension AddCourseViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension AddCourseViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.model.courseReadyList.count
@@ -71,9 +83,22 @@ extension AddCourseViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AddCoureseCourseCell", for: indexPath) as! AddCoureseCourseCell
+        if indexPath.row < self.model.courseReadyList.count {
+            let theCourse = self.model.courseReadyList[indexPath.row]
+            cell.theCourse = theCourse
+        }
+        cell.reload()
+        cell.layer.cornerRadius = 5
+        cell.clipsToBounds = true
+        cell.model = model
+        cell.indexRow = indexPath.row
+        
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 180, height: 90)
+    }
     
 }
 
@@ -105,12 +130,13 @@ extension AddCourseViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "AddCourseMasterCell") as! AddCourseMasterCell
+            cell.model = self.model
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "AddCourseCustumTimeCell") as! AddCourseCustumTimeCell
+            cell.model = self.model
+            cell.reload()
             return cell
         }
     }
-    
-    
 }
