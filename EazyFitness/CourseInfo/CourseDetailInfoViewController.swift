@@ -51,7 +51,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
             } else if ds.usergroup == .trainer {
                 if Calendar.current.date(byAdding: .day, value: 1, to: Date())! < thisCourse.date {
                     self.isEditable = true
-                    self.isDeletable = false
+                    self.isDeletable = true
                 } else {
                     self.isEditable = false
                     self.isDeletable = false
@@ -218,7 +218,7 @@ class CourseDetailInfoViewController: DefaultViewController, UITableViewDelegate
                 if let course = self.thisCourse {
                     let timeSelectorVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TimeSelectorViewController") as! TimeSelectorViewController
                     timeSelectorVC.TimeDate = course.date
-                    timeSelectorVC.ref = course.ref
+                    timeSelectorVC.thisCourse = course
                     self.present(timeSelectorVC, animated: true, completion: nil)
                 }
             } else {

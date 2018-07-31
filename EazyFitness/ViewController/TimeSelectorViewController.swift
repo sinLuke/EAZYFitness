@@ -12,7 +12,8 @@ import FirebaseFirestore
 
 class TimeSelectorViewController: UIViewController {
     
-    var ref: DocumentReference!
+    
+    var thisCourse: EFCourse!
     var TimeDate: Date!
     
     @IBOutlet weak var timeLabel: UILabel!
@@ -21,7 +22,7 @@ class TimeSelectorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        timeSelector.minimumDate = Date()
         // Do any additional setup after loading the view.
     }
 
@@ -31,10 +32,29 @@ class TimeSelectorViewController: UIViewController {
     }
     
     @IBAction func finishBtn(_ sender: Any) {
-        if let TimeDate = self.TimeDate, let ref = self.ref {
+        
+        for traineeStudentCourseRef in self.thisCourse.traineeStudentCourseRef {
+            traineeStudentCourseRef.updateData(["status":enumService.toString(e: courseStatus.waitForStudent)])
+            
+        }
+        
+        for trainee in self.thisCourse.traineeRef {
+            trainee.getDocument { (snap, err) in
+                if let snap = snap {
+                    if let uid = snap.data()?["uid"] as? String{
+                        AppDelegate.SandNotification(to: uid, with: "\(self.thisCourse.date.descriptDate())的课程已更改为\(self.TimeDate.descriptDate())", and: nil)
+                        self.thisCourse.date = TimeDate
+                    }
+                }
+            }
+        }
+        
+        if let TimeDate = self.TimeDate, let ref = self.thisCourse?.ref {
             ref.updateData(["date" : TimeDate]) { (err) in
                 if let err = err {
                     AppDelegate.showError(title: "更该课程时间时发生错误", err: err.localizedDescription)
+                } else {
+                    AppDelegate.showWarning(title: "时间修改成功", err: nil)
                 }
             }
         }

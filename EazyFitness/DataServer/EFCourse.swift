@@ -138,6 +138,7 @@ class EFCourse: EFData {
     }
     
     class func addCourse(courseRef:DocumentReference, date:Date, amount:Int, note:String?, trainer:DocumentReference, trainee:[DocumentReference], traineeStudentCourse:[DocumentReference]){
+        
         var type = courseType.general
         if trainee.count == 0 || traineeStudentCourse.count != trainee.count{
             AppDelegate.showError(title: "添加课程失败", err: "参数错误")
@@ -185,6 +186,16 @@ class EFCourse: EFData {
             }
         }
         EFRequest.removeRequestForReference(ref: self.ref)
+        
+        for theStudentRef in self.traineeRef {
+            theStudentRef.getDocument { (snap, err) in
+                if let snap = snap {
+                    if let receiverUID = snap.data()?["uid"] as? String {
+                        AppDelegate.SandNotification(to: receiverUID, with: "\(self.date.descriptDate())的课程已删除", and: "")
+                    }
+                }
+            }
+        }
     }
     
     override func download(){
