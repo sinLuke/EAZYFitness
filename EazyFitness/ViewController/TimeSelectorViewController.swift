@@ -56,10 +56,6 @@ class TimeSelectorViewController: UIViewController {
     
     @IBAction func finishBtn(_ sender: Any) {
         
-        for traineeStudentCourseRef in self.thisCourse.traineeStudentCourseRef {
-            traineeStudentCourseRef.updateData(["status":enumService.toString(e: courseStatus.waitForStudent)])
-            
-        }
         let oldtime = self.thisCourse.date
         self.thisCourse.date = self.TimeDate
         for trainee in self.thisCourse.traineeRef {
