@@ -122,8 +122,12 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
         self.collectionView?.reloadData()
         self.scrollToBtm()
     }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = falseå
         
@@ -142,13 +146,7 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
         self.refresh()
         // Do any additional setup after loading the view.
         
-        self.listener = colRef.document("Last").addSnapshotListener { (snap, err) in
-            if let err = err {
-                AppDelegate.showError(title: "读取信息时发生错误", err: err.localizedDescription)
-            } else {
-                self.refresh()
-            }
-        }
+        
         fieldHeight.constant = 34
         
     }
@@ -161,6 +159,7 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        AppDelegate.showError(title: self.colRef.path, err: self.LastMessage?.text ?? "novlaue")
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
@@ -168,6 +167,14 @@ class MessageCollectionViewController: DefaultViewController, UICollectionViewDa
     override func viewDidAppear(_ animated: Bool) {
         postView_y = inputViewContainer.frame.origin.y
         self.navigationController?.title = nameTitle
+        
+        self.listener = colRef.document("Last").addSnapshotListener { (snap, err) in
+            if let err = err {
+                AppDelegate.showError(title: "读取信息时发生错误", err: err.localizedDescription)
+            } else {
+                self.refresh()
+            }
+        }
         //scrollToBtm()
     }
     
