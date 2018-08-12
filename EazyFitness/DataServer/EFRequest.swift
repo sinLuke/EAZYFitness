@@ -67,7 +67,8 @@ class EFRequest: EFData {
                 MDCSnackbarManager.show(message)
             } else {
                 for doc in snaps!.documents{
-                    if let bageRef = data["bageRef"] as? DocumentReference {
+                    
+                    if let bageRef = doc.data()["bageRef"] as? DocumentReference {
                         bageRef.delete()
                     }
                     doc.reference.delete()
