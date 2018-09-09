@@ -22,7 +22,7 @@
 
 #### Trainer:
 
-- A student has a list of stuednt.
+- A Trainer has a list of stuednt (`trainee`).
 - Monthly goal for a trainer is the sum of course hours finished (not settlemented) this month.
 
 #### Admin
@@ -139,6 +139,8 @@
 - Show all the course and its status in current week.
 
 ### 3. Trainer Home Page
+
+- fire a notification on student's device `2` hours before every course that has been approved.
 
 - Show next course, current course (if some schedule course is happening) Blocks.
 - Show New course Notify menu, trainer can approve or decline that course (added from admin).
