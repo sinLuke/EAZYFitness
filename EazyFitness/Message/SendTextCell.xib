@@ -82,6 +82,7 @@
                 <outlet property="readLabel" destination="bxb-Q6-4Da" id="Iuh-vD-xyd"/>
                 <outlet property="widthOfCell" destination="1PU-7m-CL1" id="MeF-YK-4us"/>
             </connections>
+            <point key="canvasLocation" x="39" y="54"/>
         </collectionViewCell>
     </objects>
 </document>

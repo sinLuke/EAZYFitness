@@ -20,5 +20,4 @@ class EventTextCell: UICollectionViewCell {
         let screenWidth = UIScreen.main.bounds.size.width
         widthOfCell.constant = screenWidth - (2 * 12)
     }
-
 }

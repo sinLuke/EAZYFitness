@@ -29,15 +29,15 @@
                                     <constraint firstAttribute="height" constant="30" id="eNr-Fh-UdQ"/>
                                     <constraint firstAttribute="width" constant="100" id="yg7-KO-xbJ"/>
                                 </constraints>
-                                <state key="normal" title="记录情况">
+                                <state key="normal" title="Button">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="reportStudent:" destination="gTV-IL-0wX" eventType="touchUpInside" id="rJf-1f-tEi"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="教练尚未扫码" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4UF-gd-4VQ">
-                                <rect key="frame" x="51" y="15" width="104" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4UF-gd-4VQ">
+                                <rect key="frame" x="51" y="15" width="96" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="HpL-dp-rcr"/>
                                 </constraints>

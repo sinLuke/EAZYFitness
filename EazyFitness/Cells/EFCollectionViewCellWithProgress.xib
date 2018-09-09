@@ -13,14 +13,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EFCollectionViewCellWithProgress" id="gTV-IL-0wX" customClass="EFCollectionViewCellWithProgress" customModule="EazyFitness" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="500" height="132"/>
+            <rect key="frame" x="0.0" y="0.0" width="200" height="132"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="500" height="132"/>
+                <rect key="frame" x="0.0" y="0.0" width="200" height="132"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QLc-v9-jYC">
-                        <rect key="frame" x="0.0" y="0.0" width="500" height="132"/>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QLc-v9-jYC">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="132"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Mj-UF-Lb0">
                                 <rect key="frame" x="0.0" y="0.0" width="500" height="40"/>
@@ -43,20 +43,20 @@
                                     <constraint firstAttribute="trailing" secondItem="Pxa-4Z-Wpi" secondAttribute="trailing" constant="16" id="tjd-ac-nTa"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="目标已达成 67%" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vgi-Mu-iOZ">
-                                <rect key="frame" x="16" y="48" width="468" height="20.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vgi-Mu-iOZ">
+                                <rect key="frame" x="16" y="48" width="468" height="21"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="本月目标为 30节课，完成后会有奖励哦" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RII-Qd-HQa">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RII-Qd-HQa">
                                 <rect key="frame" x="16" y="76" width="468" height="16"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bHs-9q-uMF">
-                                <rect key="frame" x="16" y="108" width="468" height="8"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bHs-9q-uMF">
+                                <rect key="frame" x="16" y="108" width="176" height="8"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="8" id="wT6-Hh-Hf3"/>
                                 </constraints>
@@ -98,7 +98,7 @@
                 <outlet property="titleBar" destination="5Mj-UF-Lb0" id="sIU-v2-Zo2"/>
                 <outlet property="widthOdCell" destination="qIr-EB-w1b" id="468-Rm-3L3"/>
             </connections>
-            <point key="canvasLocation" x="120.5" y="54"/>
+            <point key="canvasLocation" x="48" y="-20"/>
         </collectionViewCell>
     </objects>
 </document>
