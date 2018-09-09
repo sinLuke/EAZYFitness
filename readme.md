@@ -10,19 +10,19 @@
 - All members that is not an `admin` have a monthly `goal`, who achived that goal will rewarded bonus courses.
 - All members that is not an `admin` have a `status`: `avaliable`, `canceled`, `unsigned`, `signed`
 
-* ### Student:
+#### Student:
 
 - A student has only one trainer.
 - A student has height and weight been recorded with timestamp.
 - Monthly goal for a student is the course hours finished (not settlemented) this month.
 - A student has `registedCourse` record the course hours been purchase. This student cannot approving new courses when `registedCourse` minus "Settlement" less than `1` hour. All the value added been recorded with a timestamp.
 
-* ### Trainer:
+#### Trainer:
 
 - A student has a list of stuednt.
 - Monthly goal for a trainer is the sum of course hours finished (not settlemented) this month.
 
-* ### Admin
+#### Admin
 
 - Admin can managed and view all the student and trainer that has the same `region` as his/her. The admin has a region `all` can managed and view trainer and student from all regions, this administrator also known as "super".
 
@@ -77,7 +77,7 @@
 
 ## _Mobile App_
 
-### `1`. Login and Register Page:
+### 1. Login and Register Page:
 
 #### Login
 
