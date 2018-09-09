@@ -125,6 +125,12 @@
 | `noCardFirst`    | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `0`        |
 | `noStudentFirst` | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `0`        |
 
+<sup>1</sup> Notify will disappear after user dismiss it.<br/>
+<sup>2</sup> Future courses cannot be marked as scaned, ill, etc. (This status is impossible)<br/>
+<sup>3</sup> Course cannot be declined within 24 hours of the start of the course. (This status is impossible)<br/>
+<sup>4</sup> Provide option for approved or decline.<br/>
+<sup>5</sup> Course that been approved cannot be rescheduled within 24 hours of, or after, the start of the course.<br/>
+
 #### Time Table
 
 - Show all the course and its status in current week.
@@ -154,6 +160,12 @@
 | `noCardFirst`    | hide<sup>2</sup>   | hide               | hide              | hide             | `1`                      | `1/n`                       |
 | `noStudentFirst` | hide<sup>2</sup>   | hide               | hide              | hide             | `0`                      | `1/2n`                      |
 
+<sup>1</sup> Notify will disappear after user dismiss it.<br/>
+<sup>2</sup> Future courses cannot be marked as scaned, ill, etc. (This status is impossible)<br/>
+<sup>3</sup> Course cannot be declined within 24 hours of the start of the course. (This status is impossible)<br/>
+<sup>4</sup> Provide option for approved or decline.<br/>
+<sup>5</sup> Course that been approved cannot be rescheduled within 24 hours of, or after, the start of the course.<br/>
+
 #### Time Table
 
 - Add new courses to one or up tp `3` of his students. Set the start time, amount, and note.
@@ -172,9 +184,3 @@
 - contains all the overview statistical data for the same `region` (all region for "super"), _like the sum of courses hours been finished and settlemented_
 - contains all the statistical data for students and trainers for the same `region` (all region for "super") _like the sum of courses hours been finished and settlemented for a single student and trainer (all his/her students), the sum of absents and exceptions been recorded_
 - contains the statistical data for settlemented course hours for students and trainers.
-
-<sup>1</sup> Notify will disappear after user dismiss it.<br/>
-<sup>2</sup> Future courses cannot be marked as scaned, ill, etc. (This status is impossible)<br/>
-<sup>3</sup> Course cannot be declined within 24 hours of the start of the course. (This status is impossible)<br/>
-<sup>4</sup> Provide option for approved or decline.<br/>
-<sup>5</sup> Course that been approved cannot be rescheduled within 24 hours of, or after, the start of the course.<br/>
