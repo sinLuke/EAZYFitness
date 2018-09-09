@@ -15,7 +15,10 @@
 - A student has only one trainer.
 - A student has height and weight been recorded with timestamp.
 - Monthly goal for a student is the course hours finished (not settlemented) this month.
+
 - A student has `registedCourse` record the course hours been purchase. This student cannot approving new courses when `registedCourse` minus "Settlement" less than `1` hour. All the value added been recorded with a timestamp.
+
+- A student has `expaire` record that is a timestamp. After the `expaire` passed, the `registedCourse` will be reset to 0.
 
 #### Trainer:
 
