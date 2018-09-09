@@ -173,8 +173,8 @@
 - contains all the statistical data for students and trainers for the same `region` (all region for "super") _like the sum of courses hours been finished and settlemented for a single student and trainer (all his/her students), the sum of absents and exceptions been recorded_
 - contains the statistical data for settlemented course hours for students and trainers.
 
-<sup>1</sup>: Notify will disappear after user dismiss it.
-<sup>2</sup>: Future courses cannot be marked as scaned, ill, etc. (This status is impossible)
-<sup>3</sup>: Course cannot be declined within 24 hours of the start of the course. (This status is impossible)
-<sup>4</sup>: Provide option for approved or decline.
-<sup>5</sup>: Course that been approved cannot be rescheduled within 24 hours of, or after, the start of the course.
+<sup>1</sup> Notify will disappear after user dismiss it.<br/>
+<sup>2</sup> Future courses cannot be marked as scaned, ill, etc. (This status is impossible)<br/>
+<sup>3</sup> Course cannot be declined within 24 hours of the start of the course. (This status is impossible)<br/>
+<sup>4</sup> Provide option for approved or decline.<br/>
+<sup>5</sup> Course that been approved cannot be rescheduled within 24 hours of, or after, the start of the course.<br/>
