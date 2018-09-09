@@ -105,34 +105,34 @@
 
 #### Infomation
 
+- fire a notification on student's device `2` hours before every course that has been approved.
+
 - Show next course, current course (if some schedule course is happening) Blocks.
 - Show New course Notify menu, student can approve or decline that course (added from trainer).
-- Students can reschedule the course.
+
 - Students can report trainer absent during the course time and not been `scaned`.
 - Students can view all the curse that finished. (The table shows the multiplier, the total finish time is the course time \* the multiplier)
-- Students cannot view the course time been settlemented (The table shows the multiplier), only the admin can view it.
 
-| `status`         | Next course        | Current course     | New course Notify | Reschedule       | Finished | Settlement |
-| ---------------- | ------------------ | ------------------ | ----------------- | ---------------- | -------- | ---------- |
-| `deleted`        | notify<sup>1</sup> | notify<sup>1</sup> | hide              | hide             | `0`      | `0`        |
-| `decline`        | hide               | hide<sup>3</sup>   | hide              | hide             | `0`      | `0`        |
-| `waitForTrainer` | hide               | hide               | hide              | hide             | `0`      | `0`        |
-| `waitForStudent` | hide               | hide               | menu<sup>4</sup>  | hide             | `0`      | `0`        |
-| `approved`       | show               | show               | hide              | show<sup>5</sup> | `0`      | `1`        |
-| `scaned`         | hide<sup>2</sup>   | show               | hide              | hide             | `1`      | `1`        |
-| `ill`            | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `1`        |
-| `noStudent`      | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `1`        |
-| `noTrainer`      | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `0`        |
-| `noCard`         | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `1`        |
-| `other`          | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `0`        |
-| `noCardFirst`    | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `0`        |
-| `noStudentFirst` | hide<sup>2</sup>   | show               | hide              | hide             | `0`      | `0`        |
+| `status`         | Next course        | Current course     | New course Notify | Reschedule | Finished | Settlement |
+| ---------------- | ------------------ | ------------------ | ----------------- | ---------- | -------- | ---------- |
+| `deleted`        | notify<sup>1</sup> | notify<sup>1</sup> | hide              | hide       | `0`      | `0`        |
+| `decline`        | hide               | hide<sup>3</sup>   | hide              | hide       | `0`      | `0`        |
+| `waitForTrainer` | hide               | hide               | hide              | hide       | `0`      | `0`        |
+| `waitForStudent` | hide               | hide               | menu<sup>4</sup>  | hide       | `0`      | `0`        |
+| `approved`       | show               | show               | hide              | hide       | `0`      | `1`        |
+| `scaned`         | hide<sup>2</sup>   | show               | hide              | hide       | `1`      | `1`        |
+| `ill`            | hide<sup>2</sup>   | show               | hide              | hide       | `0`      | `1`        |
+| `noStudent`      | hide<sup>2</sup>   | show               | hide              | hide       | `0`      | `1`        |
+| `noTrainer`      | hide<sup>2</sup>   | show               | hide              | hide       | `0`      | `0`        |
+| `noCard`         | hide<sup>2</sup>   | show               | hide              | hide       | `0`      | `1`        |
+| `other`          | hide<sup>2</sup>   | show               | hide              | hide       | `0`      | `0`        |
+| `noCardFirst`    | hide<sup>2</sup>   | show               | hide              | hide       | `1`      | `1`        |
+| `noStudentFirst` | hide<sup>2</sup>   | show               | hide              | hide       | `1`      | `1`        |
 
 <sup>1</sup> Notify will disappear after user dismiss it.<br/>
 <sup>2</sup> Future courses cannot be marked as scaned, ill, etc. (This status is impossible)<br/>
 <sup>3</sup> Course cannot be declined within 24 hours of the start of the course. (This status is impossible)<br/>
 <sup>4</sup> Provide option for approved or decline.<br/>
-<sup>5</sup> Course that been approved cannot be rescheduled within 24 hours of, or after, the start of the course.<br/>
 
 #### Time Table
 
@@ -140,13 +140,10 @@
 
 ### 3. Trainer Home Page
 
-- fire a notification on student's device `2` hours before every course that has been approved.
-
 - Show next course, current course (if some schedule course is happening) Blocks.
 - Show New course Notify menu, trainer can approve or decline that course (added from admin).
 - Trainers can report stdent been absent or illness, didn't bring his/her card, ect. during the course time and not been `scaned`.
 - Trainers can view all the curse that finished. (The table shows the multiplier, the total finish time is the course time \* the multiplier)
-- Trainers cannot view the course time been settlemented (The table shows the multiplier), only the admin can view it.
 - If the course involves more than one (`2` and `3`, more than 3 is not supported) trainees (students), the multiplier will be adjusted (The value will be discused in the furture)
 
 | `status`         | Next course        | Current course     | New course Notify | Reschedule       | Finished<br>`n` trainees | Settlement<br> `n` trainees |
@@ -162,7 +159,7 @@
 | `noTrainer`      | hide<sup>2</sup>   | hide               | hide              | hide             | `0`                      | `0`                         |
 | `noCard`         | hide<sup>2</sup>   | hide               | hide              | hide             | `0`                      | `1/2n`                      |
 | `other`          | hide<sup>2</sup>   | hide               | hide              | hide             | `0`                      | `1/2n`                      |
-| `noCardFirst`    | hide<sup>2</sup>   | hide               | hide              | hide             | `1`                      | `1/n`                       |
+| `noCardFirst`    | hide<sup>2</sup>   | hide               | hide              | hide             | `0`                      | `1/2n`                      |
 | `noStudentFirst` | hide<sup>2</sup>   | hide               | hide              | hide             | `0`                      | `1/2n`                      |
 
 <sup>1</sup> Notify will disappear after user dismiss it.<br/>
